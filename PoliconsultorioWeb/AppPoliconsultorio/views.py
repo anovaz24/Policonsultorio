@@ -38,3 +38,8 @@ def turno_medico(request):
         "listado_disp_medicos":listado_disp_medicos
     }
     return render(request,"AppPoliconsultorio/turnos.html",context)
+
+
+def medicos(request):
+    return ...... etcccccc
+    
