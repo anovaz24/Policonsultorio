@@ -5,10 +5,6 @@ from django.http import HttpResponse
 def index(request):
     return HttpResponse("Hola a todos")
 
-def index2(request):
-    return HttpResponse("Probando git")
-
-
 def turno_medico(request):
 
     listado_especialidad = ['Cardiología','Dermatología',
