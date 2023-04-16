@@ -1,8 +1,13 @@
-from django.shortcuts import render,HttpResponse
+from django.shortcuts import render
+from django.http import HttpResponse
 
 # Create your views here.
 def index(request):
-    return HttpResponse("Hola")
+    return HttpResponse("Hola a todos")
+
+def index2(request):
+    return HttpResponse("Probando git")
+
 
 def index4(request):
     return HttpResponse("¿Hola como estas?")
