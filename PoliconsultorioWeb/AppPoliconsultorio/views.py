@@ -4,6 +4,9 @@ from django.shortcuts import render,HttpResponse
 def index(request):
     return HttpResponse("Hola")
 
+def index4(request):
+    return HttpResponse("¿Hola como estas?")
+
 def turno_medico(request):
 
     listado_especialidad = ['Cardiología','Dermatología',
