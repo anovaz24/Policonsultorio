@@ -9,14 +9,26 @@
 <body>
     <header>
         <h1>Policonsultorios</h1>
-    </header>
-    <nav>
-        <ul>
-            <li><a href="{% url 'index' %}">Home</a></li>
-            <li><a href="">Médicos</a></li>
-            <li><a href="">Pacientes</a></li>
-            <li><a href="">Turnos</a></li>
-        </ul>
-    </nav>
+    </header>   
+    <main>
+        <nav>
+                <ul>
+                    <li><a href="{% url 'index' %}">Home</a></li>
+                    <li><a href="{% url 'turno_medico' %}">Turnos</a></li>
+                    <li><a href="{% url 'especialidades' %}">Especialidades</a></li>
+                    <li><a href="{% url 'usuarios' %}">Usuarios</a></li> 
+                    <li><a href="{% url 'acerca' %}">A cerca de</a></li>
+                    <li><a href="{% url 'contactenos' %}">Contáctenos</a></li>
+                </ul>
+            </nav>
+
+
+    </main>
+    <footer>
+        <p>
+            Tp 2023 - Comisión 7 - Todos los derechos reservados
+        </p>
+    </footer>
+    
 </body>
 </html>
