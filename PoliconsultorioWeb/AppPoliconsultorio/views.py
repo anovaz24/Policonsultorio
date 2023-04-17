@@ -1,6 +1,6 @@
 from datetime import datetime
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseNotFound
 
 # Create your views here.
 def index(request):
@@ -46,6 +46,11 @@ def index(request):
         }
     return render(request, "AppPoliconsultorio/index.html", context)
 
+def index(request):
+    context = {}
+    return render (request,"AppPoliconsultorio/index.html", context)
+
+
 def turno_medico(request):
 
     listado_especialidad = ['Cardiología','Dermatología',
@@ -80,3 +85,20 @@ def turno_medico(request):
         "listado_disp_medicos":listado_disp_medicos
     }
     return render(request,"AppPoliconsultorio/turnos.html",context)
+
+def especialidades(request):
+    context ={}
+    return render (request,"AppPoliconsultorio/especialidades.html", context)
+
+def usuarios(request):
+    context ={}
+    return render (request,"AppPoliconsultorio/usuarios.html", context)
+
+
+def contactenos(request):
+    context ={}
+    return render (request,"AppPoliconsultorio/contactenos.html", context)
+
+def acerca(request):
+    context ={}
+    return render (request,"AppPoliconsultorio/acerca.html", context)

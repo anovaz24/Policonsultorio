@@ -128,5 +128,6 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-# Virtual Environment
+# Virtual Environment 
 vPoliVirtual/
+Env_Policonsultorios
