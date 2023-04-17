@@ -4,12 +4,14 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Policonsultorios</title>
+    <title>PoliconsultorioWeb</title>
 </head>
 <body>
     <header>
-        <h1>Policonsultorios</h1>
-    </header>   
+        <h1>Policonsultorio de la Obra Social</h1>
+        <h2>Sistema de Turnos - Hoy es {{hoy}}</h2>
+        <p>Agenda del día {{dia}}</p>
+    </header>
     <main>
         <nav>
                 <ul>
@@ -20,15 +22,24 @@
                     <li><a href="{% url 'acerca' %}">A cerca de</a></li>
                     <li><a href="{% url 'contactenos' %}">Contáctenos</a></li>
                 </ul>
-            </nav>
-
-
+        </nav>
+        <section>
+            <h3>Listado de Turnos asignados</h3>
+            {% for turno in listado_turnos %}
+                <article>
+                    <!-- <li style="color: {% cycle 'red' 'green' %} "> -->
+                        <p>Día: {{turno.dia}} </p>
+                        <p>Hora: {{turno.hora}}</p>
+                        <p>Médico: {{turno.medico}}</p>
+                        <p>Especialidad: {{turno.especialidad}}</p>
+                        <p>Paciente: {{turno.paciente}}</p>
+                    <!-- </li> -->
+                </article>
+            {% endfor %}
+        </section>
     </main>
     <footer>
-        <p>
-            Tp 2023 - Comisión 7 - Todos los derechos reservados
-        </p>
+        <h6>Codo a Codo 2023 - Curso 23316 - Tp 2023 - Comisión 7 - Todos los derechos reservados</h6>
     </footer>
-    
 </body>
 </html>

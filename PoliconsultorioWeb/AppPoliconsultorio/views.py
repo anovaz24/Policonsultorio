@@ -1,9 +1,50 @@
+from datetime import datetime
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseNotFound
 
 # Create your views here.
 def index(request):
-    return HttpResponse("Hola")
+    
+    # Listar todos los turnos del día
+    turno = {
+        'dia': '20/04/2023',
+        'hora': '09:00',
+        'medico': 'Dr. Juan Perez',
+        'especialidad': 'Cardiología',
+        'paciente': 'Adriana Cullen',
+    }
+
+    listado_turnos = [
+        {
+            'dia': '20/04/2023',
+            'hora': '09:00',
+            'medico': 'Dr. Juan Pérez',
+            'especialidad': 'Cardiología',
+            'paciente': 'Adriana Cullen',
+        },
+        {
+            'dia': '20/04/2023',
+            'hora': '09:00',
+            'medico': 'Dra. María González',
+            'especialidad': 'Dermatología',
+            'paciente': 'José Olleros',
+        },
+        {
+            'dia': '20/04/2023',
+            'hora': '11:00',
+            'medico': 'Dr. Juan Perez',
+            'especialidad': 'Cardiología',
+            'paciente': 'Mariano Burgos',
+        },
+    ]
+
+    context = {
+        "hoy": datetime.now,
+        "dia": "18/04/2023",
+        "turno": turno,
+        "listado_turnos": listado_turnos,
+        }
+    return render(request, "AppPoliconsultorio/index.html", context)
 
 def index(request):
     context = {}
