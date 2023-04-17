@@ -17,13 +17,13 @@
             <h3>Listado de Turnos asignados</h3>
             {% for turno in listado_turnos %}
                 <article>
-                    <li style="color:{% cycle 'red' 'green' %}">
+                    <!-- <li style="color: {% cycle 'red' 'green' %} "> -->
                         <p>Día: {{turno.dia}} </p>
                         <p>Hora: {{turno.hora}}</p>
                         <p>Médico: {{turno.medico}}</p>
                         <p>Especialidad: {{turno.especialidad}}</p>
                         <p>Paciente: {{turno.paciente}}</p>
-                    </li>
+                    <!-- </li> -->
                 </article>
             {% endfor %}
         </section>
