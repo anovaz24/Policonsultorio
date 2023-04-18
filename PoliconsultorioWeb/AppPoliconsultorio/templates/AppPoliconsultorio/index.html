@@ -1,45 +1,44 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PoliconsultorioWeb</title>
-</head>
-<body>
-    <header>
-        <h1>Policonsultorio de la Obra Social</h1>
-        <h2>Sistema de Turnos - Hoy es {{hoy}}</h2>
-        <p>Agenda del día {{dia}}</p>
-    </header>
-    <main>
-        <nav>
-                <ul>
-                    <li><a href="{% url 'index' %}">Home</a></li>
-                    <li><a href="{% url 'turno_medico' %}">Turnos</a></li>
-                    <li><a href="{% url 'especialidades' %}">Especialidades</a></li>
-                    <li><a href="{% url 'usuarios' %}">Usuarios</a></li> 
-                    <li><a href="{% url 'acerca' %}">A cerca de</a></li>
-                    <li><a href="{% url 'contactenos' %}">Contáctenos</a></li>
-                </ul>
-        </nav>
-        <section>
-            <h3>Listado de Turnos asignados</h3>
-            {% for turno in listado_turnos %}
-                <article>
-                    <!-- <li style="color: {% cycle 'red' 'green' %} "> -->
-                        <p>Día: {{turno.dia}} </p>
-                        <p>Hora: {{turno.hora}}</p>
-                        <p>Médico: {{turno.medico}}</p>
-                        <p>Especialidad: {{turno.especialidad}}</p>
-                        <p>Paciente: {{turno.paciente}}</p>
-                    <!-- </li> -->
-                </article>
-            {% endfor %}
-        </section>
-    </main>
-    <footer>
-        <h6>Codo a Codo 2023 - Curso 23316 - Tp 2023 - Comisión 7 - Todos los derechos reservados</h6>
-    </footer>
-</body>
-</html>
+{% extends 'AppPoliconsultorio/base.html' %}
+{% load static %}
+
+{% block titulo %} Bienvenido a Policonsultorio{% endblock %}
+{% block contenido %}
+
+    <!-- Bloque comentado -->
+    <!--<section>
+        <h3>Listado de Turnos asignados</h3>
+        {% for turno in listado_turnos %}
+            <article>
+                 <li style="color: {% cycle 'red' 'green' %} ">
+                    <p>Día: {{turno.dia}} </p>
+                    <p>Hora: {{turno.hora}}</p>
+                    <p>Médico: {{turno.medico}}</p>
+                    <p>Especialidad: {{turno.especialidad}}</p>
+                    <p>Paciente: {{turno.paciente}}</p>
+                 </li>
+            </article>
+        {% endfor %}
+    </section>-->
+
+    <!-- Secciones -->
+    <section class="seccion1">
+        <div class="container">
+            <h2>Sección 1</h2>
+            <p>Descripción de la sección 1.</p>
+        </div>
+    </section>
+
+    <section class="seccion2">
+        <div class="container">
+            <h2>Sección 2</h2>
+            <p>Descripción de la sección 2.</p>
+        </div>
+    </section>
+
+    <section class="seccion3">
+        <div class="container">
+            <h2>Sección 3</h2>
+            <p>Descripción de la sección 3.</p>
+        </div>
+    </section>
+{% endblock %}

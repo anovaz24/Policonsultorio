@@ -6,8 +6,8 @@ urlpatterns = [
     path('turno_medico/',views.turno_medico,name="turno_medico"),      
     path('especialidades/',views.especialidades,name="especialidades"),   
     path('usuarios/',views.usuarios,name="usuarios"),     
-    path('contactenos', views.contactenos, name='contactenos'), 
-    path('acerca', views.acerca, name='acerca'),
+    path('contactenos/', views.contactenos, name='contactenos'), 
+    path('acerca/', views.acerca, name='acerca'),
       
                                     
 ]

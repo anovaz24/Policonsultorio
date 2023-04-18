@@ -82,23 +82,23 @@ def turno_medico(request):
     context = {
         "listado_especialidad":listado_especialidad,
         "listado_medicos":listado_medicos,
-        "listado_disp_medicos":listado_disp_medicos
+        "listado_disp_medicos":listado_disp_medicos,
     }
     return render(request,"AppPoliconsultorio/turnos.html",context)
 
 def especialidades(request):
-    context ={}
+    context = {}
     return render (request,"AppPoliconsultorio/especialidades.html", context)
 
 def usuarios(request):
-    context ={}
+    context = {}
     return render (request,"AppPoliconsultorio/usuarios.html", context)
 
 
 def contactenos(request):
-    context ={}
+    context = {}
     return render (request,"AppPoliconsultorio/contactenos.html", context)
 
 def acerca(request):
-    context ={}
+    context = {}
     return render (request,"AppPoliconsultorio/acerca.html", context)

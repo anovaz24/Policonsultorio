@@ -1,12 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Policonsultorios</title>
-</head>
-<body>
+{% extends 'AppPoliconsultorio/base.html' %}
+{% load static %}
+
+{% block titulo %} Especialidades en Policonsultorio{% endblock %}
+{% block contenido %}
     <h2>Especialidades que se brindan por el momento</h2>
     <ul>
         <li>Cardiología</li>
@@ -15,5 +11,5 @@
         <li>Oftalmología</li>
         <li>Pediatría</li>
     </ul>
-</body>
-</html>
+
+{% endblock %}
