@@ -19,40 +19,17 @@
     <link rel="stylesheet" href="{% static '/css/estilos.css' %}">
 </head>
 <body>
+    <header>
+        <!-- Barra de navegación -->
+        {% include 'AppPoliconsultorio/menu.html' %}
+    </header>
+    <main>
+        {% block contenido %}
+        {% endblock %}
+    </main>
 
-
-<!-- Barra de navegación -->
-{% include 'AppPoliconsultorio/menu.html' %}
-
-
-<main>
-<!-- Secciones
-<section class="seccion1">
-    <div class="container">
-        <h2>Sección 1</h2>
-        <p>Descripción de la sección 1.</p>
-    </div>
-</section>
-
-<section class="seccion2">
-    <div class="container">
-        <h2>Sección 2</h2>
-        <p>Descripción de la sección 2.</p>
-    </div>
-</section>
-
-<section class="seccion3">
-    <div class="container">
-        <h2>Sección 3</h2>
-        <p>Descripción de la sección 3.</p>
-    </div>
-</section> -->
-{% block contenido %}
-{% endblock %}
-</main>
-
-<!-- Footer -->
-{% include 'AppPoliconsultorio/footer.html' %}
+    <!-- Footer -->
+    {% include 'AppPoliconsultorio/footer.html' %}
   
 <!-- Bootstrap JS -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>

@@ -46,11 +46,6 @@ def index(request):
         }
     return render(request, "AppPoliconsultorio/index.html", context)
 
-def index(request):
-    context = {}
-    return render (request,"AppPoliconsultorio/index.html", context)
-
-
 def turno_medico(request):
 
     listado_especialidad = ['Cardiología','Dermatología',
@@ -102,3 +97,7 @@ def contactenos(request):
 def acerca(request):
     context = {}
     return render (request,"AppPoliconsultorio/acerca.html", context)
+
+def turnos(request):
+    context = {}
+    return render (request,"AppPoliconsultorio/turnos.html", context)

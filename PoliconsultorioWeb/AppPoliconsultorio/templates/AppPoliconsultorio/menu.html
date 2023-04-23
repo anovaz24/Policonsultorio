@@ -1,7 +1,8 @@
 <!-- Barra de navegación -->
 <nav class="navbar navbar-expand navbar-light bg-light">
     <div class="container">
-        <h5 class="mb-0"><a href="http://127.0.0.1:8000/AppPoliconsultorio/">Policonsultorio de la Obra Social</a></h5>
+        <!-- <h5 class="mb-0"><a href="http://127.0.0.1:8000/AppPoliconsultorio/">Policonsultorio de la Obra Social</a></h5> -->
+        <h5 class="mb-0"><a href="{% url 'index' %}">Policonsultorio de la Obra Social</a></h5>
         <div class="d-flex flex-column flex-wrap" id="navbarCollapse">
             <span class="navbar-text ml-auto py-0 px-lg-2">TEL: (00) 1234 5678</span>
             <ul class="navbar-nav mb-auto mt-0 ml-auto">
@@ -10,7 +11,8 @@
                     Turnos
                     </a>
                     <div class="dropdown-menu sm-menu">
-                    <a class="dropdown-item" href="http://127.0.0.1:8000/AppPoliconsultorio/turno_medico/">Alta de Turno</a>
+                    <!-- <a class="dropdown-item" href="http://127.0.0.1:8000/AppPoliconsultorio/turno_medico/">Alta de Turno</a> -->
+                    <a class="dropdown-item" href="{% url 'turno_medico' %}">Alta de Turno</a>
                     <a class="dropdown-item" href="#">Consulta de Turno</a>
                     <a class="dropdown-item" href="#">Eliminar Turno</a>
                     </div>
