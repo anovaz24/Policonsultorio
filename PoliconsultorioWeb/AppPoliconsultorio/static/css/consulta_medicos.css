@@ -1,0 +1,17 @@
+table {
+    background-color: lightblue;
+    /* color: white; */
+    align-items: center;
+}
+
+th {
+    padding: 10px;
+    text-align: center;
+    border: 1px solid #ddd;
+}
+
+td {
+    padding: 10px;
+    text-align: center;
+    border: 1px solid #ddd;
+}

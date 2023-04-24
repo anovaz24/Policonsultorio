@@ -19,6 +19,16 @@
                 </li>
                 <li class="nav-item dropdown dmenu">
                     <a class="nav-link py-0 dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
+                    Médicos
+                    </a>
+                    <div class="dropdown-menu sm-menu">
+                        <a class="dropdown-item" href="{% url 'consulta_medicos' %}">Consulta de Médicos</a>
+                        <a class="dropdown-item" href="{% url 'alta_medico' %}">Alta de un Médico</a>
+                        <a class="dropdown-item" href="{% url 'baja_medico' %}">Eliminar un Médico</a>
+                    </div>
+                </li>
+                <li class="nav-item dropdown dmenu">
+                    <a class="nav-link py-0 dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
                     Especialidades
                     </a>
                     <div class="dropdown-menu sm-menu">

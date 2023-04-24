@@ -2,6 +2,8 @@ from datetime import datetime
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseNotFound
 
+from .medicos import lista_medicos
+
 # Create your views here.
 def index(request):
     
@@ -51,12 +53,7 @@ def turno_medico(request):
     listado_especialidad = ['Cardiología','Dermatología',
         'Neurología','Oftalmología','Pediatría']
 
-    listado_medicos = [{'ID':'1','nombre':'Dr. Juan Pérez (Cardiología)','Especialidad':'Cardiología'},
-                       {'ID':'2','nombre':'Dra. María González (Dermatología)','Especialidad':'Dermatología'},
-                       {'ID':'3','nombre':'Dr. Luis Sánchez (Neurología)','Especialidad':'Neurología'},
-                       {'ID':'4','nombre':'Dra. Ana Rodríguez (Oftalmología)','Especialidad':'Oftalmología'},
-                       {'ID':'5','nombre':'Dr. Pedro López (Pediatría)','Especialidad':'Pediatría'}
-                       ]    
+    listado_medicos = lista_medicos()    
 
     listado_disp_medicos = [{'ID':'1',
                              'horario':'8:00 a 9:00',
@@ -80,6 +77,25 @@ def turno_medico(request):
         "listado_disp_medicos":listado_disp_medicos,
     }
     return render(request,"AppPoliconsultorio/turnos.html",context)
+
+def consulta_medicos(request):
+    # Listar todos los médicos
+    listado_medicos = lista_medicos()
+
+    context = {
+        "listado_medicos": listado_medicos
+    }
+    return render(request, "AppPoliconsultorio/consulta_medicos.html", context)
+
+def alta_medico(request):
+    # Alta de un Médico
+    context = {}
+    return render(request, "AppPoliconsultorio/alta_medico.html", context)
+
+def baja_medico(request):
+    # Baja de un Médico
+    context = {}
+    return render(request, "AppPoliconsultorio/baja_medico.html", context)
 
 def especialidades(request):
     context = {}
