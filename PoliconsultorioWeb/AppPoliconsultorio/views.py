@@ -2,6 +2,8 @@ from datetime import datetime
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseNotFound
 
+from .forms import ConsultaMedicosForm
+from .especialidades import lista_especialidades
 from .medicos import lista_medicos
 
 # Create your views here.
@@ -50,8 +52,7 @@ def index(request):
 
 def turno_medico(request):
 
-    listado_especialidad = ['Cardiología','Dermatología',
-        'Neurología','Oftalmología','Pediatría']
+    listado_especialidad = lista_especialidades()
 
     listado_medicos = lista_medicos()    
 
@@ -79,11 +80,19 @@ def turno_medico(request):
     return render(request,"AppPoliconsultorio/turnos.html",context)
 
 def consulta_medicos(request):
-    # Listar todos los médicos
+    # Prepara los combos
+    listado_especialidad = lista_especialidades()
     listado_medicos = lista_medicos()
 
+    if request.method == "POST":
+        consulta_medicos_form = ConsultaMedicosForm(request.POST)
+    else:
+        consulta_medicos_form = ConsultaMedicosForm()
+
     context = {
-        "listado_medicos": listado_medicos
+        "listado_especialidad": listado_especialidad,
+        "listado_medicos": listado_medicos,
+        "form": consulta_medicos_form,
     }
     return render(request, "AppPoliconsultorio/consulta_medicos.html", context)
 
