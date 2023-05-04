@@ -7,7 +7,6 @@ class ConsultaMedicosForm(forms.Form):
     # nombre = forms.CharField(label="Nombre", required=True)
     # especialidad = forms.Select(label="Especialidad", required=False)
     #listado_especialidades = lista_especialidades()
-    especialidad = forms.ChoiceField(choices=lista_especialidades(), required=True)
-    medico = forms.CharField(label="Médico", widget=forms.TimeInput(attrs={'class': 'medico'}), required=False)
+    especialidad = forms.ChoiceField(choices=lista_especialidades(), required=True, widget=forms.Select)
+    medico = forms.CharField(label="Médico", widget=forms.TextInput(attrs={'class': 'medico'}), required=False)
     fecha = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
-    
