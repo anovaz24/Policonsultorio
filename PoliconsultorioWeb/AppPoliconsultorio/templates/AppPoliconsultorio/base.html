@@ -6,53 +6,48 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block titulo %} {% endblock %}</title>
 
-    <!-- Bootstrap CSS -->
+    <!-- Bootstrap CSS 
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <!-- Otros links Bootstrap y CSS -->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>-->
+    <!-- Otros links Bootstrap y CSS
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link href="https://fonts.googleapis.com/css?family=Raleway:400,500,500i,700,800i" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Raleway:400,500,500i,700,800i" rel="stylesheet"> -->
+
+	<!-- Google Fonts -->
+	<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,600,600i,700,700i" rel="stylesheet">
+
+	<!-- Bootstrap CSS Files -->
+	<link href="{% static '/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static '/css/bootstrap-icons.css' %}" rel="stylesheet">
+	<link href="{% static '/css/boxicons.min.css' %}" rel="stylesheet">
+	<link href="{% static '/css/boxicons.css' %}" rel="stylesheet">
+
+	<!-- Template NAV CSS File -->
+	<link rel="stylesheet" href="{% static '/css/barra_estilo.css' %}">
  
-    <!-- Estilos CSS personalizados-->
-    <link rel="stylesheet" href="{% static '/css/estilos.css' %}">
+    <!-- Estilos CSS personalizados -->
+    <!-- <link rel="stylesheet" href="{% static '/css/estilos.css' %}"> -->
+    <!-- <link rel="stylesheet" href="{% static '' %}"> -->
+    {% block extra_css %} {% endblock %}
+
+   <!-- Template Main JS File -->
+   <script src="{% static '/js/main.js' %}"></script>
+
 </head>
 <body>
+    <header>
+        <!-- Barra de navegación -->
+        {% include 'AppPoliconsultorio/menu.html' %}
+    </header>
+    <main>
+        {% block contenido %}
+        {% endblock %}
+    </main>
 
-
-<!-- Barra de navegación -->
-{% include 'AppPoliconsultorio/menu.html' %}
-
-
-<main>
-<!-- Secciones
-<section class="seccion1">
-    <div class="container">
-        <h2>Sección 1</h2>
-        <p>Descripción de la sección 1.</p>
-    </div>
-</section>
-
-<section class="seccion2">
-    <div class="container">
-        <h2>Sección 2</h2>
-        <p>Descripción de la sección 2.</p>
-    </div>
-</section>
-
-<section class="seccion3">
-    <div class="container">
-        <h2>Sección 3</h2>
-        <p>Descripción de la sección 3.</p>
-    </div>
-</section> -->
-{% block contenido %}
-{% endblock %}
-</main>
-
-<!-- Footer -->
-{% include 'AppPoliconsultorio/footer.html' %}
+    <!-- Footer -->
+    {% include 'AppPoliconsultorio/footer.html' %}
   
 <!-- Bootstrap JS -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>

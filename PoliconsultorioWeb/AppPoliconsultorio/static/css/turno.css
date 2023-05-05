@@ -1,0 +1,11 @@
+.form-container {
+    max-width: 1800px;
+}
+
+.rotulo_filtro {
+    margin: 5px 10px;
+}
+
+.mensajes {
+    color: red;
+}
