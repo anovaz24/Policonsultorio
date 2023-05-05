@@ -3,87 +3,110 @@
 
 {% block titulo %} Ingreso de turno médico {% endblock %}
 {% block contenido %}
-	<div class="container-turno">
-		<div class="form-container-turno">
-			<h2>Ingrese los datos del turno médico</h2>
-			<form>
-				<div class="form-group">
-					<label for="paciente">Paciente:</label>
-					<input type="text" class="form-control" id="paciente">
+<div class="container">
+	<div class="form-container justifica-arriba">
+		<div class="form-row justify-content-center">
+			<h2><u>Ingrese los datos del turno médico</u></h2>
+		</div>
+		<div class="messages form-row justify-content-center" style="color: red;">
+			{% filter upper %}
+				<p><b> {{ error_paciente }} </b></p>
+			{% endfilter %}
+		</div>
+		<div class="messages form-row justify-content-center">
+			{% if messages %}
+				<ul class="messages_list">
+					{% for message in messages %}
+						{% filter upper %}
+						<li style="color: red;" {% if message.tags %} class="{{ message.tags }}" {% endif %}>
+							<b> {{ message }} </b>
+						</li>
+						{% endfilter %}
+					{% endfor %}
+				</ul>
+			{% endif %}
+		</div>
+		<!--<form>-->
+		<form action="{% url "turno_medico" %}" method="post">
+			{% csrf_token %}
+			<div class="form-row">
+				<div class="col-lg-11 mt-5 mt-lg-0 d-flex align-items-stretch">
+					<div class="form-group col-md-6">
+						<label for="paciente">Paciente: <b>{{ paciente }}</b></label>
+						<!--<input type="text" class="form-control" id="paciente">-->
+						{{ alta_turno_form.paciente }}
+					</div>
+					<div class="form-group col-md-6 mt-3">
+						<button type="submit" class="btn btn-primary">Buscar paciente</button>
+					</div>
 				</div>
-                <br>
-				<div class="form-row">
-					<div class="form-group-2">
+			</div>
+			<br>
+			<div class="form-row">
+				<div class="col-lg-11 mt-5 mt-lg-0 d-flex align-items-stretch">
+					<div class="form-group col-md-6">
 						<label for="especialidad">Especialidad:</label>
-						<select class="form-control" id="especialidad">
+						<!--<select class="form-control" id="especialidad">
 							<option value="">Seleccione una especialidad</option>
 							{% for especialidad in listado_especialidad %}
 								<option value="{{especialidad}}">{{especialidad}}</option>
 							{% endfor %}
-						</select>
-						<br>
+						</select>-->
+						{{ alta_turno_form.especialidad}}
+					</div>
+					<div class="form-group col-md-6 mt-3 mt-md-0">
 						<label for="medico">Médico:</label>
-						<select class="form-control" id="medico">
+						<!-- <select class="form-control" id="medico">
 						<option value="">Seleccione un médico</option>
 							{% for medico in listado_medicos %}
 								<option value="{{medico.ID}}">{{medico.nombre}}</option>
 							{% endfor %}							
-						</select>
+						</select> -->
+						{{ alta_turno_form.medico}}
 					</div>
 				</div>
-				<div class="form-row">
-					<div class="form-group-2">
-						<label for="fecha">Fecha:</label>
-						<input type="date" class="form-control" id="fecha">
-					</div>
+			</div>
+			<div class="form-row">
+				<div class="col-lg-3 mt-5 mt-lg-0 align-items-stretch">
+					<label for="fecha">Fecha:</label>
+					<!-- <input type="date" class="form-control" id="fecha"> -->
+					{{ alta_turno_form.fecha }}
 				</div>
-                <div class="form-row">
-                    <div class="form-group col-md-12">
-                        <!--<label for="hora">Hora:</label>-->
-                        <!--<input type="time" class="form-control" id="hora">-->
-                        <table class="table table-bordered">
-                            <thead class="table-header">
-                              <tr>
-                                <th scope="col"></th>
-                                <th scope="col">Horario</th>
-                                <th scope="col">Disponibilidad</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                                {% for disp_medico in listado_disp_medicos %}
-                                    <tr>
-                                        <th scope="row"><input type="radio" name="horario" value="{{disp_medico.ID}}" {{disp_medico.flag}}></th>
-                                        <td>{{disp_medico.horario}}</td>
-                                        <td>{{disp_medico.descr_disponible}}</td>
-                                    </tr>
-                                {% endfor %}	
-                              <!--<tr>
-                                <th scope="row"><input type="radio" name="horario" value="8:00"></th>
-                                <td>8:00 a 9:00</td>
-                                <td>Disponible</td>
-                              </tr>
-                              <tr>
-                                <th scope="row"><input type="radio" name="horario" value="9:00" disabled></th>
-                                <td>9:00 a 10:00</td>
-                                <td>No disponible</td>
-                              </tr>
-                              <tr>
-                                <th scope="row"><input type="radio" name="horario" value="10:00"></th>
-                                <td>10:00 a 11:00</td>
-                                <td>Disponible</td>
-                              </tr>-->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
+				<div class="form-group col-md-6 mt-3">
+					<button type="submit" class="btn btn-primary">Buscar turnos</button>
+				</div>
+			</div>
+			<div class="form-row justify-content-center">
+				<div class="form-group col-md-12">
+					<table class="table table-bordered">
+						<thead class="table-header">
+						<tr>
+							<th scope="col"></th>
+							<th scope="col">Horario</th>
+							<th scope="col">Disponibilidad</th>
+						</tr>
+						</thead>
+						<tbody>
+							{% for disp_medico in listado_disp_medicos %}
+								<tr>
+									<th scope="row"><input type="radio" name="horario" value="{{disp_medico.ID}}" {{disp_medico.flag}}></th>
+									<td>{{disp_medico.horario}}</td>
+									<td>{{disp_medico.descr_disponible}}</td>
+								</tr>
+							{% endfor %} 
+							<!--{% for turno_disp in alta_turno_form3.seleccion_turno %}
+								<tr><td>{{ turno_disp }}</td><td>Prueba</td><td>{{ alta_turno_form3.seleccion_turno.label.0.1 }}</td></tr>
+							{% endfor %}-->
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="form-row justify-content-center">
 				<button type="submit" class="btn btn-primary">Guardar turno</button>
-			</form>
-		</div>
+			</div>
+		</form>
 	</div>
-	<!-- Importar Bootstrap y jQuery -->
-	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI9UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h7210AuL4P6NfC2lFXOmF1+8O3Go8gXaVhR9T" crossorigin="anonymous"></script>
-	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h7210AuL4P6NfC2lFXOmF1+8O3Go8gXaVhR9T" crossorigin="anonymous">
+</div>
+
+
 {% endblock %}

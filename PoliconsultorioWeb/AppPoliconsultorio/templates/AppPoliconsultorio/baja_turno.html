@@ -1,0 +1,81 @@
+{% extends 'AppPoliconsultorio/base.html' %}
+{% load static %}
+
+{% block titulo %} Ingreso de datos para la baja del turno médico {% endblock %}
+{% block contenido %}
+<div class="justifica-arriba">
+    <form action="{% url "baja_turno" %}" method="post"> 
+        {% csrf_token %}
+        <!-- 
+            el profe dijo que se puede  traer de a campos 
+            para hacerlo en un html con estilos...-->
+        
+        <br><br>
+        <div class="form-row justify-content-center">
+			<h2><u>Eliminación de turnos</u></h2>
+		</div>
+        {{ bajaturno_form }}
+
+        <div class="form-group col-md-6 mt-3">
+            <button type="submit" class="btn btn-primary">Buscar paciente</button>
+        </div>
+
+        <div></div>
+        
+       <!--  {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+ -->
+
+
+
+
+
+
+
+            <ul>               
+               <p> Turnos del paciente: {{paciente}}</p> <br>                              
+            
+              <div class="form-row justify-content-center">
+				<div class="form-group col-md-12">
+					<table class="table table-bordered">
+						<thead class="table-header">
+						<tr>
+							<th scope="col">Día</th>
+							<th scope="col">Hora</th>
+							<th scope="col">Médico</th>
+							<th scope="col">Especialidad</th>
+							<th scope="col">Paciente</th>
+                            <th scope="col">Selección</th>
+						</tr>
+						</thead>
+	                    <tbody>
+							{% for xx in turnos %}
+								<th>{{ xx.dia }}</th>
+								<td>{{ xx.hora }}</td>
+								<td>{{ xx.medico }}</td>
+								<td>{{ xx.especialidad }}</td>
+								<td>{{ xx.paciente }}</td>
+                                <td><input type="radio" name="bajaturno" value=""</td>
+							</tr>
+							{% endfor %}
+						</tbody>
+
+					</table>
+            </div>
+
+            <div class="form-group col-md-6 mt-3">
+                <button type="submit" class="btn btn-primary">Eliminar el turno</button>
+            </div>
+
+            </ul> 
+            
+    </form>
+</div>
+
+{% endblock %}
+

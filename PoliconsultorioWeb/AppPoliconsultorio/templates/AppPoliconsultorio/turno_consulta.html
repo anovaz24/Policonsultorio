@@ -1,0 +1,106 @@
+{% extends 'AppPoliconsultorio/base.html' %}
+{% load static %}
+
+{% block titulo %} Consulta de Turnos {% endblock %}
+ <!-- Estilos CSS personalizados-->
+{% block extra_css %}
+ <link rel="stylesheet" href="{% static '/css/turno.css' %}">
+{% endblock %}
+
+{% block contenido %}
+<div class="container">
+	<div class="form-container justifica-arriba">
+		<div class="form-row justify-content-center">
+			<h2><u>Consulta de Turnos</u></h2>
+		</div>
+		<!--<form>-->
+		<form action="{% url 'turno_consulta' %}" method="post">
+			{% csrf_token %}
+			<div class="form-row">
+				<div class="form-group col-md-6">
+					<label class='rotulo_filtro' for="paciente">DNI Paciente:</label>
+					{{ turno_consulta_form.paciente }}
+				</div>
+				<div class="col-lg-11 mt-5 mt-lg-0 d-flex align-items-stretch">
+					<div>
+						<label class='rotulo_filtro' for="especialidad">Especialidad:</label>
+						{{ turno_consulta_form.especialidad }}
+						<label class='rotulo_filtro' for="medico">Médico:</label>
+						{{ turno_consulta_form.medico }}
+					</div>
+				</div>
+				<div>
+						<label class='rotulo_filtro' for="fechaDesde"> Fecha Desde:</label>
+						{{ turno_consulta_form.fechaDesde }}
+						<label class='rotulo_filtro' for="fechaHasta"> Fecha Hasta:</label>
+						{{ turno_consulta_form.fechaHasta }}
+				</div>
+			</div>
+			<div class="mensajes">
+				{% if messages %}
+					<ul class="messages_list">
+						{% for message in messages %}
+							<li {% if message.tags %} class="{{message.tags}}" {% endif %}>{{message}}</li>
+						{% endfor %}
+					</ul>
+				{% endif %}
+			</div>
+			<div class="form-row justify-content-center">
+				<button type="submit" class="btn btn-primary">Consultar</button>
+			</div>
+			<div class="form-row justify-content-center">
+				<div class="form-group col-md-12">
+					<table class="table table-bordered">
+						<!-- <thead class="table-header">
+						<tr> -->
+							<!--<th scope="col"></th>-->
+							<!-- <th scope="col">Horario</th>
+							<th scope="col">Disponibilidad</th>
+						</tr>
+						</thead> -->
+						<tbody>
+							{% for disp_medico in listado_disp_medicos %}
+								<tr>
+									<!--<th scope="row"><input type="radio" name="horario" value="{{disp_medico.ID}}" {{disp_medico.flag}}></th>-->
+									<td>{{disp_medico.horario}}</td>
+									<td>{{disp_medico.descr_disponible}}</td>
+								</tr>
+							{% endfor %} 
+							<!--{% for turno_disp in alta_turno_form3.seleccion_turno %}
+								<tr><td>{{ turno_disp }}</td><td>Prueba</td><td>{{ alta_turno_form3.seleccion_turno.label.0.1 }}</td></tr>
+							{% endfor %}-->
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="form-row justify-content-center">
+				<div class="form-group col-md-12">
+					<table class="table table-bordered">
+						<thead class="table-header">
+						<tr>
+							<th scope="col">Día</th>
+							<th scope="col">Hora</th>
+							<th scope="col">Médico</th>
+							<th scope="col">Especialidad</th>
+							<th scope="col">Paciente</th>
+						</tr>
+						</thead>
+	                    <tbody>
+							{% for turno in listado_turnos %}
+							<tr style='color: {% cycle 'lightcoral' 'green' %}'>
+								<th>{{ turno.dia }}</th>
+								<td>{{ turno.hora }}</td>
+								<td>{{ turno.medico }}</td>
+								<td>{{ turno.especialidad }}</td>
+								<td>{{ turno.paciente }}</td>
+							</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+            </div>
+		</form>
+	</div>
+</div>
+
+
+{% endblock %}

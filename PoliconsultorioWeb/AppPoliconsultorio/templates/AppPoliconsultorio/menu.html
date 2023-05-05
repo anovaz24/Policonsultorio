@@ -1,56 +1,51 @@
 <!-- Barra de navegación -->
-<nav class="navbar navbar-expand navbar-light bg-light">
-    <div class="container">
-        <!-- <h5 class="mb-0"><a href="http://127.0.0.1:8000/AppPoliconsultorio/">Policonsultorio de la Obra Social</a></h5> -->
-        <h5 class="mb-0"><a href="{% url 'index' %}">Policonsultorio de la Obra Social</a></h5>
-        <div class="d-flex flex-column flex-wrap" id="navbarCollapse">
-            <span class="navbar-text ml-auto py-0 px-lg-2">TEL: (00) 1234 5678</span>
-            <ul class="navbar-nav mb-auto mt-0 ml-auto">
-                <li class="nav-item dropdown dmenu">
-                    <a class="nav-link py-0 dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
-                    Turnos
-                    </a>
-                    <div class="dropdown-menu sm-menu">
-                    <!-- <a class="dropdown-item" href="http://127.0.0.1:8000/AppPoliconsultorio/turno_medico/">Alta de Turno</a> -->
-                    <a class="dropdown-item" href="{% url 'turno_medico' %}">Alta de Turno</a>
-                    <a class="dropdown-item" href="#">Consulta de Turno</a>
-                    <a class="dropdown-item" href="#">Eliminar Turno</a>
-                    </div>
-                </li>
-                <li class="nav-item dropdown dmenu">
-                    <a class="nav-link py-0 dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
-                    Médicos
-                    </a>
-                    <div class="dropdown-menu sm-menu">
-                        <a class="dropdown-item" href="{% url 'consulta_medicos' %}">Consulta de Médicos</a>
-                        <a class="dropdown-item" href="{% url 'alta_medico' %}">Alta de un Médico</a>
-                        <a class="dropdown-item" href="{% url 'baja_medico' %}">Eliminar un Médico</a>
-                    </div>
-                </li>
-                <li class="nav-item dropdown dmenu">
-                    <a class="nav-link py-0 dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
-                    Especialidades
-                    </a>
-                    <div class="dropdown-menu sm-menu">
-                    <a class="dropdown-item" href="http://127.0.0.1:8000/AppPoliconsultorio/especialidades/">Cardiología</a>
-                    <a class="dropdown-item" href="http://127.0.0.1:8000/AppPoliconsultorio/especialidades/">Dermatología</a>
-                    <a class="dropdown-item" href="http://127.0.0.1:8000/AppPoliconsultorio/especialidades/">Neurología</a>
-                    <a class="dropdown-item" href="http://127.0.0.1:8000/AppPoliconsultorio/especialidades/">Oftalmología</a>
-                    <a class="dropdown-item" href="http://127.0.0.1:8000/AppPoliconsultorio/especialidades/">Pediatría</a>
-                    </div>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link py-0" href="http://127.0.0.1:8000/AppPoliconsultorio/acerca/">Acerca de</a>
-                </li>
-                <li class="nav-item dropdown dmenu">
-                    <a class="nav-link py-0 dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
-                        Usuario Pirulo
-                    </a>
-                    <div class="dropdown-menu sm-menu">
-                    <a class="dropdown-item" href="#">Salir</a>
-                    </div>
-                </li>
+<header id="header" class="fixed-top d-flex align-items-center">
+    <div class="container d-flex align-items-center justify-content-between">
+
+      <div class="logo">
+        <!-- <h1 class="text-light"><a href="http://127.0.0.1:8000/AppPoliconsultorio/"><span>Policonsultorio</span></a></h1> -->
+        <h1 class="text-light"><a href="{% url 'index' %}"><span>Policonsultorio</span></a></h1>
+        <!-- Uncomment below if you prefer to use an image logo -->
+        <!-- <a href="index.html"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
+      </div>
+		<!-- .navbar -->
+      <nav id="navbar" class="navbar">
+        <ul>
+          <!-- <li><a class="nav-link scrollto active" href="http://127.0.0.1:8000/AppPoliconsultorio/">Home</a></li>
+          <li><a class="nav-link scrollto" href="http://127.0.0.1:8000/AppPoliconsultorio/acerca/">Acerca de</a></li>
+          <li><a class="nav-link scrollto" href="http://127.0.0.1:8000/AppPoliconsultorio/#servicios">Servicios</a></li> -->
+          <li><a class="nav-link scrollto active" href="{% url 'index' %}">Home</a></li>
+          <li><a class="nav-link scrollto" href="{% url 'acerca' %}">Acerca de</a></li>
+          <li><a class="nav-link scrollto" href="#servicios">Servicios</a></li>
+          <li class="dropdown"><a href="#"><span>Especialidades</span> <i class="bi bi-chevron-down"></i></a>
+            <ul>
+              <!-- <li><a href="http://127.0.0.1:8000/AppPoliconsultorio/especialidades/">Cardiología</a></li> -->
+              <li><a href="{% url 'especialidades' %}">Cardiología</a></li>
+              <li class="dropdown"><a href="#"><span>Dermatología</span> <i class="bi bi-chevron-right"></i></a>
+                <ul>
+                  <li><a href="{% url 'especialidades' %}">Estética</a></li>
+                  <li><a href="{% url 'especialidades' %}">Pediátrica</a></li>
+                </ul>
+              </li>
+              <li><a href="{% url 'especialidades' %}">Neurología</a></li>
+              <li><a href="{% url 'especialidades' %}">Oftalmología</a></li>
+              <li><a href="{% url 'especialidades' %}">Pediatría</a></li>
             </ul>
-        </div>
+          </li>
+		  <li class="dropdown"><a href="#"><span>Turnos</span> <i class="bi bi-chevron-down"></i></a>
+            <ul>
+              <!-- <li><a href="http://127.0.0.1:8000/AppPoliconsultorio/turno_medico/">Alta de Turno</a></li> -->
+              <li><a href="{% url 'turno_medico' %}">Alta de Turno</a></li>
+              <li><a href="{% url 'turno_consulta' %}">Consulta de Turnos</a></li>
+              <!-- <li><a href="http://127.0.0.1:8000/AppPoliconsultorio/contacto/">Baja de turno</a></li> -->
+              <li><a href="{% url 'baja_turno' %}">Baja de turno</a></li>
+            </ul>
+          </li>
+          <li><a class="getstarted scrollto" href="#about">Login / Sign In</a></li>
+        </ul>
+        <i class="bi bi-list mobile-nav-toggle"></i>
+      </nav>
+
     </div>
-</nav>
+  </header>
+
