@@ -16,26 +16,37 @@
 		<!--<form>-->
 		<form action="{% url 'turno_consulta' %}" method="post">
 			{% csrf_token %}
-			<div class="form-row">
+			<!-- <div class="form-row">
 				<div class="form-group col-md-6">
 					<label class='rotulo_filtro' for="paciente">DNI Paciente:</label>
 					{{ turno_consulta_form.paciente }}
-				</div>
-				<div class="col-lg-11 mt-5 mt-lg-0 d-flex align-items-stretch">
-					<div>
-						<label class='rotulo_filtro' for="especialidad">Especialidad:</label>
-						{{ turno_consulta_form.especialidad }}
-						<label class='rotulo_filtro' for="medico">Médico:</label>
-						{{ turno_consulta_form.medico }}
-					</div>
-				</div>
-				<div>
-						<label class='rotulo_filtro' for="fechaDesde"> Fecha Desde:</label>
-						{{ turno_consulta_form.fechaDesde }}
-						<label class='rotulo_filtro' for="fechaHasta"> Fecha Hasta:</label>
-						{{ turno_consulta_form.fechaHasta }}
+				</div> -->
+			<div class="form-row">
+				<div class="mt-lg-0 d-flex align-items-stretch">
+					<!-- <div class="form-group col-md-6"> -->
+						<label class='rotulo_filtro' for="paciente">Paciente: <b>{{ paciente }}</b></label>
+						{{ turno_consulta_form.paciente }}
+					<!-- </div> -->
 				</div>
 			</div>
+			<div class="form-row">
+				<div class="col-lg-11 mt-5 mt-lg-0 d-flex">
+					<label class='rotulo_filtro' for="especialidad">Especialidad:</label>
+					{{ turno_consulta_form.especialidad }}
+					<label class='rotulo_filtro' for="medico">Médico:</label>
+					{{ turno_consulta_form.medico }}
+				</div>
+			</div>
+			<div class="form-row">
+				<div class="col-lg-11 mt-5 mt-lg-0 d-flex">
+					<label class='rotulo_filtro' for="fechaDesde"> Fecha Desde:</label>
+					{{ turno_consulta_form.fechaDesde }}
+					<label class='rotulo_filtro' for="fechaHasta"> Fecha Hasta:</label>
+					{{ turno_consulta_form.fechaHasta }}
+				</div>
+			</div>
+
+			<!-- Mensajes -->
 			<div class="mensajes">
 				{% if messages %}
 					<ul class="messages_list">
@@ -51,43 +62,19 @@
 			<div class="form-row justify-content-center">
 				<div class="form-group col-md-12">
 					<table class="table table-bordered">
-						<!-- <thead class="table-header">
-						<tr> -->
-							<!--<th scope="col"></th>-->
-							<!-- <th scope="col">Horario</th>
-							<th scope="col">Disponibilidad</th>
-						</tr>
-						</thead> -->
-						<tbody>
-							{% for disp_medico in listado_disp_medicos %}
-								<tr>
-									<!--<th scope="row"><input type="radio" name="horario" value="{{disp_medico.ID}}" {{disp_medico.flag}}></th>-->
-									<td>{{disp_medico.horario}}</td>
-									<td>{{disp_medico.descr_disponible}}</td>
-								</tr>
-							{% endfor %} 
-							<!--{% for turno_disp in alta_turno_form3.seleccion_turno %}
-								<tr><td>{{ turno_disp }}</td><td>Prueba</td><td>{{ alta_turno_form3.seleccion_turno.label.0.1 }}</td></tr>
-							{% endfor %}-->
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="form-row justify-content-center">
-				<div class="form-group col-md-12">
-					<table class="table table-bordered">
 						<thead class="table-header">
-						<tr>
-							<th scope="col">Día</th>
-							<th scope="col">Hora</th>
-							<th scope="col">Médico</th>
-							<th scope="col">Especialidad</th>
-							<th scope="col">Paciente</th>
-						</tr>
+							<tr>
+								<th scope="col">Día</th>
+								<th scope="col">Hora</th>
+								<th scope="col">Médico</th>
+								<th scope="col">Especialidad</th>
+								<th scope="col">Paciente</th>
+							</tr>
 						</thead>
-	                    <tbody>
+
+						<tbody>
 							{% for turno in listado_turnos %}
-							<tr style='color: {% cycle 'lightcoral' 'green' %}'>
+							<tr style='background-color: {% cycle '#f3c5aa' '#f1d5c5' %}'>
 								<th>{{ turno.dia }}</th>
 								<td>{{ turno.hora }}</td>
 								<td>{{ turno.medico }}</td>
@@ -97,6 +84,7 @@
 							{% endfor %}
 						</tbody>
 					</table>
+				</div>
             </div>
 		</form>
 	</div>

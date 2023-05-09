@@ -10,24 +10,7 @@ from .medicos import lista_medicos
 
 # Create your views here.
 def index(request):
-    
-    # Listar todos los turnos del día
-    turno = {
-        'dia': '20/04/2023',
-        'hora': '09:00',
-        'medico': 'Dr. Juan Perez',
-        'especialidad': 'Cardiología',
-        'paciente': 'Adriana Cullen',
-    }
-
-    listado_turnos = lista_turnos()
-
-    context = {
-        "hoy": datetime.now,
-        "dia": "18/04/2023",
-        "turno": turno,
-        "listado_turnos": listado_turnos,
-        }
+    context = {}
     return render(request, "AppPoliconsultorio/index.html", context)
 
 def turno_medico(request):

@@ -1,5 +1,8 @@
 from django import forms
 from django.core.exceptions import ValidationError
+from django.core.validators import RegexValidator
+
+import datetime
 
 from .medicos import lista_medicos
 from .especialidades import lista_especialidades
@@ -13,24 +16,28 @@ class ContactoForm(forms.Form):
 
 class ConsultaMedicosForm(forms.Form):
     # Definir campos
-    # nombre = forms.CharField(label="Nombre", required=True)
-    # especialidad = forms.Select(label="Especialidad", required=False)
-    #listado_especialidades = lista_especialidades()
     especialidad = forms.ChoiceField(choices=lista_especialidades(), required=True, widget=forms.Select)
     medico = forms.CharField(label="Médico", widget=forms.TextInput(attrs={'class': 'medico'}), required=False)
     fecha = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'})),
 
 class ConsultaTurnosForm(forms.Form):
     # Definir campos
-    # nombre = forms.CharField(label="Nombre", required=True)
-    # especialidad = forms.Select(label="Especialidad", required=False)
-    # paciente = forms.ChoiceField(choices=lista_pacientes(), required=False, widget=forms.Select(attrs={"class": "form-control", "id":"paciente"}))
-    paciente = forms.CharField(label="DNI Paciente", widget=forms.TextInput(attrs={'class': 'paciente'}), required=False)
+    def fecha(desde,cuantos_dias):
+        if desde == 'h':
+            hasta = datetime.date.today() + datetime.timedelta(days=cuantos_dias)
+        else:
+            pass
+        return hasta.strftime('%Y-%m-%d')
+
+    paciente = forms.CharField(label="pacientex:", max_length=8, min_length=6 ,required=False, validators=[RegexValidator(
+                '^[0-9]+$',
+                message="Debe contener solo números")],
+        widget=forms.TextInput(attrs={"class": "form-control", "id":"paciente","size": 12, "title":"Ingrese entre 6 y 8 dígitos de su número de documento"}))
     especialidad = forms.ChoiceField(label=' Especialidad', choices=lista_especialidades(), required=False, widget=forms.Select)
     # # medico = forms.CharField(label="Médico", widget=forms.TextInput(attrs={'class': 'medico'}), required=False)
     medico = forms.ChoiceField(label=' Médico', choices=lista_medicos(), required=False, widget=forms.Select)
-    fechaDesde = forms.DateField(label=' Fecha Desde',widget=forms.DateInput(attrs={'type': 'date'}), required=False)
-    fechaHasta = forms.DateField(label=' Fecha Hasta',widget=forms.DateInput(attrs={'type': 'date'}), required=False)
+    fechaDesde = forms.DateField(label=' Fecha Desde',widget=forms.DateInput(attrs={'type': 'date'}), required=False, initial=fecha('h',0))
+    fechaHasta = forms.DateField(label=' Fecha Hasta',widget=forms.DateInput(attrs={'type': 'date'}), required=False, initial=fecha('h',60))
 
     # def clean_fechaDesde(self):
     #     dataD = self.cleaned_data["fechaDesde"]

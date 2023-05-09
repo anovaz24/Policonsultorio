@@ -2,6 +2,7 @@ from django import forms
 from django.forms.fields import DateField
 from django.core.validators import RegexValidator
 from django.core.exceptions import ValidationError
+
 from .especialidades import lista_especialidades
 from .medicos import lista_medicos
 
