@@ -1,6 +1,6 @@
 from datetime import datetime
 from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseNotFound, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseNotFound, HttpResponseRedirect,HttpRequest
 from django.contrib import messages
 
 from .forms import *
@@ -103,21 +103,29 @@ def turno_medico(request):
 
 def turno_consulta(request):
     listado_turnos = []
+    errores = []
     
     if request.method == "POST":
         turno_consulta_form = ConsultaTurnosForm(request.POST)
         if turno_consulta_form.is_valid():
+            # request
             listado_turnos = lista_turnos()
         else:
-            print(turno_consulta_form.cleaned_data['fechaDesde'])
-            messages.add_message(request, messages.WARNING, 'Debe ingresar un rango de fechas correcto, Fecha Desde <= Fechas Hasta', extra_tags="tag1")
-            print(request)
+            errores = turno_consulta_form.errors
+            print("errores: ",errores)
+            print("request: ",request)
+            for error in errores:
+                print("error: ",error)
+            if errores is None:
+                print(turno_consulta_form.non_field_errors)
+                # messages.add_message(request, messages.WARNING, 'Debe ingresar un rango de fechas correcto, Fecha Desde <= Fecha Hasta', extra_tags="tag1")
     else:
         turno_consulta_form = ConsultaTurnosForm()
 
     context = {
         "listado_turnos": listado_turnos,
         "turno_consulta_form": turno_consulta_form,
+        "errores": errores,
     }
     return render(request, "AppPoliconsultorio/turno_consulta.html", context)
 

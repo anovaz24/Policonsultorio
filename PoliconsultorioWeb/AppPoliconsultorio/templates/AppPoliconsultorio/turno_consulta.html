@@ -4,7 +4,7 @@
 {% block titulo %} Consulta de Turnos {% endblock %}
  <!-- Estilos CSS personalizados-->
 {% block extra_css %}
- <link rel="stylesheet" href="{% static '/css/turno.css' %}">
+	<link rel="stylesheet" href="{% static '/css/turno.css' %}">
 {% endblock %}
 
 {% block contenido %}
@@ -48,10 +48,25 @@
 
 			<!-- Mensajes -->
 			<div class="mensajes">
-				{% if messages %}
-					<ul class="messages_list">
+				<ul class="messages_list">
+					<!-- {% if not paciente.valid %}
+						<li>
+							{% filter upper %}
+							El DNI del paciente debe contener sólo números
+							{% endfilter %}
+						</li>
+					{% endif %} -->
+					{% if messages %}
 						{% for message in messages %}
 							<li {% if message.tags %} class="{{message.tags}}" {% endif %}>{{message}}</li>
+						{% endfor %}
+					{% endif %}
+				</ul>
+				{{errores}}
+				{% if errores %}
+					<ul class="errors_list">
+						{% for error in errores %}
+							<li {% if error.tags %} class="{{error.tags}}" {% endif %}>{{error}}</li>
 						{% endfor %}
 					</ul>
 				{% endif %}

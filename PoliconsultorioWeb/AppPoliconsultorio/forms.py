@@ -1,6 +1,7 @@
 from django import forms
 from django.core.exceptions import ValidationError
 from django.core.validators import RegexValidator
+from django.contrib import messages
 
 import datetime
 
@@ -29,38 +30,34 @@ class ConsultaTurnosForm(forms.Form):
             pass
         return hasta.strftime('%Y-%m-%d')
 
-    paciente = forms.CharField(label="pacientex:", max_length=8, min_length=6 ,required=False, validators=[RegexValidator(
+    paciente = forms.CharField(label="Paciente:", max_length=8, min_length=6 ,required=False, validators=[RegexValidator(
                 '^[0-9]+$',
                 message="Debe contener solo números")],
         widget=forms.TextInput(attrs={"class": "form-control", "id":"paciente","size": 12, "title":"Ingrese entre 6 y 8 dígitos de su número de documento"}))
     especialidad = forms.ChoiceField(label=' Especialidad', choices=lista_especialidades(), required=False, widget=forms.Select)
-    # # medico = forms.CharField(label="Médico", widget=forms.TextInput(attrs={'class': 'medico'}), required=False)
     medico = forms.ChoiceField(label=' Médico', choices=lista_medicos(), required=False, widget=forms.Select)
     fechaDesde = forms.DateField(label=' Fecha Desde',widget=forms.DateInput(attrs={'type': 'date'}), required=False, initial=fecha('h',0))
     fechaHasta = forms.DateField(label=' Fecha Hasta',widget=forms.DateInput(attrs={'type': 'date'}), required=False, initial=fecha('h',60))
 
-    # def clean_fechaDesde(self):
-    #     dataD = self.cleaned_data["fechaDesde"]
-    #     dataH = self.cleaned_data["fechaHasta"]
-
-    #     if dataD is not None and dataH is not None and dataD > dataH:
-    #         raise ValidationError("La Fecha Desde debe ser anterior a la Fecha Hasta")
-        
-    #     return dataD
+    def clean_paciente(self):
+        data = self.cleaned_data["paciente"]
+        print("Paciente: entró a validar")
+        if data is None:
+            print("Paciente: es None")
+            pass
+        if data == '':
+            print("Paciente: es nulo")
+            pass
+        return data
     
     def clean(self):
         cleaned_data = super().clean()
         dataD = cleaned_data.get("fechaDesde")
         dataH = cleaned_data.get("fechaHasta")
 
-        print(cleaned_data)
-        print(dataD)
-        print(dataH)
-        if dataD is not None and dataH is not None: print(dataD > dataH)
-
         if dataD is not None and dataH is not None and dataD > dataH:
-            raise ValidationError("La Fecha Desde debe ser anterior a la Fecha Hasta")
-        
+            raise ValidationError("Debe ingresar un rango de fechas correcto, Fecha Desde <= Fechas Hasta")
+
         return cleaned_data
         
 class BajaTurnoForm(forms.Form):
