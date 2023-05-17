@@ -1,5 +1,8 @@
 from django import forms
 from django.core.exceptions import ValidationError
+from django.core.validators import RegexValidator
+from django.contrib import messages
+
 
 from .medicos import lista_medicos
 from .especialidades import lista_especialidades
@@ -11,7 +14,7 @@ class ContactoForm(forms.Form):
     apellido = forms.CharField(label="Apellido de contacto", required=True)
     email = forms.EmailField(required=True)
 
-class ConsultaMedicosForm(forms.Form):
+class ConsultaMedicosForm(forms.Form): 
     # Definir campos
     # nombre = forms.CharField(label="Nombre", required=True)
     # especialidad = forms.Select(label="Especialidad", required=False)
@@ -55,9 +58,15 @@ class ConsultaTurnosForm(forms.Form):
             raise ValidationError("La Fecha Desde debe ser anterior a la Fecha Hasta")
         
         return cleaned_data
-        
-class BajaTurnoForm(forms.Form):
-    paciente = forms.CharField(label="DNI Paciente", max_length=15, widget=forms.TextInput(attrs={'class': 'paciente'}), required=False)
+
+class BajaTurnoForm(forms.Form):          
+    paciente = forms.CharField(label="Paciente:", max_length=15, required=True, 
+        validators=[RegexValidator('^[0-9]+$', message="Debe contener sólo números")],
+        widget=forms.TextInput(attrs={"class": "form-paciente", "id":"paciente", "title":"Ingrese entre 7 y 8 dígitos de su número de documento"}))
+    # medico = forms.CharField(label="Medico:",max_length=15) ,
+    # especialidad =forms.CharField(label="Especialidad", disabled="False")
+    # , widget=forms.IntegerField(attrs={"hidden": True}) )
+
 
 class BajaTurnoDetalleForm(forms.Form):
     fecha = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))

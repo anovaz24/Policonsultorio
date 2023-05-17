@@ -138,57 +138,61 @@ def turno_consulta(request):
     }
     return render(request, "AppPoliconsultorio/turno_consulta.html", context)
 
+    
 def baja_turno(request):
-    turnos_otorgados = [
-        {
-            'dia': '08/05/2023',
-            'hora': '09:00',
-            'medico': 'Dr. Juan Pérez',
-            'especialidad': 'Cardiología',
-            'paciente': 'Adriana Cullen',
-        },
-        {
-            'dia': '15/05/2023',
-            'hora': '09:00',
-            'medico': 'Dra. María González',
-            'especialidad': 'Dermatología',
-            'paciente': 'José Olleros',
-        },
-        {
-            'dia': '17/06/2023',
-            'hora': '11:00',
-            'medico': 'Dr. Juan Perez',
-            'especialidad': 'Cardiología',
-            'paciente': 'Mariano Burgos',
-        },
-    ]
-
-    context = {
-        'nombre': 'ninguno',
-        'turnos': turnos_otorgados,
-        'paciente': request.POST.get("paciente")
-        
-   }    
+    listado_turnos = []
     
     if request.method == "POST":
         # Creo la instancia del formulario con los datos cargados en pantalla
         bajaturno_form = BajaTurnoForm(request.POST)
       
-        if request.POST.get("paciente") is None:   
-           print ('ingreso al if')                   
-           messages.add_message(request, messages.WARNING, 'Debe ingresar un paciente', extra_tags="tag1")
-        return render(request, "AppPoliconsultorio/baja_turno.html", context) 
-    
-      
-        # Valido y proceso los datos.
-               
-        if bajaturno_form.is_valid():              
+        if bajaturno_form.is_valid():
+            # id_turno = bajaturno_form.cleaned_data['ID'] 
+            listado_turnos = lista_turnos()
+            print("entro por is valid")
+            print(request.POST)
+            print (request.POST.get("selectbajaturno"))
+            print ("xx", request.POST.get("xx.medico"))
+            
+            if request.POST.get("selectbajaturno") is None :                 
+                print("entro selectbaja turno es vacio")
+                messages.add_message(request, messages.WARNING, 'Debe ingresar un turno para dar de baja', extra_tags="tag1")
+
+                
+            
+            else:  
+                print("pasa por select baja turno , hay uno seleccionado")
+                seleccionado = request.POST.get("selectbajaturno")
+
+                print ("seleccionado2:", listado_turnos)
+             
+              
+
+        #     else (si esta lleno)
+        #         evaluar si hay alguno seleccionado  -> si no, mensaje de error
+        #          evaluar cual es que esta seleccionado --> eliminarlo
            
-           return render(request, "AppPoliconsultorio/baja_turno.html", context)      
+        #    en el html subir la grilla adntro del form
+                 
     else:
+        #GET
             # Creo el formulario vacío con los valores por defecto
-        bajaturno_form = BajaTurnoForm()
-    return render(request, "AppPoliconsultorio/baja_turno.html", {'bajaturno_form': bajaturno_form })
+        bajaturno_form = BajaTurnoForm()    
+             
+    context = {
+            'turnos': listado_turnos,
+            'paciente': request.POST.get("paciente"),
+            'bajaturno_form': bajaturno_form
+        }   
+
+    return render(request, "AppPoliconsultorio/baja_turno.html", context)
+
+    #return HttpResponseRedirect('/AppPoliconsultorio/thanks/')
+
+
+
+
+
 
 def especialidades(request):
     context = {}
