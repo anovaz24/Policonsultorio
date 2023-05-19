@@ -108,7 +108,6 @@ def turno_consulta(request):
     if request.method == "POST":
         turno_consulta_form = ConsultaTurnosForm(request.POST)
         if turno_consulta_form.is_valid():
-            # request
             listado_turnos = lista_turnos()
         else:
             errores = turno_consulta_form.errors
