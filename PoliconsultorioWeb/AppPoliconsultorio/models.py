@@ -13,13 +13,9 @@ class Persona(models.Model):
 
 class Especialidad(models.Model):
     descripcion = models.CharField(max_length=50, verbose_name='Descripcion')
-
-
-class Medico(Persona):
-    matricula = models.IntegerField(blank=False, verbose_name='Matricula')
-    especialidad = models.ManyToManyField(Especialidad)
-
-
+    codigo = models.Charfield(max_length=2, verbose_name='Codigo')
+    
+    
 class Paciente(Persona):
     GENEROS = [
         ('F', 'Femenino'),
@@ -28,6 +24,11 @@ class Paciente(Persona):
     ]
     fecha_nacimiento = models.DateField(verbose_name='Fecha Nacimiento')
     genero = models.CharField(max_length=1, choices=GENEROS, verbose_name='Genero')
+    
+class Medico(Persona):
+    matricula = models.IntegerField(blank=False, verbose_name='Matricula')
+    especialidad = models.ForeignKey(Especialidad, on_delete=models.CASCADE)
+    pacientes = models.ManyToMany(Paciente, through='Turno')
 
 
 class Turno(models.Model):
@@ -35,4 +36,4 @@ class Turno(models.Model):
     hora = models.TimeField(verbose_name='Hora')
     # paciente = models.ForeignKey(Paciente, on_delete=models.CASCADE)
     medico =models.ForeignKey(Medico, on_delete=models.CASCADE)
-    especialidad = models.ForeignKey(Especialidad, on_delete=models.CASCADE)
+    # especialidad = models.ForeignKey(Especialidad, on_delete=models.CASCADE)
