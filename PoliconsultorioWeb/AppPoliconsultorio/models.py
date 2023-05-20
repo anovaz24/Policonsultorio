@@ -13,7 +13,7 @@ class Persona(models.Model):
 
 class Especialidad(models.Model):
     descripcion = models.CharField(max_length=50, verbose_name='Descripcion')
-
+    codigo = models.Charfield(max_length=2, verbose_name='Codigo')
 
 class Medico(Persona):
     matricula = models.IntegerField(blank=False, verbose_name='Matricula')
