@@ -4,6 +4,7 @@ from django.http import HttpResponse, HttpResponseNotFound, HttpResponseRedirect
 from django.contrib import messages
 
 from .forms import *
+from .models import *
 from .turno import *
 from .especialidades import lista_especialidades
 from .medicos import lista_medicos
@@ -108,7 +109,8 @@ def turno_consulta(request):
     if request.method == "POST":
         turno_consulta_form = ConsultaTurnosForm(request.POST)
         if turno_consulta_form.is_valid():
-            listado_turnos = lista_turnos()
+            # listado_turnos = lista_turnos()
+            listado_turnos = Turno.objects.all()
         else:
             errores = turno_consulta_form.errors
             print("errores: ",errores)

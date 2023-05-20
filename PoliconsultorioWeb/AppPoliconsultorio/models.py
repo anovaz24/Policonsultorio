@@ -33,6 +33,6 @@ class Paciente(Persona):
 class Turno(models.Model):
     fecha = models.DateField(verbose_name='Fecha')
     hora = models.TimeField(verbose_name='Hora')
-    paciente = models.ForeignKey(Paciente, on_delete=models.CASCADE)
+    # paciente = models.ForeignKey(Paciente, on_delete=models.CASCADE)
     medico =models.ForeignKey(Medico, on_delete=models.CASCADE)
     especialidad = models.ForeignKey(Especialidad, on_delete=models.CASCADE)
