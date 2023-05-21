@@ -48,21 +48,23 @@
 
 			<!-- Mensajes -->
 			<div class="mensajes">
-				<ul class="messages_list">
-					<!-- {% if not paciente.valid %}
+				<!-- <ul class="messages_list">
+					{% if not paciente.valid %}
 						<li>
 							{% filter upper %}
 							El DNI del paciente debe contener sólo números
 							{% endfilter %}
 						</li>
-					{% endif %} -->
+					{% endif %}
 					{% if messages %}
 						{% for message in messages %}
 							<li {% if message.tags %} class="{{message.tags}}" {% endif %}>{{message}}</li>
 						{% endfor %}
 					{% endif %}
-				</ul>
-				{{errores}}
+				</ul> -->
+				{% if errores %}
+					{{errores}}
+				{% endif %}
 				<!-- {% if errores %}
 					<ul class="errors_list">
 						{% for error in errores %}

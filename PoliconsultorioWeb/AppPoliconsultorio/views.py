@@ -110,7 +110,23 @@ def turno_consulta(request):
         turno_consulta_form = ConsultaTurnosForm(request.POST)
         if turno_consulta_form.is_valid():
             # listado_turnos = lista_turnos()
-            listado_turnos = Turno.objects.all()
+            
+            # especialidad_form = request.POST['especialidad']
+            # if especialidad_form != 'Z':
+            #     especialidad = Especialidad.objects.get(codigo = especialidad_form)
+            #     listado_medicos = Medico.objects.filter(especialidad = especialidad.id )
+            #     print(listado_medicos)
+            #     print(Turno.objects.filter(medico in listado_medicos))
+            #     # listado_turnos = Turno.objects.filter(Medico.objects.get() in listado_medicos)
+            # else:
+            #     listado_turnos = Turno.objects.all()
+
+            medico = request.POST['medico']
+            print(medico)
+            if medico != 'Z':
+                listado_turnos = Turno.objects.filter(medico = medico)
+            else:
+                listado_turnos = Turno.objects.all()
         else:
             errores = turno_consulta_form.errors
             print("errores: ",errores)
