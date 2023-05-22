@@ -8,56 +8,51 @@
 {% endblock %}
 
 {% block contenido %}
-<div class="justifica-arriba"> 
-    <form action="{% url "baja_turno" %}" method="post"> 
-        {% csrf_token %}
-        <!-- 
-            el profe dijo que se puede  traer de a campos 
-            para hacerlo en un html con estilos...-->
-        
-        <br><br>
-        <div class="container">
-
-       
+<div class="container"></div>
+    <div class="form-container justifica-arriba"> 
         <div class="form-row justify-content-center">
 			<h2><u>Eliminación de turnos</u></h2>
 		</div>
-        <!-- <div class="form-row">
-            <div class="col-lg-11 mt-5 mt-lg-0 d-flex align-items-stretch">
-                <div class="form-group col-md-6"> -->
-                    <br><br>
-                    <div class="form-group col-md-6">
-                        <label class='rotulo_filtro' for="paciente">DNI Paciente:</label> 
-                            {{ bajaturno_form.paciente }}   
-                        <button type="submit" class="btn btn-primary">Buscar paciente</button>
-                     </div>
-    <!-- </form> -->
 
- <!-- <div class="messages form-row justify-content-center"> 
-     {% if messages %}
-        <ul class="messages_list">
-            {% for message in messages %}
-                {% filter upper %}
-                <li style="color: red;" {% if message.tags %} class="{{ message.tags }}" {% endif %}>
-                    <b> {{ message }} </b>
-                </li>
-                {% endfilter %}
-            {% endfor %}
-        </ul>
-    {% endif %}
-</div> -->
-
-
-            <div class="form-group col-md-6">
-                Turnos del paciente: {{paciente}} <br><br>
+    <form action="{% url 'baja_turno' %}" method="post"> 
+        {% csrf_token %}
+  
+        <br><br>
+        <div class="col-lg-11 mt-5 mt-lg-0 d-flex align-items-stretch">
+            <div>
+                <label class='rotulo_filtro' for="paciente">DNI Paciente:</label> 
+                {{ bajaturno_form.dni }} 
             </div>
+        </div>
+    
+        <div class="messages form-row justify-content-center"> 
+            {% if messages %}
+                <ul class="messages_list">
+                    {% for message in messages %}
+                        {% filter upper %}
+                        <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>
+                            <b> {{ message }} </b>
+                        </li>
+                        {% endfilter %}
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
 
+
+        <div class="form-group col-md-6">
+            <!-- Turnos del paciente: {{ paciente.apellido }}    -->
+        </div>
+           
+            <div class="form-row justify-content-center">
+				<button type="submit" class="btn btn-primary">Consultar</button>                   
+			</div>
               <div class="form-row justify-content-center">
 				<div class="form-group col-md-12">
 					<table class="table table-bordered">
 						<thead class="table-header">
 						<tr>
-							<th scope="col">Día</th>
+							<th scope="col">Fecha</th>
 							<th scope="col">Hora</th>
 							<th scope="col">Médico</th>
 							<th scope="col">Especialidad</th>
@@ -66,33 +61,21 @@
 						</tr>
 						</thead>
 	                    <tbody>
-							{% for xx in turnos %}
-                                <!-- <th>{{ xx.D }}</th> -->
-								<th>{{ xx.dia }}</th>
+							{% for xx in listado_turnos %}
+
+								<th>{{ xx.fecha }}</th>
 								<td>{{ xx.hora }}</td>
-								<td>{{ xx.medico }}</td>
-								<td>{{ xx.especialidad }}</td>
-								<td>{{ xx.paciente }}</td>
+								<td>{{ xx.medico.apellido}} , {{xx.medico.nombre}}</td>
+								<td>{{ xx.medico.especialidad.descripcion}}</td>
+								<td>{{ xx.paciente.apellido }} , {{ xx.paciente.nombre }}</td>
                                 <td><input type="radio" name="selectbajaturno" value= {{ xx.ID }} ></td>
 							</tr>
 							{% endfor %}
 						</tbody>
 
 					</table>
-            </div>
-
-
-
-
-
-            
-
-            <!-- <div class="form-group col-md-6 mt-3"> -->
-            <div class="form-group col-md-6"> 
-                {% if turnos %}  
-                    <button type="submit" class="btn btn-primary">Eliminar el turno</button>                    
-                {% endif %}
-            </div>            
+                </div>
+              </div>            
            
             <div class="messages form-row justify-content-center"> 
                 {% if messages %}
@@ -107,8 +90,11 @@
                    </ul>
                {% endif %}
            </div>
-   
+        </form>
+    </div>
 </div>
-</form>
+
+
+
 {% endblock %}  
 

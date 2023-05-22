@@ -2,8 +2,11 @@ from django import forms
 from django.forms.fields import DateField
 from django.core.validators import RegexValidator
 from django.core.exceptions import ValidationError
+from django.utils.dateparse import parse_date
 from .especialidades import lista_especialidades
 from .medicos import lista_medicos
+from .models import Turno
+
 
    
 listado_disp_medicos = [{'ID':'1',
@@ -67,31 +70,41 @@ class AltaTurnoForm(forms.Form):
 
 
 
-def lista_turnos():
-    listado_turnos = [
-        {
-            'dia': '20/04/2023',
-            'hora': '09:00',
-            'medico': 'Dr. Juan Pérez',
-            'especialidad': 'Cardiología',
-            'paciente': 'Adriana Cullen',
-        },
-        {
-            'dia': '20/04/2023',
-            'hora': '10:00',
-            'medico': 'Dra. María González',
-            'especialidad': 'Dermatología',
-            'paciente': 'José Olleros',
-        },
-        {
-            'dia': '20/04/2023',
-            'hora': '11:00',
-            'medico': 'Dr. Juan Perez',
-            'especialidad': 'Cardiología',
-            'paciente': 'Mariano Burgos',
-        },
-    ]
+def lista_turnos(filtro_paciente='', filtro_especialidad='', filtro_medico='', filtro_fechaDesde='', filtro_fechaHasta=''):
+    
+    listado_turnos = []
+    
+    turnos = Turno.objects.all()
+    for turno in turnos:
+        esta = 1
+        print("Turno: ",turno)
+        print("Turno.medico: ", turno.medico)
+        if filtro_paciente != '':
+            if turno.paciente is None:
+                esta = 0
+            elif turno.paciente.dni != filtro_paciente:
+                esta = 0
+        if esta and (filtro_especialidad != '' and turno.medico.especialidad.codigo != filtro_especialidad):
+            esta = 0
+            print("Turno.especialidad: ", turno.medico.especialidad.codigo)
+            print("Tipo Turno.especialidad: ", type(turno.medico.especialidad.codigo))
+            print("No cumple filtro_especialidad ", filtro_especialidad)
+        if esta and (filtro_medico != '' and turno.medico.id != filtro_medico):
+            esta = 0
+        if esta and (filtro_fechaDesde != '' and turno.fecha < parse_date(filtro_fechaDesde)):
+            esta = 0
+            print("No cumple filtro_fechaDesde ", filtro_fechaDesde)
+        if esta and (filtro_fechaHasta != '' and turno.fecha > parse_date(filtro_fechaHasta)):
+            esta = 0
+            print("No cumple filtro_fechaHasta ", filtro_fechaHasta)
+        if esta:
+            print(turno)
+            listado_turnos.append(turno)
+        # break
+    # listado_turnos.sort()
+
     return listado_turnos
+
 
 
 def funcion_de_guardado_de_turno(accion,id,descr_disponible,flag):
