@@ -7,38 +7,6 @@ from .pacientes import lista_pacientes
 from .models import Medico, Especialidad, Paciente, Turno
 import datetime
 
-   
-listado_disp_medicos = [{'ID':'1',
-                             'horario':'8:00 a 9:00',
-                             'descr_disponible':'Disponible',
-                             'flag':'enabled',
-                             },
-                            {'ID':'2',
-                            'horario':'9:00 a 10:00',
-                            'descr_disponible':'No disponible',
-                            'flag':'disabled',
-                            },
-                            {'ID':'3',
-                             'horario':'10:00 a 11:00',
-                             'descr_disponible':'Disponible',
-                             'flag':'enabled',
-                             },
-                             {'ID':'4',
-                             'horario':'11:00 a 12:00',
-                             'descr_disponible':'Disponible',
-                             'flag':'enabled',
-                             },
-                             {'ID':'5',
-                             'horario':'15:00 a 16:00',
-                             'descr_disponible':'Disponible',
-                             'flag':'enabled',
-                             },
-                             {'ID':'6',
-                             'horario':'16:00 a 17:00',
-                             'descr_disponible':'Disponible',
-                             'flag':'enabled',
-                             }]
-
 
 class ContactoForm(forms.Form):
     nombre = forms.CharField(label="Nombre de contacto:", max_length=5, required=True,
@@ -47,35 +15,18 @@ class ContactoForm(forms.Form):
     email = forms.EmailField(required=True)
 
 class ConsultaMedicosForm(forms.Form):
-    # Definir campos
-    # nombre = forms.CharField(label="Nombre", required=True)
-    # especialidad = forms.Select(label="Especialidad", required=False)
-    #listado_especialidades = lista_especialidades()
     especialidad = forms.ChoiceField(choices=lista_especialidades(), required=True, widget=forms.Select)
     medico = forms.CharField(label="Médico", widget=forms.TextInput(attrs={'class': 'medico'}), required=False)
     fecha = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'})),
 
 class ConsultaTurnosForm(forms.Form):
-    # Definir campos
-    # nombre = forms.CharField(label="Nombre", required=True)
-    # especialidad = forms.Select(label="Especialidad", required=False)
-    # paciente = forms.ChoiceField(choices=lista_pacientes(), required=False, widget=forms.Select(attrs={"class": "form-control", "id":"paciente"}))
     paciente = forms.CharField(label="DNI Paciente", widget=forms.TextInput(attrs={'class': 'paciente'}), required=False)
     especialidad = forms.ChoiceField(label=' Especialidad', choices=lista_especialidades(), required=False, widget=forms.Select)
-    # # medico = forms.CharField(label="Médico", widget=forms.TextInput(attrs={'class': 'medico'}), required=False)
     medico = forms.ChoiceField(label=' Médico', choices=lista_medicos(), required=False, widget=forms.Select)
     fechaDesde = forms.DateField(label=' Fecha Desde',widget=forms.DateInput(attrs={'type': 'date'}), required=False)
     fechaHasta = forms.DateField(label=' Fecha Hasta',widget=forms.DateInput(attrs={'type': 'date'}), required=False)
 
-    # def clean_fechaDesde(self):
-    #     dataD = self.cleaned_data["fechaDesde"]
-    #     dataH = self.cleaned_data["fechaHasta"]
-
-    #     if dataD is not None and dataH is not None and dataD > dataH:
-    #         raise ValidationError("La Fecha Desde debe ser anterior a la Fecha Hasta")
-        
-    #     return dataD
-    
+  
     def clean(self):
         cleaned_data = super().clean()
         dataD = cleaned_data.get("fechaDesde")
@@ -107,16 +58,12 @@ class AltaTurnoForm(forms.Form):
 
     listado_especialidad = lista_especialidades()
 
-    #listado_medicos = lista_medicos()
-
     paciente = forms.CharField(label="pacientex:", max_length=8, min_length=7 ,required=True, validators=[RegexValidator(
                 '^[0-9]+$',
                 message="Debe contener solo números")],
         widget=forms.TextInput(attrs={"class": "form-control", "id":"paciente","size": 12, "title":"Ingrese entre 7 y 8 dígitos de su número de documento"}))
     especialidad = forms.ChoiceField(label="especialidadx:",required=False, choices = listado_especialidad,
         widget=forms.Select(attrs={"class": "form-control", "id":"especialidad"}))
-    #medico = forms.ChoiceField(label="medicox:", required=False, choices = listado_medicos,
-        #widget=forms.Select(attrs={"class": "form-control", "id":"medico"}))
     medico = forms.ChoiceField(label="medicox:", required=False,
         widget=forms.Select(attrs={"class": "form-control", "id":"medico"}))
 
@@ -124,11 +71,7 @@ class AltaTurnoForm(forms.Form):
     def __init__(self, *args, **kwargs):
         codigo_especialidad = kwargs.pop('especialidad', None)
         super().__init__(*args, **kwargs)
-        #print("entra al init de medico y el codigo de especialidad es:",codigo_especialidad)
-        #if self.is_bound:
-        #self.fields['medico'].choices = self.get_medicos_choices(self.cleaned_data['especialidad'])
         self.fields['medico'].choices = self.get_medicos_choices(codigo_especialidad)
-        #print('ahora las opciones son: ', self.fields['medico'].choices)
 
     def get_medicos_choices(self, codigo_especialidad):
         choices = [('Z', 'Seleccione un médico')]
@@ -160,17 +103,11 @@ class AltaTurnoForm(forms.Form):
     
     def clean_paciente(self):
         data = self.cleaned_data["paciente"]
-        #if True:
-        #    print("llego aki")
-        #    raise ValidationError("Ingrese entre 7 y 8 dígitos de su número de documento")
         print("los datos de paciente ingresado son:", data)
-        #if data ==
-        #return None
         longitud = len(data)
         if longitud > 8 or longitud < 7:
             raise ValidationError("Ingrese entre 7 y 8 dígitos de su número de documento")
         return data
-        #return None
 
     def clean_fecha(self):
         fecha_elegida = self.cleaned_data['fecha']
@@ -184,35 +121,11 @@ class AltaTurnoForm(forms.Form):
                 raise forms.ValidationError("La fecha no puede ser Sábado ni Domingo!")
         return fecha_elegida
 
-    """
-    def clean_especialidad(self):
-        data = self.cleaned_data["especialidad"]
-        print("el dato de especialidad es:", data)
-        if data == 'Z':
-            raise ValidationError("Debe seleccionar una especialidad de la lista")
-        return data
-
-    def clean_medico(self):
-        data = self.cleaned_data["medico"]
-        print("el dato de médico es:", data)
-        if data == 'Z':
-            raise ValidationError("Debe seleccionar un médico de la lista")
-        return data
-    """
     def clean(self):
         print("entro al clean")
-        #pass
-        # este es el que me da error... para revisar....
         cleaned_data = super().clean()
-        #especialidad_codigo = cleaned_data.get('especialidad')
         medico_id = cleaned_data.get('medico')
         print("Medico id:", medico_id)
-        #choices = self.get_medicos_choices(especialidad_codigo)
-        #print("los choices de medicos son:",choices)
-        #if medico_id:
-        #    choices = self.get_medicos_choices(especialidad_codigo)
-        #    if medico_id not in [choice[0] for choice in choices]:
-        #        self.add_error('medico', 'Selecciona un médico válido.')
         return self
 
 
@@ -245,7 +158,6 @@ def lista_turnos():
 
 
 def funcion_de_guardado_de_turno(accion,id,medico,fecha,hora):
-    #ya_actualizado = 0
     if accion == 'actualizar':
         print("ingreso a actualizar")
         actualizacion = Turno.asignar_turno(id,medico,fecha,hora)
@@ -253,20 +165,6 @@ def funcion_de_guardado_de_turno(accion,id,medico,fecha,hora):
             print("Turno fue registrado correctamente!!!")
         else:
             print("Hay un problema en el guardado del turno")
-        """
-        for e in listado_disp_medicos:
-            #print('Valores en el diccionario: ',e)
-            for j in e.items():
-                if j[0] == 'ID' and j[1] == id:
-                    print('lo encontre, ahora lo actualizo' )
-                    #print ('Antes de modificar: ',e ['descr_disponible'])
-                    e ['descr_disponible'] = descr_disponible
-                    e ['flag'] = flag
-                    ya_actualizado = 1
-                    break
-            if ya_actualizado == 1:
-                break
-        """
 
     if accion == 'consultar':
         id_paciente = Paciente.Obtener_id_Paciente_por_dni(id)
@@ -276,30 +174,6 @@ def funcion_de_guardado_de_turno(accion,id,medico,fecha,hora):
         print("ingreso a consultar")
         listado_de_turnos = Turno.obtener_turnos(medico,fecha)
         print("LISTA NUEVITA DE TURNOS! --> :",listado_de_turnos)
-        #return listado_disp_medicos
         return listado_de_turnos
-
-"""  Lo comento porque es la vieja funcion de guardado de turno
-
-def funcion_de_guardado_de_turno(accion,nro_dni,medico,dia,descr_disponible,flag):
-    ya_actualizado = 0
-    if accion == 'actualizar':
-        print("ingreso a actualizar")
-        #id_paciente = Obtener_id_Paciente_por_dni(nro_dni)
-
-
-    if accion == 'consultar':
-        print("ingreso a consultar")
-        id_paciente = Paciente.Obtener_id_Paciente_por_dni(nro_dni)
-
-
-
-        return listado_disp_medicos
-"""
-
-
-#print(funcion_de_guardado_de_turno('consultar','','',''))
-#funcion_de_guardado_de_turno('actualizar','3','No disponible','disabled')
-#print(funcion_de_guardado_de_turno('consultar','','',''))
 
 

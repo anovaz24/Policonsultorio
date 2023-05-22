@@ -1,12 +1,6 @@
 from django.db import models
 from datetime import timedelta, date
 
-#para crear y migrar
-# python manage.py makemigrations AppPoliconsultorio  
-# # esta linea de arriba solo creo el archivo en migrate, luego lo tenes que migrar...
-# con esta linea lo crea en la base...   
-# python manage.py migrate AppPoliconsultorio
-
 # Create your models here.
 class Especialidad(models.Model):
     descripcion = models.CharField(max_length=128, verbose_name="Descripcion")
@@ -106,7 +100,6 @@ class Medico(Persona):
 
     @classmethod
     def migrar_registros_iniciales(cls):
-        
         medicos = [
             {'nombre': 'Juan', 'apellido': 'Pérez', 'telefono': '123456789', 'mail': 'correo1@example.com', 'especialidad': 'Cardiología'},
             {'nombre': 'María', 'apellido': 'González', 'telefono': '987654321', 'mail': 'correo2@example.com', 'especialidad': 'Dermatología'},
@@ -117,7 +110,6 @@ class Medico(Persona):
             {'nombre': 'Jacinta', 'apellido': 'Lee', 'telefono': '174954987', 'mail': 'correo7@example.com', 'especialidad': 'Oftalmología'},
             {'nombre': 'Pedro', 'apellido': 'López', 'telefono': '321654987', 'mail': 'correo8@example.com', 'especialidad': 'Pediatría'},
         ]
-
         for medico in medicos:
             especialidad = Especialidad.objects.get(descripcion=medico['especialidad'])
             obj, created = cls.objects.get_or_create(
@@ -129,7 +121,6 @@ class Medico(Persona):
             )
             if created:
                 print(f"Se creó el médico: {obj}")
-
         print("Registros iniciales de médicos migrados con éxito.")
 
 
@@ -150,11 +141,8 @@ class Turno(models.Model):
     def migrar_registros_iniciales(cls):
         fecha_inicial = date.today()
         fecha_final = fecha_inicial + timedelta(days=90)
-
         horas = ['10:00', '11:00', '12:00', '15:00', '16:00', '17:00']
-
         medicos = Medico.objects.all()
-
         for medico in medicos:
             for fecha in daterange(fecha_inicial, fecha_final):
                 for hora in horas:
@@ -166,7 +154,6 @@ class Turno(models.Model):
                     )
                     if created:
                         print(f"Se creó el turno: {obj}")
-
         print("Registros iniciales de turnos migrados con éxito.")
 
     @classmethod
@@ -174,22 +161,11 @@ class Turno(models.Model):
         turnos = cls.objects.filter(medico__id=id_medico, fecha=fecha_param)
         resultados = []
         for turno in turnos:
-            #print("Si no hay paciente_ :xxx -> ",turno.paciente)
-            #if turno.paciente is None:
-            #nombre_completo_paciente = "{turno.paciente.nombre} {turno.paciente.apellido}"
-            #nombre_completo_medico = "{turno.medico.nombre} {turno.medico.apellido}"
             resultado = {
                 'ID': turno.hora,
-                #'dia': turno.fecha.strftime('%d/%m/%Y'),
-                #'hora': turno.hora.strftime('%H:%M'),
                 'horario' : turno.hora,
                 'descr_disponible': 'No disponible' if turno.paciente else 'Disponible',
                 'flag': 'disabled' if turno.paciente else 'enabled',
-                #'medico': turno.medico.nombre_completo,
-                #'medico': nombre_completo_medico,
-                #'especialidad': turno.medico.especialidad.descripcion,
-                #'paciente': turno.paciente.nombre_completo,
-                #'paciente': nombre_completo_paciente,
             }
             resultados.append(resultado)
         return resultados
