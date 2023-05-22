@@ -1,11 +1,10 @@
-
 from django import forms
 from django.core.exceptions import ValidationError
 from django.core.validators import RegexValidator
 from .medicos import lista_medicos
 from .especialidades import lista_especialidades
 from .pacientes import lista_pacientes
-from .models import Medico, Especialidad
+from .models import Medico, Especialidad, Paciente, Turno
 import datetime
 
    
@@ -245,10 +244,16 @@ def lista_turnos():
     return listado_turnos
 
 
-def funcion_de_guardado_de_turno(accion,id,descr_disponible,flag):
-    ya_actualizado = 0
+def funcion_de_guardado_de_turno(accion,id,medico,fecha,hora):
+    #ya_actualizado = 0
     if accion == 'actualizar':
         print("ingreso a actualizar")
+        actualizacion = Turno.asignar_turno(id,medico,fecha,hora)
+        if actualizacion:
+            print("Turno fue registrado correctamente!!!")
+        else:
+            print("Hay un problema en el guardado del turno")
+        """
         for e in listado_disp_medicos:
             #print('Valores en el diccionario: ',e)
             for j in e.items():
@@ -261,11 +266,37 @@ def funcion_de_guardado_de_turno(accion,id,descr_disponible,flag):
                     break
             if ya_actualizado == 1:
                 break
+        """
+
+    if accion == 'consultar':
+        id_paciente = Paciente.Obtener_id_Paciente_por_dni(id)
+        print("el id del paciente es: ", id_paciente)
+        print("el id del medico es el nro:", medico)
+        print("la fecha tiene el valor siguiente:", fecha)
+        print("ingreso a consultar")
+        listado_de_turnos = Turno.obtener_turnos(medico,fecha)
+        print("LISTA NUEVITA DE TURNOS! --> :",listado_de_turnos)
+        #return listado_disp_medicos
+        return listado_de_turnos
+
+"""  Lo comento porque es la vieja funcion de guardado de turno
+
+def funcion_de_guardado_de_turno(accion,nro_dni,medico,dia,descr_disponible,flag):
+    ya_actualizado = 0
+    if accion == 'actualizar':
+        print("ingreso a actualizar")
+        #id_paciente = Obtener_id_Paciente_por_dni(nro_dni)
 
 
     if accion == 'consultar':
         print("ingreso a consultar")
+        id_paciente = Paciente.Obtener_id_Paciente_por_dni(nro_dni)
+
+
+
         return listado_disp_medicos
+"""
+
 
 #print(funcion_de_guardado_de_turno('consultar','','',''))
 #funcion_de_guardado_de_turno('actualizar','3','No disponible','disabled')

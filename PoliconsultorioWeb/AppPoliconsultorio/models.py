@@ -90,6 +90,13 @@ class Paciente(Persona):
         except cls.DoesNotExist:
             return "No-existe"
 
+    @classmethod
+    def Obtener_id_Paciente_por_dni(cls, dni):
+        try:
+            paciente = cls.objects.get(dni=dni)
+            return paciente.pk
+        except cls.DoesNotExist:
+            return None
 
 
 #Relacion uno a muchos
@@ -161,6 +168,43 @@ class Turno(models.Model):
                         print(f"Se creó el turno: {obj}")
 
         print("Registros iniciales de turnos migrados con éxito.")
+
+    @classmethod
+    def obtener_turnos(cls, id_medico, fecha_param):
+        turnos = cls.objects.filter(medico__id=id_medico, fecha=fecha_param)
+        resultados = []
+        for turno in turnos:
+            #print("Si no hay paciente_ :xxx -> ",turno.paciente)
+            #if turno.paciente is None:
+            #nombre_completo_paciente = "{turno.paciente.nombre} {turno.paciente.apellido}"
+            #nombre_completo_medico = "{turno.medico.nombre} {turno.medico.apellido}"
+            resultado = {
+                'ID': turno.hora,
+                #'dia': turno.fecha.strftime('%d/%m/%Y'),
+                #'hora': turno.hora.strftime('%H:%M'),
+                'horario' : turno.hora,
+                'descr_disponible': 'No disponible' if turno.paciente else 'Disponible',
+                'flag': 'disabled' if turno.paciente else 'enabled',
+                #'medico': turno.medico.nombre_completo,
+                #'medico': nombre_completo_medico,
+                #'especialidad': turno.medico.especialidad.descripcion,
+                #'paciente': turno.paciente.nombre_completo,
+                #'paciente': nombre_completo_paciente,
+            }
+            resultados.append(resultado)
+        return resultados
+
+
+    @classmethod
+    def asignar_turno(cls, id_paciente, id_medico, fecha_turno, hora_param):
+        paciente = Paciente.objects.get(dni=id_paciente)
+        turno = cls.objects.filter(medico__id=id_medico, fecha=fecha_turno, hora=hora_param).first()
+        if turno:
+            turno.paciente = paciente
+            turno.save()
+            return True
+        return False
+
 
 def daterange(start_date, end_date):
     for n in range(int((end_date - start_date).days)):

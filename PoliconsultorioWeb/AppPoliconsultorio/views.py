@@ -179,7 +179,9 @@ def turno_medico(request):
                 #alta_turno_form.fields['validar_paciente'].widget.attrs['disabled'] = True
                 print('es el valor que le veo al boton de buscar turnos: ',request.POST.get('buscar_turnos'))
                 if buscar_turnos_ya_se_valido == False:
-                    return render(request, "AppPoliconsultorio/turnos.html", {'alta_turno_form': alta_turno_form, 'paciente': paciente, "listado_disp_medicos":funcion_de_guardado_de_turno('consultar','','',''),'estado_boton_guardar_turno': 'enabled'})
+                    print("el medico tiene el valor: ",alta_turno_form.cleaned_data['medico'])
+                    #return render(request, "AppPoliconsultorio/turnos.html", {'alta_turno_form': alta_turno_form, 'paciente': paciente, "listado_disp_medicos":funcion_de_guardado_de_turno('consultar','','',''),'estado_boton_guardar_turno': 'enabled'})
+                    return render(request, "AppPoliconsultorio/turnos.html", {'alta_turno_form': alta_turno_form, 'paciente': paciente, "listado_disp_medicos":funcion_de_guardado_de_turno('consultar',request.POST['paciente'],request.POST['medico'],request.POST['fecha'],''),'estado_boton_guardar_turno': 'enabled'})
                 #no se si poner un else aqui...
 
 
@@ -194,7 +196,7 @@ def turno_medico(request):
                 #paciente = 'Mabel Gandulfox'
                 messages.add_message(request, messages.WARNING, 'Debe elegir un horario!', extra_tags="tag1")
                 #return render(request, "AppPoliconsultorio/turnos.html", {'alta_turno_form': alta_turno_form, 'paciente': paciente, "listado_disp_medicos":funcion_de_guardado_de_turno('consultar','','','')})
-                return render(request, "AppPoliconsultorio/turnos.html", {'alta_turno_form': alta_turno_form, 'paciente': paciente, "listado_disp_medicos":funcion_de_guardado_de_turno('consultar','','',''), 'estado_boton_guardar_turno': 'enabled'})
+                return render(request, "AppPoliconsultorio/turnos.html", {'alta_turno_form': alta_turno_form, 'paciente': paciente, "listado_disp_medicos":funcion_de_guardado_de_turno('consultar',request.POST['paciente'],request.POST['medico'],request.POST['fecha'],''), 'estado_boton_guardar_turno': 'enabled'})
 
 
             if request.POST.get("horario") is not None:
@@ -206,7 +208,7 @@ def turno_medico(request):
                 #print('seleccion_turno: ',alta_turno_form3.cleaned_data['seleccion_turno'])
                 #paciente = 'Mabel Gandulfoz'
                 print('registro el alta del turno')
-                funcion_de_guardado_de_turno('actualizar',request.POST.get("horario"),'No disponible','disabled')
+                funcion_de_guardado_de_turno('actualizar',request.POST['paciente'],request.POST['medico'],request.POST['fecha'],request.POST.get("horario"))
                 #return render(request, "AppPoliconsultorio/turnos.html", {'alta_turno_form': alta_turno_form, 'alta_turno_form2': alta_turno_form2, 'alta_turno_form3': alta_turno_form3, 'paciente': paciente})
                 return render(request,"AppPoliconsultorio/thanks.html")  
                 #return render(request, "AppPoliconsultorio/turnos.html", {'alta_turno_form': alta_turno_form, 'alta_turno_form2': alta_turno_form2, 'alta_turno_form3': alta_turno_form3, 'paciente': paciente, 'listado_disp_medicos': listado_disp_medicos})
