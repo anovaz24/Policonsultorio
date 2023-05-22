@@ -128,10 +128,10 @@ class Medico(Persona):
 
 
 class Turno(models.Model):
-    paciente = models.ForeignKey(Paciente, on_delete=models.CASCADE, null=True)
-    medico =models.ForeignKey(Medico, on_delete=models.CASCADE)
     fecha = models.DateField(verbose_name='Fecha')
     hora = models.CharField(max_length=128, verbose_name='Horario_turno')
+    paciente = models.ForeignKey(Paciente, on_delete=models.CASCADE, null=True)
+    medico = models.ForeignKey(Medico, on_delete=models.CASCADE)
     # hora = models.TimeField(verbose_name='Hora')
 
     class Meta:
