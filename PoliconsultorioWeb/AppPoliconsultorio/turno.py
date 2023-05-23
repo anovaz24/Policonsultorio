@@ -93,6 +93,7 @@ def lista_turnos(filtro_paciente='', filtro_especialidad='', filtro_medico='', f
     return listado_turnos
 
 
+
 def funcion_de_guardado_de_turno(accion,id,descr_disponible,flag):
     ya_actualizado = 0
     if accion == 'actualizar':

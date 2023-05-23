@@ -1,3 +1,4 @@
+
 from .models import Especialidad
 
 def lista_especialidades():

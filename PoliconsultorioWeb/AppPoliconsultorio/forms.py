@@ -1,3 +1,4 @@
+from typing import Any, Dict
 from django import forms
 from django.core.exceptions import ValidationError
 from django.core.validators import RegexValidator
@@ -6,9 +7,9 @@ from django.contrib import messages
 import datetime
 
 from .medicos import lista_medicos
-from .especialidades import lista_especialidades
 from .pacientes import lista_pacientes
-from .models import Paciente
+from .especialidades import lista_especialidades
+from .models import *
 
 class ContactoForm(forms.Form):
     nombre = forms.CharField(label="Nombre de contacto:", max_length=5, required=True,
@@ -16,7 +17,7 @@ class ContactoForm(forms.Form):
     apellido = forms.CharField(label="Apellido de contacto", required=True)
     email = forms.EmailField(required=True)
 
-class ConsultaMedicosForm(forms.Form):
+class ConsultaMedicosForm(forms.Form): 
     # Definir campos
     especialidad = forms.ChoiceField(choices=lista_especialidades(), required=True, widget=forms.Select)
     medico = forms.CharField(label="Médico", widget=forms.TextInput(attrs={'class': 'medico'}), required=False)
@@ -42,6 +43,7 @@ class ConsultaTurnosForm(forms.Form):
 
     def clean_paciente(self):
         data = self.cleaned_data["paciente"]
+
         print(data)
         if data != '':
             if not Paciente.objects.filter(dni = int(data)).exists():
@@ -57,9 +59,53 @@ class ConsultaTurnosForm(forms.Form):
             raise ValidationError("Debe ingresar un rango de fechas correcto, Fecha Desde <= Fechas Hasta")
 
         return cleaned_data
+    
+
+
+class BajaTurnoForm(forms.Form):          
+    # paciente = forms.CharField(label="Paciente:", max_length=15, required=True, 
+    #     validators=[RegexValidator('^[0-9]+$', message="Debe contener sólo números")],
+    #     widget=forms.TextInput(attrs={"class": "form-paciente", "id":"paciente", "title":"Ingrese entre 7 y 8 dígitos de su número de documento"}))
+    dni = forms.IntegerField(label="Paciente:", widget=forms.TextInput(attrs=
+         {"class": "form-paciente", "id":"paciente", "title":"Ingrese entre 7 y 8 dígitos de su número de documento"}))
+    nombre_completo = forms.CharField(required=False , show_hidden_initial=True)
+
+  
+    def clean_dni(self):
         
-class BajaTurnoForm(forms.Form):
-    paciente = forms.CharField(label="DNI Paciente", max_length=15, widget=forms.TextInput(attrs={'class': 'paciente'}), required=False)
+        data = self.cleaned_data["dni"]
+        # nombrep = self.cleaned_data["nombre"]
+        # apellidop = self.cleaned_data["apellido"]
+        # print("nombrep: ", nombrep)
+        # print("apellidop: ", apellidop)   
+
+        # Paciente.objects.all()
+        if Paciente.objects.filter(dni=self.cleaned_data["dni"]).exists():
+            pass
+            # dni=int(self.cleaned_data["dni"])
+            # paciente = Paciente.objects.filter(dni=dni)
+            # nombre = paciente.nonmbre
+            # apellido= paciente.apellido
+
+        #     # apellido=self.cleaned_data["apellido"]
+        #     print("encontró el  dni en la tabla - forms")
+        #     print("dni: ", dni)
+        #     print("pacientep: ", paciente)
+                     
+              
+        else:
+            print("NO encontró el  dni en la tabla")
+            raise ValidationError("Paciente inexistente")
+       
+        return data
+    
+    # def nombre_clean(self):
+    #     if Paciente.objects.filter(nombre=self.cleaned_data["nombre"]).exists():
+    #         # dni=self.cleaned_data["dni"]
+    #         nombre= self.cleaned_data["nombre"]
+    #         print('encontro nombre')
+    #         # apellido=self.cleaned_data["apellido"]
+    #     return nombre
 
 class BajaTurnoDetalleForm(forms.Form):
     fecha = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
