@@ -178,9 +178,11 @@ def baja_turno(request):
             nombre_completo = f"{ apellido},{nombre}"
             print("nombre compelto", nombre_completo)
             listado_turnos = Turno.objects.filter(paciente=dni)           
-       
+          
     else:
+                
         bajaturno_form = BajaTurnoForm()
+
 
     context = {
         "listado_turnos": listado_turnos,
