@@ -94,9 +94,9 @@
 							<tr style='background-color: {% cycle '#f3c5aa' '#f1d5c5' %}'>
 								<th>{{ turno.fecha }}</th>
 								<td>{{ turno.hora }}</td>
-								<td>{{ turno.medico.apellido }}</td>
+								<td>{{ turno.medico.apellido }}, {{ turno.medico.nombre }}</td>
 								<td>{{ turno.medico.especialidad.descripcion }}</td>
-								<td>{{ turno.paciente.apellido }}</td>
+								<td>{{ turno.paciente.apellido }}, {{ turno.paciente.nombre }}</td>
 							</tr>
 							{% endfor %}
 						</tbody>

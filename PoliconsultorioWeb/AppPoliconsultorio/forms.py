@@ -8,6 +8,7 @@ import datetime
 from .medicos import lista_medicos
 from .especialidades import lista_especialidades
 from .pacientes import lista_pacientes
+from .models import Paciente
 
 class ContactoForm(forms.Form):
     nombre = forms.CharField(label="Nombre de contacto:", max_length=5, required=True,
@@ -41,13 +42,10 @@ class ConsultaTurnosForm(forms.Form):
 
     def clean_paciente(self):
         data = self.cleaned_data["paciente"]
-        print("Paciente: entró a validar")
-        if data is None:
-            print("Paciente: es None")
-            pass
-        if data == '':
-            print("Paciente: es nulo")
-            pass
+        print(data)
+        if data != '':
+            if not Paciente.objects.filter(dni = int(data)).exists():
+                raise ValidationError("Debe ingresar un DNI de paciente válido o dejarlo en blanco")
         return data
     
     def clean(self):
