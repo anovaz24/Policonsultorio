@@ -1,9 +1,11 @@
 from datetime import datetime
 from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseNotFound, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseNotFound, HttpResponseRedirect,HttpRequest
 from django.contrib import messages
+from django.db.models import Q
 
 from .forms import *
+from .models import Especialidad, Paciente, Medico, Turno
 from .turno import *
 from .especialidades import lista_especialidades
 from .pacientes import lista_pacientes
@@ -12,20 +14,7 @@ from .models import *
 
 # Create your views here.
 def index(request):
-    
-    # Listar todos los turnos del día
-    turno = {
-        'dia': '20/04/2023',
-        'hora': '09:00',
-        'medico': 'Dr. Juan Perez',
-        'especialidad': 'Cardiología',
-        'paciente': 'Adriana Cullen',
-    }
-
-    listado_turnos = {}
-
-    context = {
-        }
+    context = {}
     return render(request, "AppPoliconsultorio/index.html", context)
 
 def turno_medico(request):
@@ -123,24 +112,37 @@ def turno_consulta(request):
     if request.method == "POST":
         turno_consulta_form = ConsultaTurnosForm(request.POST)
         if turno_consulta_form.is_valid():
-            # listado_turnos = lista_turnos()
-            
-            # especialidad_form = request.POST['especialidad']
-            # if especialidad_form != 'Z':
-            #     especialidad = Especialidad.objects.get(codigo = especialidad_form)
-            #     listado_medicos = Medico.objects.filter(especialidad = especialidad.id )
-            #     print(listado_medicos)
-            #     print(Turno.objects.filter(medico in listado_medicos))
-            #     # listado_turnos = Turno.objects.filter(Medico.objects.get() in listado_medicos)
-            # else:
-            #     listado_turnos = Turno.objects.all()
+            filtro_paciente = ""
+            filtro_especialidad = ""
+            filtro_medico = ""
+            filtro_fechaDesde = ""
+            filtro_fechaHasta = ""
 
-            medico = request.POST['medico']
-            print(medico)
-            if medico != 'Z':
-                listado_turnos = Turno.objects.filter(medico = medico)
-            else:
-                listado_turnos = Turno.objects.all()
+            # Filtro por Paciente
+            paciente_form = request.POST['paciente']
+            if paciente_form != '':
+                paciente = Paciente.objects.filter(dni = paciente_form)
+                filtro_paciente = paciente[0].dni
+                # listado_turnos = Turno.objects.filter(paciente = dni)
+
+            # Filtro por Especialidad
+            especialidad_form = request.POST['especialidad']
+            if especialidad_form != 'Z':
+                filtro_especialidad = especialidad_form
+
+            # Filtro por Medico
+            medico_form = request.POST['medico']
+            if medico_form != 'Z':
+                filtro_medico = int(medico_form)
+
+            # Filtro por Fechas
+            filtro_fechaDesde = request.POST['fechaDesde']
+            filtro_fechaHasta = request.POST['fechaHasta']
+
+            listado_turnos = lista_turnos(filtro_paciente, filtro_especialidad, filtro_medico, filtro_fechaDesde, filtro_fechaHasta)
+
+            # if listado_turnos is None:
+            #     turno_consulta_form.errors[]
         else:
             errores = turno_consulta_form.errors
             print("errores: ",errores)

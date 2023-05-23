@@ -1,39 +1,4 @@
 from django.db import models
-
-
-# class Especialidades(models.Model):
-#     especialidad_id = models.IntegerField(verbose_name="Código de especialidad")
-#     descripcion = models.CharField(max_length=128, verbose_name="Especialidad")
-
-
-# class Medicos(models.Model):
-#     nombre = models.CharField(max_length=25, verbose_name="Nombre")
-#     apellido = models.CharField(max_length=25, verbose_name="Apellido")
-#     dni = models.IntegerField(verbose_name="DNI")
-#     matricula = models.CharField(max_length=8, verbose_name="Matrícula")
-#     especialidad = models.ForeignKey(Especialidades, on_delete=models.CASCADE)
-#     # turno = models.Choices() #deberá guardar el código del turno seleccionado
-#     # turno = models.IntegerField(verbose_name="Turno")
-
-
-# class Pacientes (models.Model):
-#     nombre_paciente = models.CharField(max_length=25, verbose_name="Nombre Paciente")
-#     apellido_paciente = models.CharField(max_length=15, verbose_name="Apellido Paciente")
-#     # turno = models.IntegerChoices(Turnos) #deberá guardar el código del turno seleccionado
-
-
-# class Turnos(models.Model):
-#     # turno_id = models.IntegerField(verbose_name = "Código turno")
-#     fecha = models.DateField(verbose_name = "Fecha")
-#     horario = models.CharField(max_length=5, verbose_name="Horario")
-#     # medico = models.Choices(Medicos)  #deberá guardar el código del turno seleccionado
-#     # medico = models.CharField(max_length=2, verbose_name="Médico")
-#     medico = models.ManyToManyField(Medicos) 
-#     # especialidad = models.Choices(Especialidad)  #deberá guardar el código del turno seleccionado    
-#     especialidad = models.ManyToManyField(Especialidades)  
-#     paciente = models.ForeignKey(Pacientes, on_delete=models.CASCADE)    
-
-from django.db import models
 from datetime import timedelta, date
 
 class Persona(models.Model):
@@ -63,7 +28,9 @@ class Especialidad(models.Model):
     @classmethod
     def migrar_registros_iniciales(cls):
         especialidades_lst = [
-        
+            {'descripcion': 'Cardiología', 'codigo': 'C'},
+            {'descripcion': 'Dermatología', 'codigo': 'D'},
+            {'descripcion': 'Neurología', 'codigo': 'N'},
             {'descripcion': 'Oftalmología', 'codigo': 'O'},
             {'descripcion': 'Pediatría', 'codigo': 'P'},
         ]
@@ -161,10 +128,10 @@ class Medico(Persona):
 
 
 class Turno(models.Model):
-    paciente = models.ForeignKey(Paciente, on_delete=models.CASCADE, null=True)
-    medico =models.ForeignKey(Medico, on_delete=models.CASCADE)
     fecha = models.DateField(verbose_name='Fecha')
     hora = models.CharField(max_length=128, verbose_name='Horario_turno')
+    paciente = models.ForeignKey(Paciente, on_delete=models.CASCADE, null=True)
+    medico = models.ForeignKey(Medico, on_delete=models.CASCADE)
     # hora = models.TimeField(verbose_name='Hora')
 
     class Meta:
@@ -199,3 +166,4 @@ class Turno(models.Model):
 def daterange(start_date, end_date):
     for n in range(int((end_date - start_date).days)):
         yield start_date + timedelta(n)
+
