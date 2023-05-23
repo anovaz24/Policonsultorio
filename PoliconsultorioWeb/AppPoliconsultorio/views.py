@@ -1,33 +1,18 @@
 from datetime import datetime
 from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseNotFound, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseNotFound, HttpResponseRedirect,HttpRequest
 from django.contrib import messages
+from django.db.models import Q
 
 from .forms import *
+from .models import Especialidad, Paciente, Medico, Turno
 from .turno import *
 from .especialidades import lista_especialidades
 from .medicos import lista_medicos
 
 # Create your views here.
 def index(request):
-    
-    # Listar todos los turnos del día
-    turno = {
-        'dia': '20/04/2023',
-        'hora': '09:00',
-        'medico': 'Dr. Juan Perez',
-        'especialidad': 'Cardiología',
-        'paciente': 'Adriana Cullen',
-    }
-
-    listado_turnos = lista_turnos()
-
-    context = {
-        "hoy": datetime.now,
-        "dia": "18/04/2023",
-        "turno": turno,
-        "listado_turnos": listado_turnos,
-        }
+    context = {}
     return render(request, "AppPoliconsultorio/index.html", context)
 
 def turno_medico(request):
@@ -120,21 +105,58 @@ def turno_medico(request):
 
 def turno_consulta(request):
     listado_turnos = []
+    errores = []
     
     if request.method == "POST":
         turno_consulta_form = ConsultaTurnosForm(request.POST)
         if turno_consulta_form.is_valid():
-            listado_turnos = lista_turnos()
+            filtro_paciente = ""
+            filtro_especialidad = ""
+            filtro_medico = ""
+            filtro_fechaDesde = ""
+            filtro_fechaHasta = ""
+
+            # Filtro por Paciente
+            paciente_form = request.POST['paciente']
+            if paciente_form != '':
+                paciente = Paciente.objects.filter(dni = paciente_form)
+                filtro_paciente = paciente[0].dni
+                # listado_turnos = Turno.objects.filter(paciente = dni)
+
+            # Filtro por Especialidad
+            especialidad_form = request.POST['especialidad']
+            if especialidad_form != 'Z':
+                filtro_especialidad = especialidad_form
+
+            # Filtro por Medico
+            medico_form = request.POST['medico']
+            if medico_form != 'Z':
+                filtro_medico = int(medico_form)
+
+            # Filtro por Fechas
+            filtro_fechaDesde = request.POST['fechaDesde']
+            filtro_fechaHasta = request.POST['fechaHasta']
+
+            listado_turnos = lista_turnos(filtro_paciente, filtro_especialidad, filtro_medico, filtro_fechaDesde, filtro_fechaHasta)
+
+            # if listado_turnos is None:
+            #     turno_consulta_form.errors[]
         else:
-            print(turno_consulta_form.cleaned_data['fechaDesde'])
-            messages.add_message(request, messages.WARNING, 'Debe ingresar un rango de fechas correcto, Fecha Desde <= Fechas Hasta', extra_tags="tag1")
-            print(request)
+            errores = turno_consulta_form.errors
+            print("errores: ",errores)
+            print("request: ",request)
+            for error in errores:
+                print("error: ",error)
+            if errores is None:
+                print(turno_consulta_form.non_field_errors)
+                # messages.add_message(request, messages.WARNING, 'Debe ingresar un rango de fechas correcto, Fecha Desde <= Fecha Hasta', extra_tags="tag1")
     else:
         turno_consulta_form = ConsultaTurnosForm()
 
     context = {
         "listado_turnos": listado_turnos,
         "turno_consulta_form": turno_consulta_form,
+        "errores": errores,
     }
     return render(request, "AppPoliconsultorio/turno_consulta.html", context)
 
