@@ -73,6 +73,11 @@
 					</ul>
 				{% endif %} -->
 			</div>
+			<div class="messages form-row justify-content-center" style="color: red;">
+				{% filter upper %}
+					<p><b> {{ ValidationError }} </b></p>
+				{% endfilter %}
+			</div>
 			<div class="form-row justify-content-center">
 				<button type="submit" class="btn btn-primary">Consultar</button>
 			</div>

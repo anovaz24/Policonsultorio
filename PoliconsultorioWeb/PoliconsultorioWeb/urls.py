@@ -24,5 +24,4 @@ urlpatterns = [
     path('AppPoliconsultorio/', include('AppPoliconsultorio.urls')),
     path('apppoliconsultorio/', include('AppPoliconsultorio.urls')),
     path('favicon.ico', RedirectView.as_view(url=staticfiles_storage.url('img/favicon.ico')))                               
-                                        
 ]

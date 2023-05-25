@@ -1,9 +1,6 @@
-
 from .models import Especialidad
 
 def lista_especialidades():
-    especialidades = Especialidad.objects.all().order_by('descripcion')
-    listado_especialidad = [('Z','Seleccione una especialidad')]
-    for especialidad in especialidades:
-        listado_especialidad.append((especialidad.codigo, especialidad.descripcion))
-    return listado_especialidad
+    opciones_especialidades = [('Z', 'Seleccione una especialidad')]
+    opciones_especialidades += [(esp.codigo, esp.descripcion) for esp in Especialidad.objects.all().order_by('descripcion')]
+    return opciones_especialidades
