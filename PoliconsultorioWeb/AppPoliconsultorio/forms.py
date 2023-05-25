@@ -6,7 +6,7 @@ from django.contrib import messages
 
 import datetime
 
-from .medicos import lista_medicos
+from .medicos import *
 from .pacientes import lista_pacientes
 from .especialidades import lista_especialidades
 from .models import *
