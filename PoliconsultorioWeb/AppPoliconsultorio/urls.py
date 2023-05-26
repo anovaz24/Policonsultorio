@@ -13,9 +13,11 @@ urlpatterns = [
     path('acerca/', views.acerca, name='acerca'),
     path('contacto/', views.contacto, name="contacto"),
     path('thanks/', views.thanks, name="thanks"),
-    path('turnos/',views.turnos,name="turnos"),
-    path('turnos/<slug:slug>/',views.turnos,name="turnos_rol"),
+    #path('turnos/',views.turnos,name="turnos"),
+    #path('turnos/<slug:slug>/',views.turnos,name="turnos_rol"),
     path('consulta_medicos/',views.consulta_medicos,name="consulta_medicos"),
     path('alta_medico/',views.alta_medico,name="alta_medico"),
     path('baja_medico/',views.baja_medico,name="baja_medico"),
+    path('listar_especialidad/',views.listar_especialidad,name="listar_especialidad"),
+    path('listar_pacientes/',views.listar_pacientes,name="listar_pacientes"),
 ]

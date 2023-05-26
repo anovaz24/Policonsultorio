@@ -1,10 +1,12 @@
 from typing import Any, Dict
 from django import forms
 from django.core.exceptions import ValidationError
-
+from django.core.validators import RegexValidator
+import datetime
 from .medicos import lista_medicos
 from .especialidades import lista_especialidades
 from .pacientes import lista_pacientes
+from .models import *
 
 class ContactoForm(forms.Form):
     nombre = forms.CharField(label="Nombre de contacto:", max_length=5, required=True,
@@ -21,7 +23,16 @@ class ConsultaMedicosForm(forms.Form):
     medico = forms.CharField(label="Médico", widget=forms.TextInput(attrs={'class': 'medico'}), required=False)
     fecha = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'})),
 
+
 class ConsultaTurnosForm(forms.Form):
+
+    def fecha(desde,cuantos_dias):
+            if desde == 'h':
+                hasta = datetime.date.today() + datetime.timedelta(days=cuantos_dias)
+            else:
+                pass
+            return hasta.strftime('%Y-%m-%d')
+
     # Definir campos
     # nombre = forms.CharField(label="Nombre", required=True)
     # especialidad = forms.Select(label="Especialidad", required=False)
@@ -55,7 +66,7 @@ class ConsultaTurnosForm(forms.Form):
             raise ValidationError("La Fecha Desde debe ser anterior a la Fecha Hasta")
         
         return cleaned_data
-    
+
 
 
 class BajaTurnoForm(forms.Form):          
@@ -185,31 +196,31 @@ class AltaTurnoForm(forms.Form):
 
 
 
-def lista_turnos():
-    listado_turnos = [
-        {
-            'dia': '20/04/2023',
-            'hora': '09:00',
-            'medico': 'Dr. Juan Pérez',
-            'especialidad': 'Cardiología',
-            'paciente': 'Adriana Cullen',
-        },
-        {
-            'dia': '20/04/2023',
-            'hora': '10:00',
-            'medico': 'Dra. María González',
-            'especialidad': 'Dermatología',
-            'paciente': 'José Olleros',
-        },
-        {
-            'dia': '20/04/2023',
-            'hora': '11:00',
-            'medico': 'Dr. Juan Perez',
-            'especialidad': 'Cardiología',
-            'paciente': 'Mariano Burgos',
-        },
-    ]
-    return listado_turnos
+# def lista_turnos():
+#     listado_turnos = [
+#         {
+#             'dia': '20/04/2023',
+#             'hora': '09:00',
+#             'medico': 'Dr. Juan Pérez',
+#             'especialidad': 'Cardiología',
+#             'paciente': 'Adriana Cullen',
+#         },
+#         {
+#             'dia': '20/04/2023',
+#             'hora': '10:00',
+#             'medico': 'Dra. María González',
+#             'especialidad': 'Dermatología',
+#             'paciente': 'José Olleros',
+#         },
+#         {
+#             'dia': '20/04/2023',
+#             'hora': '11:00',
+#             'medico': 'Dr. Juan Perez',
+#             'especialidad': 'Cardiología',
+#             'paciente': 'Mariano Burgos',
+#         },
+#     ]
+#     return listado_turnos
 
 
 def funcion_de_guardado_de_turno(accion,id,medico,fecha,hora):
