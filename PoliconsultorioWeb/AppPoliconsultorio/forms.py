@@ -3,9 +3,6 @@ from django import forms
 from django.core.exceptions import ValidationError
 from django.core.validators import RegexValidator
 import datetime
-from .medicos import lista_medicos
-from .especialidades import lista_especialidades
-from .pacientes import lista_pacientes
 from .models import *
 
 class ContactoForm(forms.Form):
@@ -19,52 +16,44 @@ class ConsultaMedicosForm(forms.Form):
     # nombre = forms.CharField(label="Nombre", required=True)
     # especialidad = forms.Select(label="Especialidad", required=False)
     #listado_especialidades = lista_especialidades()
-    especialidad = forms.ChoiceField(choices=lista_especialidades(), required=True, widget=forms.Select)
+    especialidad = forms.ChoiceField(choices=Especialidad.lista_especialidades(), required=True, widget=forms.Select)
     medico = forms.CharField(label="Médico", widget=forms.TextInput(attrs={'class': 'medico'}), required=False)
     fecha = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'})),
 
 
 class ConsultaTurnosForm(forms.Form):
-
-    def fecha(desde,cuantos_dias):
-            if desde == 'h':
-                hasta = datetime.date.today() + datetime.timedelta(days=cuantos_dias)
-            else:
-                pass
-            return hasta.strftime('%Y-%m-%d')
-
     # Definir campos
-    # nombre = forms.CharField(label="Nombre", required=True)
-    # especialidad = forms.Select(label="Especialidad", required=False)
-    # paciente = forms.ChoiceField(choices=lista_pacientes(), required=False, widget=forms.Select(attrs={"class": "form-control", "id":"paciente"}))
-    paciente = forms.CharField(label="DNI Paciente", widget=forms.TextInput(attrs={'class': 'paciente'}), required=False)
-    especialidad = forms.ChoiceField(label=' Especialidad', choices=lista_especialidades(), required=False, widget=forms.Select)
-    medico = forms.ChoiceField(label=' Médico', choices=lista_medicos(), required=False, widget=forms.Select)
+    def fecha(desde,cuantos_dias):
+        if desde == 'h':
+            hasta = datetime.date.today() + datetime.timedelta(days=cuantos_dias)
+        else:
+            pass
+        return hasta.strftime('%Y-%m-%d')
+
+    paciente = forms.CharField(label="Paciente:", max_length=8, min_length=6 ,required=False, validators=[RegexValidator(
+                '^[0-9]+$',
+                message="Debe contener solo números")],
+        widget=forms.TextInput(attrs={"class": "form-control", "id":"paciente","size": 12, "title":"Ingrese entre 6 y 8 dígitos de su número de documento"}))
+    especialidad = forms.ChoiceField(label=' Especialidad', choices=Especialidad.lista_especialidades(), required=False, widget=forms.Select)
+    medico = forms.ChoiceField(label=' Médico', choices=Medico.lista_medicos(), required=False, widget=forms.Select)
     fechaDesde = forms.DateField(label=' Fecha Desde',widget=forms.DateInput(attrs={'type': 'date'}), required=False, initial=fecha('h',0))
     fechaHasta = forms.DateField(label=' Fecha Hasta',widget=forms.DateInput(attrs={'type': 'date'}), required=False, initial=fecha('h',60))
 
-    # def clean_fechaDesde(self):
-    #     dataD = self.cleaned_data["fechaDesde"]
-    #     dataH = self.cleaned_data["fechaHasta"]
-
-    #     if dataD is not None and dataH is not None and dataD > dataH:
-    #         raise ValidationError("La Fecha Desde debe ser anterior a la Fecha Hasta")
-        
-    #     return dataD
+    def clean_paciente(self):
+        data = self.cleaned_data["paciente"]
+        if data != '':
+            if not Paciente.objects.filter(dni = int(data)).exists():
+                raise ValidationError("Debe ingresar un DNI de paciente válido o dejarlo en blanco")
+        return data
     
     def clean(self):
         cleaned_data = super().clean()
         dataD = cleaned_data.get("fechaDesde")
         dataH = cleaned_data.get("fechaHasta")
 
-        print(cleaned_data)
-        print(dataD)
-        print(dataH)
-        if dataD is not None and dataH is not None: print(dataD > dataH)
-
         if dataD is not None and dataH is not None and dataD > dataH:
-            raise ValidationError("La Fecha Desde debe ser anterior a la Fecha Hasta")
-        
+            raise ValidationError("Debe ingresar un rango de fechas correcto, Fecha Desde <= Fechas Hasta")
+
         return cleaned_data
 
 
@@ -122,7 +111,7 @@ class BajaTurnoDetalleForm(forms.Form):
 
 class AltaTurnoForm(forms.Form):
 
-    listado_especialidad = lista_especialidades()
+    listado_especialidad = Especialidad.lista_especialidades()
 
     paciente = forms.CharField(label="pacientex:", max_length=8, min_length=7 ,required=True, validators=[RegexValidator(
                 '^[0-9]+$',
@@ -193,34 +182,6 @@ class AltaTurnoForm(forms.Form):
         medico_id = cleaned_data.get('medico')
         print("Medico id:", medico_id)
         return self
-
-
-
-# def lista_turnos():
-#     listado_turnos = [
-#         {
-#             'dia': '20/04/2023',
-#             'hora': '09:00',
-#             'medico': 'Dr. Juan Pérez',
-#             'especialidad': 'Cardiología',
-#             'paciente': 'Adriana Cullen',
-#         },
-#         {
-#             'dia': '20/04/2023',
-#             'hora': '10:00',
-#             'medico': 'Dra. María González',
-#             'especialidad': 'Dermatología',
-#             'paciente': 'José Olleros',
-#         },
-#         {
-#             'dia': '20/04/2023',
-#             'hora': '11:00',
-#             'medico': 'Dr. Juan Perez',
-#             'especialidad': 'Cardiología',
-#             'paciente': 'Mariano Burgos',
-#         },
-#     ]
-#     return listado_turnos
 
 
 def funcion_de_guardado_de_turno(accion,id,medico,fecha,hora):

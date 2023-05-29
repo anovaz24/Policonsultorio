@@ -16,17 +16,10 @@
 		<!--<form>-->
 		<form action="{% url 'turno_consulta' %}" method="post">
 			{% csrf_token %}
-			<!-- <div class="form-row">
-				<div class="form-group col-md-6">
-					<label class='rotulo_filtro' for="paciente">DNI Paciente:</label>
-					{{ turno_consulta_form.paciente }}
-				</div> -->
 			<div class="form-row">
 				<div class="mt-lg-0 d-flex align-items-stretch">
-					<!-- <div class="form-group col-md-6"> -->
-						<label class='rotulo_filtro' for="paciente">Paciente: <b>{{ paciente }}</b></label>
-						{{ turno_consulta_form.paciente }}
-					<!-- </div> -->
+					<label class='rotulo_filtro' for="paciente">Paciente: <b>{{ paciente }}</b></label>
+					{{ turno_consulta_form.paciente }}
 				</div>
 			</div>
 			<div class="form-row">

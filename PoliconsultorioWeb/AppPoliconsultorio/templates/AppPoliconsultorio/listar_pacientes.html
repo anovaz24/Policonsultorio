@@ -14,6 +14,8 @@
 
 {% block contenido %}
 
+<section class="listado" style="margin-top: 40px;">
+
 {%for paciente in listar_pacientes %}
     <article>
         <P><b>Nombre:</b> {{paciente.nombre}}</P>  
@@ -29,5 +31,5 @@
 {% empty %}
 
 {% endfor %}
-<!-- </section> -->
+</section>
 {% endblock %}

@@ -2,10 +2,7 @@ from datetime import datetime
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseNotFound, HttpResponseRedirect
 from django.contrib import messages
-from .turno import lista_turnos
 from .forms import *
-from .especialidades import lista_especialidades
-from .medicos import lista_medicos
 from .models import Paciente
 
 # Create your views here.
@@ -33,25 +30,11 @@ def index(request):
 
 def turno_medico(request):
 
-    listado_especialidad = lista_especialidades()
+    listado_especialidad = Especialidad.lista_especialidades()
 
-    listado_medicos = lista_medicos()
+    listado_medicos = Medico.lista_medicos()
 
-    listado_disp_medicos = [{'ID':'1',
-                             'horario':'8:00 a 9:00',
-                             'descr_disponible':'Disponible',
-                             'flag':'enabled',
-                             },
-                            {'ID':'2',
-                            'horario':'9:00 a 10:00',
-                            'descr_disponible':'No disponible',
-                            'flag':'disabled',
-                            },
-                            {'ID':'3',
-                             'horario':'10:00 a 11:00',
-                             'descr_disponible':'Disponible',
-                             'flag':'enabled',
-                             }]
+    listado_disp_medicos = []
 
     context = {
         "listado_especialidad":listado_especialidad,
@@ -237,29 +220,7 @@ def turno_medico(request):
     return render(request, "AppPoliconsultorio/turnos.html", {'alta_turno_form': alta_turno_form, 'estado_boton_buscar_medicos': 'disabled' ,'estado_boton_buscar_turnos': 'disabled', 'estado_boton_guardar_turno': 'disabled' })
     #return render(request,"AppPoliconsultorio/turnos.html",context)
 
-"""
-def turno_consulta(request):
-    listado_turnos = []
-    
-    if request.method == "POST":
-        turno_consulta_form = ConsultaTurnosForm(request.POST)
-        if turno_consulta_form.is_valid():
-            listado_turnos = lista_turnos()
-            #return render(request, "AppPoliconsultorio/turno_consulta.html", {'turno_consulta_form': turno_consulta_form })
-        else:
-            print(turno_consulta_form.cleaned_data['fechaDesde'])
-            #messages.add_message(request, messages.WARNING, 'Debe ingresar un rango de fechas correcto, Fecha Desde <= Fechas Hasta', extra_tags="tag1")
-            return render(request, "AppPoliconsultorio/turno_consulta.html", {'turno_consulta_form': turno_consulta_form })
-            #print(request)
-    else:
-        turno_consulta_form = ConsultaTurnosForm()
 
-    context = {
-        "listado_turnos": listado_turnos,
-        "turno_consulta_form": turno_consulta_form,
-    }
-    return render(request, "AppPoliconsultorio/turno_consulta.html", context)
-"""
 def turno_consulta(request):
     listado_turnos = []
     errores = []
@@ -294,19 +255,10 @@ def turno_consulta(request):
             filtro_fechaDesde = request.POST['fechaDesde']
             filtro_fechaHasta = request.POST['fechaHasta']
 
-            listado_turnos = lista_turnos(filtro_paciente, filtro_especialidad, filtro_medico, filtro_fechaDesde, filtro_fechaHasta)
+            listado_turnos = Turno.lista_turnos(filtro_fechaDesde, filtro_fechaHasta, filtro_paciente, filtro_especialidad, filtro_medico)
 
-            # if listado_turnos is None:
-            #     turno_consulta_form.errors[]
         else:
             errores = turno_consulta_form.errors
-            print("errores: ",errores)
-            print("request: ",request)
-            for error in errores:
-                print("error: ",error)
-            if errores is None:
-                print(turno_consulta_form.non_field_errors)
-                # messages.add_message(request, messages.WARNING, 'Debe ingresar un rango de fechas correcto, Fecha Desde <= Fecha Hasta', extra_tags="tag1")
     else:
         turno_consulta_form = ConsultaTurnosForm()
 
@@ -442,8 +394,8 @@ def turnos(request):
 
 def consulta_medicos(request):
     # Prepara los combos
-    listado_especialidad = lista_especialidades()
-    listado_medicos = lista_medicos()
+    listado_especialidad = Especialidad.lista_especialidades()
+    listado_medicos = Medico.lista_medicos()
 
     if request.method == "POST":
         consulta_medicos_form = ConsultaMedicosForm(request.POST)

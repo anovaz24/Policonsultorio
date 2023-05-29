@@ -1,10 +1,6 @@
 from django.db import models
 from datetime import timedelta, date
-#para crear y migrar
-# python manage.py makemigrations AppPoliconsultorio  
-# # esta linea de arriba solo creo el archivo en migrate, luego lo tenes que migrar...
-# con esta linea lo crea en la base...   
-# python manage.py migrate AppPoliconsultorio
+from django.utils.dateparse import parse_date
 
 
 class Persona(models.Model):
@@ -15,6 +11,10 @@ class Persona(models.Model):
 
     class Meta:
         abstract = True
+
+    @property
+    def nombre_completo(self):
+        return f"{self.apellido}, {self.nombre}"
 
 
 class Especialidad(models.Model):
@@ -30,6 +30,11 @@ class Especialidad(models.Model):
 
     def __str__(self):
         return self.descripcion
+
+    def lista_especialidades():
+        opciones_especialidades = [('Z', 'Seleccione una especialidad')]
+        opciones_especialidades += [(esp.codigo, esp.descripcion) for esp in Especialidad.objects.all().order_by('descripcion')]
+        return opciones_especialidades
 
     @classmethod
     def migrar_registros_iniciales(cls):
@@ -66,6 +71,14 @@ class Paciente(Persona):
             )
         ]
 
+    def lista_pacientes():
+        pacientes = Paciente.objects.all().order_by('apellido','nombre')
+        listado_pacientes = [('Z','Seleccione un paciente')]
+        for paciente in pacientes:
+                listado_pacientes.append(paciente.dni, paciente.nombre_completo)
+            
+        return listado_pacientes 
+    
     @classmethod
     def migrar_registros_iniciales(cls):
         pacientes = [
@@ -111,6 +124,13 @@ class Medico(Persona):
             )
         ]
 
+    def lista_medicos():
+        medicos = Medico.objects.all().order_by('apellido','nombre')
+        listado_medicos = [('Z','Seleccione un medico')]
+        for medico in medicos:
+            listado_medicos.append((medico.id, f"{medico.nombre_completo} ({medico.especialidad.descripcion})"))
+        return listado_medicos
+
     @classmethod
     def migrar_registros_iniciales(cls):
         
@@ -154,6 +174,18 @@ class Turno(models.Model):
                 fields=['medico', 'fecha', 'hora'], name='unique_medico_fecha_hora_combination'
             )
         ]
+
+    def lista_turnos(filtro_fechaDesde=date.today(), filtro_fechaHasta=date.today(), filtro_paciente='', filtro_especialidad='', filtro_medico=''):
+        turnos = Turno.objects.filter(fecha__range=(parse_date(filtro_fechaDesde),parse_date(filtro_fechaHasta)))
+        if filtro_paciente != '':
+            turnos = turnos.filter(paciente__dni__exact=filtro_paciente)
+        if filtro_especialidad != '':
+            turnos = turnos.filter(medico__especialidad__codigo__exact=filtro_especialidad)
+        if filtro_medico != '':
+            turnos = turnos.filter(medico__id = filtro_medico)
+        turnos = sorted(turnos, key=lambda turno: (str(turno.fecha) + turno.hora))
+        return turnos
+
     @classmethod
     def migrar_registros_iniciales(cls):
         fecha_inicial = date.today()
