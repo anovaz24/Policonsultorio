@@ -3,7 +3,7 @@
 {% load static %}
 
 {% block extra_css %}
-    <link rel="stylesheet" href="{% static 'AppPoliconsultorio/turno.css' %}">
+    <link rel="stylesheet" href="{% static 'css/turno.css' %}">
 {% endblock %}
 
 link rel="stylesheet" href="{% static 'AppPoliconsultorio/listar_especialidad.css' %}"
@@ -16,15 +16,17 @@ link rel="stylesheet" href="{% static 'AppPoliconsultorio/listar_especialidad.cs
 
 {% block contenido %}
 
-<!-- <section class="listado"> -->
+<section class="listado" style="margin-top: 40px;">
 
-{%for especialidad in listado_especialidades %}
-    <article>
-        <P><b>Código:</b> {{especialidad.codigo}}</P>  
-        <P><b>Descripción:</b> {{especialidad.descripcion}}</P>        
-    </article>
-{% empty %}
+    {%for especialidad in lista_especialidades %}
+        <article>
+            <p><b>Código:</b> {{especialidad.codigo}}</p>  
+            <p><b>Descripción:</b> {{especialidad.descripcion}}</p>
+            <P>--------------------------------------------------</P>        
+        </article>
+    {% empty %}
 
-{% endfor %}
-<!-- </section> -->
+    {% endfor %}
+
+</section>
 {% endblock %}

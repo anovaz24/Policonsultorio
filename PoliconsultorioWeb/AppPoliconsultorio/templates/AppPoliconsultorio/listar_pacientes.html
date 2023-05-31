@@ -3,10 +3,8 @@
 {% load static %}
 
 {% block extra_css %}
-    <link rel="stylesheet" href="{% static 'AppPoliconsultorio/turno.css' %}">
+    <link rel="stylesheet" href="{% static 'css/turno.css' %}">
 {% endblock %}
-
-link rel="stylesheet" href="{% static 'AppPoliconsultorio/listar_pacientes.css' %}"
 
 {% block titulo %}Listado de Pacientes{% endblock %}
 
@@ -16,7 +14,9 @@ link rel="stylesheet" href="{% static 'AppPoliconsultorio/listar_pacientes.css' 
 
 {% block contenido %}
 
-{%for paciente in lista_pacientes %}
+<section class="listado" style="margin-top: 40px;">
+
+{%for paciente in listar_pacientes %}
     <article>
         <P><b>Nombre:</b> {{paciente.nombre}}</P>  
         <P><b>apellido:</b> {{paciente.apellido}}</P>     
@@ -25,10 +25,11 @@ link rel="stylesheet" href="{% static 'AppPoliconsultorio/listar_pacientes.css' 
         <P><b>Teléfono:</b> {{paciente.telefono}}</P>  
         <P><b>F.Nacimiento:</b> {{paciente.fecha_nacimiento}}</P>     
         <P><b>Género:</b> {{paciente.genero}}</P>  
-        <P><b>O. Social:</b> {{paciente.obra_social}}</P>   
+        <P><b>O. Social:</b> {{paciente.obra_social}}</P>
+        <P>--------------------------------------------------</P>
     </article>
 {% empty %}
 
 {% endfor %}
-<!-- </section> -->
+</section>
 {% endblock %}
