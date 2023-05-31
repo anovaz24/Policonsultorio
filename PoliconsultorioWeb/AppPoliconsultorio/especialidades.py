@@ -6,4 +6,4 @@ def lista_especialidades():
     listado_especialidad = [('Z','Seleccione una especialidad')]
     for especialidad in especialidades:
         listado_especialidad.append((especialidad.codigo, especialidad.descripcion))
-    return listado_especialidad
+    return listado_especialidad 

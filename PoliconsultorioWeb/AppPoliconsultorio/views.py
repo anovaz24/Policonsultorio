@@ -165,7 +165,6 @@ def turno_consulta(request):
 
 def baja_turno(request):
     listado_turnos = []
-    listado_pacientes =[]
     errores = []
 
     if request.method == "POST":
@@ -173,19 +172,32 @@ def baja_turno(request):
         bajaturno_form = BajaTurnoForm(request.POST)
       
         if bajaturno_form.is_valid():
-            dni = int(request.POST['dni'])        
+            dni = int(request.POST['dni'])    
+            # id = int(request.POST['id'])    
             pacientes = Paciente.objects.filter(dni=dni)
+            turnos_tabla = Turno.objects.filter(paciente=dni )
+            # turnos_tabla = Turno.objects.all(id=id)
+            # turnos_tabla = Turno.objects.filter()
             nombre = pacientes[0].nombre
             apellido= pacientes[0].apellido
-            nombre_completo = f"{ apellido},{nombre}"
-            print("nombre compelto", nombre_completo)
-            listado_turnos = Turno.objects.filter(paciente=dni)           
-          
-    else:
+            nombre_completo = f"{ apellido}, {nombre}"
+            id = turnos_tabla[0].id
+            print ('nombre completo1: ', nombre_completo)
+            # aca genero el listado_turnos: gte= mayor o igual a hoy                        
+            listado_turnos = Turno.objects.filter(fecha__gte=date.today(), paciente=dni).order_by('fecha')
+            
+            print ('nombre completo3: ', nombre_completo)
+            print ('id ', id)          
+
+            return render(request, "AppPoliconsultorio/baja_turno.html", {'bajaturno_form': bajaturno_form, 'pacientel': nombre_completo, 'listado_turnos': listado_turnos  })
+        #     redireccionar 
+
+           
+
+    else: 
                 
         bajaturno_form = BajaTurnoForm()
-
-
+ 
     context = {
         "listado_turnos": listado_turnos,
         "bajaturno_form": BajaTurnoForm,
@@ -193,10 +205,20 @@ def baja_turno(request):
     }
     return render(request, "AppPoliconsultorio/baja_turno.html", context)
 
-
-    return render(request, "AppPoliconsultorio/baja_turno.html", context)
-
     #return HttpResponseRedirect('/AppPoliconsultorio/thanks/')
+
+def eliminar_turno(request, id):
+    turno = Turno.objects.get(id=id)
+    print('encontrre el turno a eliminar' , turno)
+
+    turno.delete()
+
+    # return redirect('/')
+
+    return render(request, 'Apppoliconsultorio/baja_turnos.html')  
+
+# print('id turno despues del return ' , dni )
+
 
 def listar_turnos(request):
     context = {}

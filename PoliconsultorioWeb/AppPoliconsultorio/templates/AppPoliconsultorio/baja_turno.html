@@ -8,90 +8,109 @@
 {% endblock %}
 
 {% block contenido %}
-<div class="container"></div>
+<div class="container">
+    <div>class ="row">
+    <div> class=<col>md-4 > 
     <div class="form-container justifica-arriba"> 
         <div class="form-row justify-content-center">
 			<h2><u>Eliminación de turnos</u></h2>
 		</div>
 
-    <form action="{% url 'baja_turno' %}" method="post"> 
-        {% csrf_token %}
-  
-        <br><br>
-        <div class="col-lg-11 mt-5 mt-lg-0 d-flex align-items-stretch">
-            <div>
-                <label class='rotulo_filtro' for="paciente">DNI Paciente:</label> 
-                {{ bajaturno_form.dni }} 
-            </div>
-        </div>
+        <form action="{% url 'baja_turno' %}" method="post"> 
+            {% csrf_token %}
     
-        <div class="messages form-row justify-content-center"> 
-            {% if messages %}
-                <ul class="messages_list">
-                    {% for message in messages %}
-                        {% filter upper %}
-                        <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>
-                            <b> {{ message }} </b>
-                        </li>
-                        {% endfilter %}
-                    {% endfor %}
-                </ul>
-            {% endif %}
-        </div>
-
-
-        <div class="form-group col-md-6">
-            <!-- Turnos del paciente: {{ paciente.apellido }}    -->
-        </div>
-           
-            <div class="form-row justify-content-center">
-				<button type="submit" class="btn btn-primary">Consultar</button>                   
-			</div>
-              <div class="form-row justify-content-center">
-				<div class="form-group col-md-16">
-					<table class="table table-bordered">
-						<thead class="table-header">
-						<tr>
-							<th scope="col">Fecha</th>
-							<th scope="col">Hora</th>
-							<th scope="col">Médico</th>
-							<th scope="col">Especialidad</th>
-							<th scope="col">Paciente</th>
-                            <th scope="col">Selección</th>
-						</tr>
-						</thead>
-	                    <tbody>
-							{% for xx in listado_turnos %}
-
-								<td>{{ xx.fecha }}</td>
-								<td>{{ xx.hora }}</td>
-								<td>{{ xx.medico.apellido}} , {{xx.medico.nombre}}</td>
-								<td>{{ xx.medico.especialidad.descripcion}}</td>
-								<td>{{ xx.paciente.apellido }} , {{ xx.paciente.nombre }}</td>
-                                <td><input type="radio" name="selectbajaturno" value= {{ xx.ID }} ></td>
-							</tr>
-							{% endfor %}
-						</tbody>
-
-					</table>
+            <br><br>
+            <div class="col-lg-11 mt-5 mt-lg-0 d-flex align-items-stretch">
+                <div>
+                    <label class='rotulo_filtro' for="paciente">DNI Paciente:</label> 
+                    {{ bajaturno_form.dni }} {{ pacientel }}     
                 </div>
-              </div>            
-           
+            </div>
+        
             <div class="messages form-row justify-content-center"> 
                 {% if messages %}
-                   <ul class="messages_list">
-                       {% for message in messages %}
-                           {% filter upper %}
-                           <li style="color: red;" {% if message.tags %} class="{{ message.tags }}" {% endif %}>
-                               <b> {{ message }} </b>
-                           </li>
-                           {% endfilter %}
-                       {% endfor %}
-                   </ul>
-               {% endif %}
-           </div>
+                    <ul class="messages_list">
+                        {% for message in messages %}
+                            {% filter upper %}
+                            <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>
+                                <b> {{ message }} </b>
+                            </li>
+                            {% endfilter %}
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+        
+            
+                <div class="form-row justify-content-center">
+                    <button type="submit" class="btn btn-primary">Consultar</button>                   
+                </div>
+                <div class="form-row justify-content-center">
+                    <div class="form-group col-md-16"> 
+                        <table class="table table-striped">  
+                        <thead class="table-header"> 
+                            <tr>
+                                <th scope="col">Fecha</th>
+                                <th scope="col">Hora</th>
+                                <th scope="col">Médico</th>
+                                <th scope="col">Especialidad</th>
+                                <!-- <th scope="col">Paciente</th> -->
+                                <th scope="col">Selección</th>
+                                <th scope="col">id</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                                                
+                                <tr>
+                                {% for xx in listado_turnos %}                           
+                                    <td>{{ xx.fecha }}</td>
+                                    <td>{{ xx.hora }}</td>
+                                    <td>{{ xx.medico.apellido}} , {{xx.medico.nombre}}</td>
+                                    <td>{{ xx.medico.especialidad.descripcion}}</td>
+                                    <td>{{xx.id}}</td>
+                                    <td><input type="radio" name="selectbajaturno" value= {{ xx.ID }} ></td>       
+   
+                                    <!-- {%if  type="radio" name="selectbajaturno" value= {{ xx.ID }}.checked%}
+                                        {{eliminar_turno(xx.id)}}
+                                    {% endif %} -->
+
+                                </tr>
+                                {% endfor %}
+
+                            </tbody>
+
+                            <!-- si no hay ningun radio bnutton presionado, que aparezca el boton de seleccionar 
+                            si está seleccionado, ocultar el de seleccion y que aparezca el de confirmar la baja_turno -->
+
+
+    <!-- meter un javascript para saber que boton apreto -->
+
+                        </table>
+                    </div>
+                </div>            
+            
+                <div class="messages form-row justify-content-center"> 
+                    {% if messages %}
+                    <ul class="messages_list">
+                        {% for message in messages %}
+                            {% filter upper %}
+                            <li style="color: red;" {% if message.tags %} class="{{ message.tags }}" {% endif %}>
+                                <b> {{ message }} </b>
+                            </li>
+                            {% endfilter %}
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+
+            <div class="form-row justify-content-center">
+				<button type="submit" name="eliminar_turno" class="btn btn-primary" {{ null }}>Eliminar turno</button>
+			</div>
+
         </form>
     </div>
+</div>
+</div>
 </div>
 
 

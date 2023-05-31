@@ -63,49 +63,25 @@ class ConsultaTurnosForm(forms.Form):
 
 
 class BajaTurnoForm(forms.Form):          
-    # paciente = forms.CharField(label="Paciente:", max_length=15, required=True, 
-    #     validators=[RegexValidator('^[0-9]+$', message="Debe contener sólo números")],
-    #     widget=forms.TextInput(attrs={"class": "form-paciente", "id":"paciente", "title":"Ingrese entre 7 y 8 dígitos de su número de documento"}))
-    dni = forms.IntegerField(label="Paciente:", widget=forms.TextInput(attrs=
-         {"class": "form-paciente", "id":"paciente", "title":"Ingrese entre 7 y 8 dígitos de su número de documento"}))
-    nombre_completo = forms.CharField(required=False , show_hidden_initial=True)
-
+    dni = forms.IntegerField(label="Paciente:", initial="" , error_messages={'required': 'Ingrese el dni del paciente'} ,
+            widget=forms.TextInput(attrs={"class": "form-paciente", "id":"paciente", "title":"Ingrese entre 7 y 8 dígitos de su número de documento"}))
+    
+    # nombre_completo = forms.Field(required=False , disabled=True)  -- no hace falta colocarlo aquí, ,porque lo estoy pasando por el context
+    
   
     def clean_dni(self):
         
-        data = self.cleaned_data["dni"]
-        # nombrep = self.cleaned_data["nombre"]
-        # apellidop = self.cleaned_data["apellido"]
-        # print("nombrep: ", nombrep)
-        # print("apellidop: ", apellidop)   
-
-        # Paciente.objects.all()
+        data = self.cleaned_data["dni"]      
+       
         if Paciente.objects.filter(dni=self.cleaned_data["dni"]).exists():
-            pass
-            # dni=int(self.cleaned_data["dni"])
-            # paciente = Paciente.objects.filter(dni=dni)
-            # nombre = paciente.nonmbre
-            # apellido= paciente.apellido
-
-        #     # apellido=self.cleaned_data["apellido"]
-        #     print("encontró el  dni en la tabla - forms")
-        #     print("dni: ", dni)
-        #     print("pacientep: ", paciente)
-                     
+            pass                               
               
         else:
             print("NO encontró el  dni en la tabla")
             raise ValidationError("Paciente inexistente")
        
         return data
-    
-    # def nombre_clean(self):
-    #     if Paciente.objects.filter(nombre=self.cleaned_data["nombre"]).exists():
-    #         # dni=self.cleaned_data["dni"]
-    #         nombre= self.cleaned_data["nombre"]
-    #         print('encontro nombre')
-    #         # apellido=self.cleaned_data["apellido"]
-    #     return nombre
+       
 
 class BajaTurnoDetalleForm(forms.Form):
     fecha = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
