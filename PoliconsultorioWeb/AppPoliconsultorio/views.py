@@ -288,11 +288,7 @@ def baja_turno(request):
     else: 
                 
         bajaturno_form = BajaTurnoForm()
-<<<<<<< HEAD
  
-=======
-
->>>>>>> 0a0bb4ffe56bced67285a43cfb2873560718945e
     context = {
         "listado_turnos": listado_turnos,
         "bajaturno_form": BajaTurnoForm,
@@ -300,7 +296,6 @@ def baja_turno(request):
     }
     return render(request, "AppPoliconsultorio/baja_turno.html", context)
 
-<<<<<<< HEAD
     #return HttpResponseRedirect('/AppPoliconsultorio/thanks/')
 
 def eliminar_turno(request, id):
@@ -315,8 +310,6 @@ def eliminar_turno(request, id):
 
 # print('id turno despues del return ' , dni )
 
-=======
->>>>>>> 0a0bb4ffe56bced67285a43cfb2873560718945e
 
 def listar_turnos(request):
     context = {}
