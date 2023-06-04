@@ -1,14 +1,118 @@
-from datetime import datetime
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseNotFound, HttpResponseRedirect
 from django.contrib import messages
+from django.views.generic.list import ListView
+
 from .forms import *
-from .models import Paciente
+from .models import *
 
 # Create your views here.
 def index(request):
     context = {}
     return render(request, "AppPoliconsultorio/index.html", context)
+
+
+def acerca(request):
+    context = {}
+    return render (request,"AppPoliconsultorio/acerca.html", context)
+
+
+def especialidades(request):
+    context = {}
+    return render (request,"AppPoliconsultorio/especialidades.html", context)
+
+
+def listar_especialidad(request):
+    context = {}
+
+    listado = Especialidad.objects.all()
+
+    context['lista_especialidades'] = listado
+    return render (request,"AppPoliconsultorio/listar_especialidad.html", context)
+
+
+def alta_medico(request):
+    # Alta de un Médico
+    context = {}
+    if request.method == 'POST':
+        form = AltaMedicoForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.add_message(request, messages.SUCCESS, 'Médico incorporado con éxito')
+            return redirect('listar_medicos')
+    else:
+        form = AltaMedicoForm()
+
+    context['form'] = form
+    return render(request, "AppPoliconsultorio/alta_medico.html", context)
+
+
+def baja_medico(request):
+    # Baja de un Médico
+    context = {}
+    return render(request, "AppPoliconsultorio/baja_medico.html", context)
+
+
+def consulta_medicos(request):
+    # Prepara los combos
+    listado_especialidad = Especialidad.lista_especialidades()
+    listado_medicos = Medico.lista_medicos()
+
+    if request.method == "POST":
+        consulta_medicos_form = ConsultaMedicosForm(request.POST)
+    else:
+        consulta_medicos_form = ConsultaMedicosForm()
+
+    context = {
+        "listado_especialidad": listado_especialidad,
+        "listado_medicos": listado_medicos,
+        "form": consulta_medicos_form,
+    }
+    return render(request, "AppPoliconsultorio/consulta_medicos.html", context)
+
+
+class listar_medicos(ListView):
+    model = Medico
+    context_object_name = "medicos"
+    template_name = "AppPoliconsultorio\listar_medicos.html"
+    ordering = ['apellido', 'nombre']
+
+
+def alta_paciente(request):
+    # Alta de un Paciente
+    context = {}
+    return render(request, "AppPoliconsultorio/alta_paciente.html", context)
+
+
+def baja_paciente(request):
+    # Baja de un Médico
+    context = {}
+    return render(request, "AppPoliconsultorio/baja_paciente.html", context)
+
+
+def consulta_pacientes(request):
+    # Prepara los combos
+    listado_pacientes = Paciente.lista_pacientes()
+
+    if request.method == "POST":
+        consulta_pacientes_form = ConsultaPacientesForm(request.POST)
+    else:
+        consulta_pacientes_form = ConsultaPacientesForm()
+
+    context = {
+        "listado_pacientes": listado_pacientes,
+        "form": consulta_pacientes_form,
+    }
+    return render(request, "AppPoliconsultorio/consulta_pacientes.html", context)
+
+
+def listar_pacientes(request):
+    context = {}
+
+    listado = Paciente.objects.all()
+
+    context['listar_pacientes'] = listado
+    return render(request, 'Apppoliconsultorio/listar_pacientes.html', context) 
 
 
 def turno_medico(request):
@@ -204,56 +308,6 @@ def turno_medico(request):
     #return render(request,"AppPoliconsultorio/turnos.html",context)
 
 
-def turno_consulta(request):
-    listado_turnos = []
-    errores = []
-    
-    if request.method == "POST":
-        turno_consulta_form = ConsultaTurnosForm(request.POST)
-        if turno_consulta_form.is_valid():
-            filtro_paciente = ""
-            filtro_especialidad = ""
-            filtro_medico = ""
-            filtro_fechaDesde = ""
-            filtro_fechaHasta = ""
-
-            # Filtro por Paciente
-            paciente_form = request.POST['paciente']
-            if paciente_form != '':
-                paciente = Paciente.objects.filter(dni = paciente_form)
-                filtro_paciente = paciente[0].dni
-                # listado_turnos = Turno.objects.filter(paciente = dni)
-
-            # Filtro por Especialidad
-            especialidad_form = request.POST['especialidad']
-            if especialidad_form != 'Z':
-                filtro_especialidad = especialidad_form
-
-            # Filtro por Medico
-            medico_form = request.POST['medico']
-            if medico_form != 'Z':
-                filtro_medico = int(medico_form)
-
-            # Filtro por Fechas
-            filtro_fechaDesde = request.POST['fechaDesde']
-            filtro_fechaHasta = request.POST['fechaHasta']
-
-            listado_turnos = Turno.lista_turnos(filtro_fechaDesde, filtro_fechaHasta, filtro_paciente, filtro_especialidad, filtro_medico)
-
-        else:
-            errores = turno_consulta_form.errors
-    else:
-        turno_consulta_form = ConsultaTurnosForm()
-
-    context = {
-        "listado_turnos": listado_turnos,
-        "turno_consulta_form": turno_consulta_form,
-        "errores": errores,
-    }
-    return render(request, "AppPoliconsultorio/turno_consulta.html", context)
-
-
-
 def baja_turno(request):
     listado_turnos = []
     errores = []
@@ -311,6 +365,55 @@ def eliminar_turno(request, id):
 # print('id turno despues del return ' , dni )
 
 
+def consulta_turnos(request):
+    listado_turnos = []
+    errores = []
+    
+    if request.method == "POST":
+        turno_consulta_form = ConsultaTurnosForm(request.POST)
+        if turno_consulta_form.is_valid():
+            filtro_paciente = ""
+            filtro_especialidad = ""
+            filtro_medico = ""
+            filtro_fechaDesde = ""
+            filtro_fechaHasta = ""
+
+            # Filtro por Paciente
+            paciente_form = request.POST['paciente']
+            if paciente_form != '':
+                paciente = Paciente.objects.filter(dni = paciente_form)
+                filtro_paciente = paciente[0].dni
+                # listado_turnos = Turno.objects.filter(paciente = dni)
+
+            # Filtro por Especialidad
+            especialidad_form = request.POST['especialidad']
+            if especialidad_form != 'Z':
+                filtro_especialidad = especialidad_form
+
+            # Filtro por Medico
+            medico_form = request.POST['medico']
+            if medico_form != 'Z':
+                filtro_medico = int(medico_form)
+
+            # Filtro por Fechas
+            filtro_fechaDesde = request.POST['fechaDesde']
+            filtro_fechaHasta = request.POST['fechaHasta']
+
+            listado_turnos = Turno.lista_turnos(filtro_fechaDesde, filtro_fechaHasta, filtro_paciente, filtro_especialidad, filtro_medico)
+
+        else:
+            errores = turno_consulta_form.errors
+    else:
+        turno_consulta_form = ConsultaTurnosForm()
+
+    context = {
+        "listado_turnos": listado_turnos,
+        "turno_consulta_form": turno_consulta_form,
+        "errores": errores,
+    }
+    return render(request, "AppPoliconsultorio/turno_consulta.html", context)
+
+
 def listar_turnos(request):
     context = {}
 
@@ -335,29 +438,6 @@ def listar_turnos(request):
     return render(request, 'Apppoliconsultorio/listar_turnos.html', context)  
 
 
-def listar_pacientes(request):
-    context = {}
-
-    listado = Paciente.objects.all()
-
-    context['listar_pacientes'] = listado
-    return render(request, 'Apppoliconsultorio/listar_pacientes.html', context) 
-
-
-def listar_especialidad(request):
-    context = {}
-
-    listado = Especialidad.objects.all()
-
-    context['lista_especialidades'] = listado
-    return render (request,"AppPoliconsultorio/listar_especialidad.html", context)
-
-
-def especialidades(request):
-    context = {}
-    return render (request,"AppPoliconsultorio/especialidades.html", context)
-
-
 def usuarios(request):
     context = {}
     return render (request,"AppPoliconsultorio/usuarios.html", context)
@@ -366,11 +446,6 @@ def usuarios(request):
 def contactenos(request):
     context = {}
     return render (request,"AppPoliconsultorio/contactenos.html", context)
-
-
-def acerca(request):
-    context = {}
-    return render (request,"AppPoliconsultorio/acerca.html", context)
 
 
 def contacto(request):
@@ -400,33 +475,3 @@ def thanks(request): #new
 def turnos(request):
     context = {}
     return render (request,"AppPoliconsultorio/turnos.html", context)
-
-
-def consulta_medicos(request):
-    # Prepara los combos
-    listado_especialidad = Especialidad.lista_especialidades()
-    listado_medicos = Medico.lista_medicos()
-
-    if request.method == "POST":
-        consulta_medicos_form = ConsultaMedicosForm(request.POST)
-    else:
-        consulta_medicos_form = ConsultaMedicosForm()
-
-    context = {
-        "listado_especialidad": listado_especialidad,
-        "listado_medicos": listado_medicos,
-        "form": consulta_medicos_form,
-    }
-    return render(request, "AppPoliconsultorio/consulta_medicos.html", context)
-
-
-def alta_medico(request):
-    # Alta de un Médico
-    context = {}
-    return render(request, "AppPoliconsultorio/alta_medico.html", context)
-
-
-def baja_medico(request):
-    # Baja de un Médico
-    context = {}
-    return render(request, "AppPoliconsultorio/baja_medico.html", context)

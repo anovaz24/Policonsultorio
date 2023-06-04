@@ -5,11 +5,13 @@ from django.core.validators import RegexValidator
 import datetime
 from .models import *
 
-class ContactoForm(forms.Form):
-    nombre = forms.CharField(label="Nombre de contacto:", max_length=5, required=True,
-        widget=forms.TextInput(attrs={"class": "special", "id":"44"}))
-    apellido = forms.CharField(label="Apellido de contacto", required=True)
-    email = forms.EmailField(required=True)
+
+class AltaMedicoForm(forms.ModelForm):
+    class Meta:
+        model = Medico
+        fields = '__all__'
+        exclude = ['pacientes']
+
 
 class ConsultaMedicosForm(forms.Form):
     # Definir campos
@@ -21,69 +23,11 @@ class ConsultaMedicosForm(forms.Form):
     fecha = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'})),
 
 
-class ConsultaTurnosForm(forms.Form):
-    # Definir campos
-    def fecha(desde,cuantos_dias):
-        if desde == 'h':
-            hasta = datetime.date.today() + datetime.timedelta(days=cuantos_dias)
-        else:
-            pass
-        return hasta.strftime('%Y-%m-%d')
+class ConsultaPacientesForm(forms.Form):
+    especialidad = forms.ChoiceField(choices=Especialidad.lista_especialidades(), required=True, widget=forms.Select)
+    medico = forms.CharField(label="Médico", widget=forms.TextInput(attrs={'class': 'medico'}), required=False)
+    fecha = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'})),
 
-    paciente = forms.CharField(label="Paciente:", max_length=8, min_length=6 ,required=False, validators=[RegexValidator(
-                '^[0-9]+$',
-                message="Debe contener solo números")],
-        widget=forms.TextInput(attrs={"class": "form-control", "id":"paciente","size": 12, "title":"Ingrese entre 6 y 8 dígitos de su número de documento"}))
-    especialidad = forms.ChoiceField(label=' Especialidad', choices=Especialidad.lista_especialidades(), required=False, widget=forms.Select)
-    medico = forms.ChoiceField(label=' Médico', choices=Medico.lista_medicos(), required=False, widget=forms.Select)
-    fechaDesde = forms.DateField(label=' Fecha Desde',widget=forms.DateInput(attrs={'type': 'date'}), required=False, initial=fecha('h',0))
-    fechaHasta = forms.DateField(label=' Fecha Hasta',widget=forms.DateInput(attrs={'type': 'date'}), required=False, initial=fecha('h',60))
-
-    def clean_paciente(self):
-        data = self.cleaned_data["paciente"]
-        if data != '':
-            if not Paciente.objects.filter(dni = int(data)).exists():
-                raise ValidationError("Debe ingresar un DNI de paciente válido o dejarlo en blanco")
-        return data
-    
-    def clean(self):
-        cleaned_data = super().clean()
-        dataD = cleaned_data.get("fechaDesde")
-        dataH = cleaned_data.get("fechaHasta")
-
-        if dataD is not None and dataH is not None and dataD > dataH:
-            raise ValidationError("Debe ingresar un rango de fechas correcto, Fecha Desde <= Fechas Hasta")
-
-        return cleaned_data
-
-
-
-class BajaTurnoForm(forms.Form):          
-    dni = forms.IntegerField(label="Paciente:", initial="" , error_messages={'required': 'Ingrese el dni del paciente'} ,
-            widget=forms.TextInput(attrs={"class": "form-paciente", "id":"paciente", "title":"Ingrese entre 7 y 8 dígitos de su número de documento"}))
-    
-    # nombre_completo = forms.Field(required=False , disabled=True)  -- no hace falta colocarlo aquí, ,porque lo estoy pasando por el context
-    
-  
-    def clean_dni(self):
-        
-        data = self.cleaned_data["dni"]      
-       
-        if Paciente.objects.filter(dni=self.cleaned_data["dni"]).exists():
-            pass                               
-              
-        else:
-            print("NO encontró el  dni en la tabla")
-            raise ValidationError("Paciente inexistente")
-       
-        return data
-       
-
-class BajaTurnoDetalleForm(forms.Form):
-    fecha = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
-    horario = forms.CharField(label="Horario", required=True)       
-    medico = forms.CharField(label=' Médico', widget=forms.TextInput(attrs={'class': 'paciente'}))
-    especialidad = forms.CharField(label=' Especialidad')
 
 class AltaTurnoForm(forms.Form):
 
@@ -180,3 +124,72 @@ def funcion_de_guardado_de_turno(accion,id,medico,fecha,hora):
         return listado_de_turnos
 
 
+class BajaTurnoForm(forms.Form):          
+    dni = forms.IntegerField(label="Paciente:", initial="" , error_messages={'required': 'Ingrese el dni del paciente'} ,
+            widget=forms.TextInput(attrs={"class": "form-paciente", "id":"paciente", "title":"Ingrese entre 7 y 8 dígitos de su número de documento"}))
+    
+    # nombre_completo = forms.Field(required=False , disabled=True)  -- no hace falta colocarlo aquí, ,porque lo estoy pasando por el context
+    
+  
+    def clean_dni(self):
+        
+        data = self.cleaned_data["dni"]      
+       
+        if Paciente.objects.filter(dni=self.cleaned_data["dni"]).exists():
+            pass                               
+              
+        else:
+            print("NO encontró el  dni en la tabla")
+            raise ValidationError("Paciente inexistente")
+       
+        return data
+       
+
+class BajaTurnoDetalleForm(forms.Form):
+    fecha = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
+    horario = forms.CharField(label="Horario", required=True)       
+    medico = forms.CharField(label=' Médico', widget=forms.TextInput(attrs={'class': 'paciente'}))
+    especialidad = forms.CharField(label=' Especialidad')
+
+
+class ConsultaTurnosForm(forms.Form):
+    # Definir campos
+    def fecha(desde,cuantos_dias):
+        if desde == 'h':
+            hasta = datetime.date.today() + datetime.timedelta(days=cuantos_dias)
+        else:
+            pass
+        return hasta.strftime('%Y-%m-%d')
+
+    paciente = forms.CharField(label="Paciente:", max_length=8, min_length=6 ,required=False, validators=[RegexValidator(
+                '^[0-9]+$',
+                message="Debe contener solo números")],
+        widget=forms.TextInput(attrs={"class": "form-control", "id":"paciente","size": 12, "title":"Ingrese entre 6 y 8 dígitos de su número de documento"}))
+    especialidad = forms.ChoiceField(label=' Especialidad', choices=Especialidad.lista_especialidades(), required=False, widget=forms.Select)
+    medico = forms.ChoiceField(label=' Médico', choices=Medico.lista_medicos(), required=False, widget=forms.Select)
+    fechaDesde = forms.DateField(label=' Fecha Desde',widget=forms.DateInput(attrs={'type': 'date'}), required=False, initial=fecha('h',0))
+    fechaHasta = forms.DateField(label=' Fecha Hasta',widget=forms.DateInput(attrs={'type': 'date'}), required=False, initial=fecha('h',60))
+
+    def clean_paciente(self):
+        data = self.cleaned_data["paciente"]
+        if data != '':
+            if not Paciente.objects.filter(dni = int(data)).exists():
+                raise ValidationError("Debe ingresar un DNI de paciente válido o dejarlo en blanco")
+        return data
+    
+    def clean(self):
+        cleaned_data = super().clean()
+        dataD = cleaned_data.get("fechaDesde")
+        dataH = cleaned_data.get("fechaHasta")
+
+        if dataD is not None and dataH is not None and dataD > dataH:
+            raise ValidationError("Debe ingresar un rango de fechas correcto, Fecha Desde <= Fechas Hasta")
+
+        return cleaned_data
+
+
+class ContactoForm(forms.Form):
+    nombre = forms.CharField(label="Nombre de contacto:", max_length=5, required=True,
+        widget=forms.TextInput(attrs={"class": "special", "id":"44"}))
+    apellido = forms.CharField(label="Apellido de contacto", required=True)
+    email = forms.EmailField(required=True)
