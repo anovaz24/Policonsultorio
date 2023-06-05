@@ -71,6 +71,9 @@ class Paciente(Persona):
             )
         ]
 
+    def __str__(self):
+        return f"{self.nombre_completo} - DNI: {self.dni}"
+
     def lista_pacientes():
         pacientes = Paciente.objects.all().order_by('apellido','nombre')
         listado_pacientes = [('Z','Seleccione un paciente')]
@@ -113,7 +116,7 @@ class Paciente(Persona):
 
 
 class Medico(Persona):
-    matricula = models.IntegerField(blank=False, verbose_name='Matricula')
+    matricula = models.IntegerField(blank=False, null=True, verbose_name='Matricula')
     especialidad = models.ForeignKey(Especialidad, on_delete=models.CASCADE)
     pacientes = models.ManyToManyField(Paciente, through='Turno')
 
@@ -123,6 +126,9 @@ class Medico(Persona):
                 fields=['matricula'], name='unique_matricula_combination'
             )
         ]
+
+    def __str__(self):
+        return f"{self.nombre_completo} - ({self.especialidad})"
 
     def lista_medicos():
         medicos = Medico.objects.all().order_by('apellido','nombre')
@@ -174,6 +180,9 @@ class Turno(models.Model):
                 fields=['medico', 'fecha', 'hora'], name='unique_medico_fecha_hora_combination'
             )
         ]
+
+    def __str__(self):
+        return f"{self.fecha} - {self.hora} - Médico: {self.medico} - Paciente: {self.paciente}"
 
     def lista_turnos(filtro_fechaDesde=date.today(), filtro_fechaHasta=date.today(), filtro_paciente='', filtro_especialidad='', filtro_medico=''):
         turnos = Turno.objects.filter(fecha__range=(parse_date(filtro_fechaDesde),parse_date(filtro_fechaHasta)))

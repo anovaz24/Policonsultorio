@@ -17,11 +17,11 @@
 		<form action="{% url 'alta_medico' %}" method="post">
 			{% csrf_token %}
             {{form.as_p}}
-			<div class="form-row">
+			<!-- <div class="form-row">
 				<div class="mt-lg-0 d-flex align-items-stretch">
-					<!-- <label class='rotulo_filtro' for="medico">Medico: <b>{{ medico }}</b></label> -->
+					<label class='rotulo_filtro' for="medico">Medico: <b>{{ medico }}</b></label>
 				</div>
-			</div>
+			</div> -->
 
 			<!-- Mensajes -->
 			<div class="mensajes">

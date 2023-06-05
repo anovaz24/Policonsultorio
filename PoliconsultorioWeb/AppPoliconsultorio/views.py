@@ -368,10 +368,11 @@ def eliminar_turno(request, id):
 def consulta_turnos(request):
     listado_turnos = []
     errores = []
+    nombre_completo = ""
     
     if request.method == "POST":
-        turno_consulta_form = ConsultaTurnosForm(request.POST)
-        if turno_consulta_form.is_valid():
+        consulta_turnos_form = ConsultaTurnosForm(request.POST)
+        if consulta_turnos_form.is_valid():
             filtro_paciente = ""
             filtro_especialidad = ""
             filtro_medico = ""
@@ -383,7 +384,7 @@ def consulta_turnos(request):
             if paciente_form != '':
                 paciente = Paciente.objects.filter(dni = paciente_form)
                 filtro_paciente = paciente[0].dni
-                # listado_turnos = Turno.objects.filter(paciente = dni)
+                nombre_completo = paciente[0].nombre_completo
 
             # Filtro por Especialidad
             especialidad_form = request.POST['especialidad']
@@ -399,19 +400,21 @@ def consulta_turnos(request):
             filtro_fechaDesde = request.POST['fechaDesde']
             filtro_fechaHasta = request.POST['fechaHasta']
 
+            # Preparo el listado de turnos según los filtros cargados
             listado_turnos = Turno.lista_turnos(filtro_fechaDesde, filtro_fechaHasta, filtro_paciente, filtro_especialidad, filtro_medico)
 
         else:
-            errores = turno_consulta_form.errors
+            errores = consulta_turnos_form.errors
     else:
-        turno_consulta_form = ConsultaTurnosForm()
+        consulta_turnos_form = ConsultaTurnosForm()
 
     context = {
         "listado_turnos": listado_turnos,
-        "turno_consulta_form": turno_consulta_form,
+        "consulta_turnos_form": consulta_turnos_form,
         "errores": errores,
+        "nombre_completo": nombre_completo,
     }
-    return render(request, "AppPoliconsultorio/turno_consulta.html", context)
+    return render(request, "AppPoliconsultorio/consulta_turno.html", context)
 
 
 def listar_turnos(request):
