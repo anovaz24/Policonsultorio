@@ -1,9 +1,12 @@
 from datetime import datetime
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseNotFound, HttpResponseRedirect
 from django.contrib import messages
 from .forms import *
 from .models import Paciente
+from django.contrib.auth.decorators import login_required, permission_required
+
+
 
 # Create your views here.
 def index(request):
@@ -28,6 +31,8 @@ def index(request):
     return render(request, "AppPoliconsultorio/index.html", context)
 
 
+#@login_required
+@permission_required(['AppPoliconsultorio.change_turno','AppPoliconsultorio.delete_turno'])
 def turno_medico(request):
 
     listado_especialidad = Especialidad.lista_especialidades()
@@ -270,7 +275,6 @@ def turno_consulta(request):
     return render(request, "AppPoliconsultorio/turno_consulta.html", context)
 
 
-
 def baja_turno(request):
     listado_turnos = []
     listado_pacientes =[]
@@ -323,6 +327,7 @@ def listar_turnos(request):
 
     context['listado_turnos'] = resultado
     return render(request, 'Apppoliconsultorio/listar_turnos.html', context)  
+
 
 
 def listar_pacientes(request):
