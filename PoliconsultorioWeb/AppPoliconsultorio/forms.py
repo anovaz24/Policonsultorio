@@ -106,7 +106,7 @@ class AltaTurnoForm(forms.Form):
 
 def funcion_de_guardado_de_turno(accion,id,medico,fecha,hora):
     if accion == 'actualizar':
-        print("ingreso a actualizar")
+        print("ingreso a actualizar") 
         actualizacion = Turno.asignar_turno(id,medico,fecha,hora)
         if actualizacion:
             print("Turno fue registrado correctamente!!!")

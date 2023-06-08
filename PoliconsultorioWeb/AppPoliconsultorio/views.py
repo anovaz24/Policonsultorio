@@ -1,3 +1,4 @@
+from datetime import datetime
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseNotFound, HttpResponseRedirect
 from django.contrib import messages
@@ -5,6 +6,8 @@ from django.views.generic.list import ListView
 
 from .forms import *
 from .models import *
+
+from django.contrib.auth.decorators import login_required, permission_required
 
 # Create your views here.
 def index(request):
@@ -115,6 +118,8 @@ def listar_pacientes(request):
     return render(request, 'Apppoliconsultorio/listar_pacientes.html', context) 
 
 
+#@login_required
+@permission_required(['AppPoliconsultorio.change_turno','AppPoliconsultorio.delete_turno'])
 def turno_medico(request):
 
     listado_especialidad = Especialidad.lista_especialidades()
@@ -308,6 +313,8 @@ def turno_medico(request):
     #return render(request,"AppPoliconsultorio/turnos.html",context)
 
 
+@login_required
+
 def baja_turno(request):
     listado_turnos = []
     errores = []
@@ -318,26 +325,42 @@ def baja_turno(request):
       
         if bajaturno_form.is_valid():
             dni = int(request.POST['dni'])    
-            # id = int(request.POST['id'])    
-            pacientes = Paciente.objects.filter(dni=dni)
-            turnos_tabla = Turno.objects.filter(paciente=dni )
-            # turnos_tabla = Turno.objects.all(id=id)
-            # turnos_tabla = Turno.objects.filter()
-            nombre = pacientes[0].nombre
-            apellido= pacientes[0].apellido
-            nombre_completo = f"{ apellido}, {nombre}"
-            id = turnos_tabla[0].id
-            print ('nombre completo1: ', nombre_completo)
-            # aca genero el listado_turnos: gte= mayor o igual a hoy                        
-            listado_turnos = Turno.objects.filter(fecha__gte=date.today(), paciente=dni).order_by('fecha')
-            
-            print ('nombre completo3: ', nombre_completo)
-            print ('id ', id)          
+            seleccionado = (request.POST.get('selectbajaturno'))   
+            print('sleccionado1: ', seleccionado)
+            if seleccionado is None :    
+                pacientes = Paciente.objects.filter(dni=dni)
+                turnos_tabla = Turno.objects.filter(paciente=dni )                
+                nombre = pacientes[0].nombre
+                apellido= pacientes[0].apellido
+                nombre_completo = f"{ apellido}, {nombre}"
+                id = turnos_tabla[0].id
+                # aca genero el listado_turnos: gte= mayor o igual a hoy                        
+                listado_turnos = Turno.objects.filter(fecha__gte=date.today(), paciente=dni).order_by('fecha')
+                return render(request, "AppPoliconsultorio/baja_turno.html", {'bajaturno_form': bajaturno_form, 'pacientel': nombre_completo, 'listado_turnos': listado_turnos  })
+       
+            else:
+                
 
-            return render(request, "AppPoliconsultorio/baja_turno.html", {'bajaturno_form': bajaturno_form, 'pacientel': nombre_completo, 'listado_turnos': listado_turnos  })
-        #     redireccionar 
+                turno = Turno.objects.filter(id=seleccionado)
+                print('turno1: ', turno)
+                
+                turno[0].paciente = None
+                print('turno de cero: ', turno)
 
-           
+                # turno.save()
+                
+            # revisar los mensajes
+                # turno.hora = ""
+                
+                                
+                messages.add_message(request, messages.WARNING, 'Turno eliminado', extra_tags="tag1")
+
+                context = {                        
+                    "bajaturno_form": BajaTurnoForm,
+                    "errores": errores,
+                }
+
+                return render(request, "AppPoliconsultorio/baja_turno.html", context)
 
     else: 
                 
@@ -352,18 +375,15 @@ def baja_turno(request):
 
     #return HttpResponseRedirect('/AppPoliconsultorio/thanks/')
 
-def eliminar_turno(request, id):
-    turno = Turno.objects.get(id=id)
-    print('encontrre el turno a eliminar' , turno)
+def eliminar_turno(request,id):
+    print ("request", request)
 
-    turno.delete()
+    print ('request.id', request.id)
+    print ('id', id)
 
-    # return redirect('/')
+    return redirect('/')
 
-    return render(request, 'Apppoliconsultorio/baja_turnos.html')  
-
-# print('id turno despues del return ' , dni )
-
+    # return render(request, 'Apppoliconsultorio/baja_turnos.html')  
 
 def consulta_turnos(request):
     listado_turnos = []
