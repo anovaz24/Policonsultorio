@@ -22,12 +22,16 @@ class Especialidad(models.Model):
     codigo = models.CharField(max_length=2, verbose_name='Codigo')
 
     class Meta:
+
+        verbose_name = 'Especialidad'
+        verbose_name_plural = 'Especialidades'
+
         constraints = [
             models.UniqueConstraint(
                 fields=['codigo', 'descripcion'], name='unique_codigo_descripcion_combination'
             )
-        ]
-
+            ]
+       
     def __str__(self):
         return self.descripcion
 
@@ -63,6 +67,9 @@ class Paciente(Persona):
     fecha_nacimiento = models.DateField(null= True, verbose_name='Fecha Nacimiento')
     genero = models.CharField(max_length=1, choices=GENEROS, verbose_name='Genero', null = True)
     obra_social = models.CharField(max_length=128, verbose_name="Obra_social", null = True)
+
+    def __str__(self):
+        return self.nombre_completo
 
     class Meta:
         constraints = [
@@ -120,12 +127,17 @@ class Medico(Persona):
     especialidad = models.ForeignKey(Especialidad, on_delete=models.CASCADE)
     pacientes = models.ManyToManyField(Paciente, through='Turno')
 
+    def __str__(self):
+        return self.nombre_completo
+
+
     class Meta:
         constraints = [
             models.UniqueConstraint(
                 fields=['matricula'], name='unique_matricula_combination'
             )
         ]
+
 
     def lista_medicos():
         medicos = Medico.objects.all().order_by('apellido','nombre')
@@ -178,10 +190,14 @@ class Turno(models.Model):
         ('17:00','17:00'),
     ]
     fecha = models.DateField(verbose_name='Fecha')
+
     hora = models.CharField(max_length=128, choices=HORARIOS ,verbose_name='Horario_turno')
     paciente = models.ForeignKey(Paciente, on_delete=models.CASCADE, null=True, blank=True)
     medico = models.ForeignKey(Medico, on_delete=models.CASCADE)
     # hora = models.TimeField(verbose_name='Hora')
+
+    def __str__(self):
+        return f" {self.fecha } ,{self.hora}, {self.paciente} ,{self.medico}"
 
     class Meta:
         constraints = [
@@ -226,7 +242,7 @@ class Turno(models.Model):
 
     @classmethod
     def obtener_turnos(cls, id_medico, fecha_param):
-        turnos = cls.objects.filter(medico__id=id_medico, fecha=fecha_param)
+        turnos = cls.objects.filter(medico__id=id_medico, fecha=fecha_param) 
         resultados = []
         for turno in turnos:
             resultado = {
