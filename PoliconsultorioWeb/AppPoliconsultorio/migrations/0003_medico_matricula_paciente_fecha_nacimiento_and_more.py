@@ -10,9 +10,9 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.AddField(
-            model_name='medico',
-            name='matricula',
-            field=models.IntegerField(blank=True, null=True, verbose_name='Matricula'),
-        ),
+        # migrations.AddField(
+        #     model_name='medico',
+        #     name='matricula',
+        #     field=models.IntegerField(blank=True, null=True, verbose_name='Matricula'),
+        # ),
     ]

@@ -14,28 +14,29 @@
 			<h2><u>Consulta de Turnos</u></h2>
 		</div>
 		<!--<form>-->
-		<form action="{% url 'turno_consulta' %}" method="post">
+		<form action="{% url 'consulta_turnos' %}" method="post">
 			{% csrf_token %}
 			<div class="form-row">
 				<div class="mt-lg-0 d-flex align-items-stretch">
 					<label class='rotulo_filtro' for="paciente">Paciente: <b>{{ paciente }}</b></label>
-					{{ turno_consulta_form.paciente }}
+					{{ consulta_turnos_form.paciente }}
+					<!-- <label class='nombre_completo' for="paciente"><b>{{ nombre_completo }}</b></label> -->
 				</div>
 			</div>
 			<div class="form-row">
 				<div class="col-lg-11 mt-5 mt-lg-0 d-flex">
 					<label class='rotulo_filtro' for="especialidad">Especialidad:</label>
-					{{ turno_consulta_form.especialidad }}
+					{{ consulta_turnos_form.especialidad }}
 					<label class='rotulo_filtro' for="medico">Médico:</label>
-					{{ turno_consulta_form.medico }}
+					{{ consulta_turnos_form.medico }}
 				</div>
 			</div>
 			<div class="form-row">
 				<div class="col-lg-11 mt-5 mt-lg-0 d-flex">
 					<label class='rotulo_filtro' for="fechaDesde"> Fecha Desde:</label>
-					{{ turno_consulta_form.fechaDesde }}
+					{{ consulta_turnos_form.fechaDesde }}
 					<label class='rotulo_filtro' for="fechaHasta"> Fecha Hasta:</label>
-					{{ turno_consulta_form.fechaHasta }}
+					{{ consulta_turnos_form.fechaHasta }}
 				</div>
 			</div>
 

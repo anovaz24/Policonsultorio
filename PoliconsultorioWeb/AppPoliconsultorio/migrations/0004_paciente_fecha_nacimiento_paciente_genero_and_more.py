@@ -10,8 +10,8 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.AddConstraint(
-            model_name='medico',
-            constraint=models.UniqueConstraint(fields=('matricula',), name='unique_matricula_combination'),
-        ),
+        # migrations.AddConstraint(
+        #     model_name='medico',
+        #     constraint=models.UniqueConstraint(fields=('matricula',), name='unique_matricula_combination'),
+        # ),
     ]
