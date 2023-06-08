@@ -20,12 +20,12 @@ from django.contrib.staticfiles.storage import staticfiles_storage
 from django.views.generic.base import RedirectView
 from django.contrib.auth import views as auth_views
 
-    
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('django.contrib.auth.urls')),
     path('accounts/login/', auth_views.LoginView.as_view(template_name='AppPoliconsultorio/login_html')),
     path('AppPoliconsultorio/', include('AppPoliconsultorio.urls')),        
     path('apppoliconsultorio/', include('AppPoliconsultorio.urls')),
-    path('favicon.ico', RedirectView.as_view(url=staticfiles_storage.url('img/favicon.ico')))                                  
+    path('accounts/', include('django.contrib.auth.urls')),
+    path('favicon.ico', RedirectView.as_view(url=staticfiles_storage.url('img/favicon.ico'))),
 ]

@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -56,7 +57,7 @@ ROOT_URLCONF = 'PoliconsultorioWeb.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -85,9 +86,9 @@ WSGI_APPLICATION = 'PoliconsultorioWeb.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'policonsultorio',
+        'NAME': 'Policonsultorio',
         'USER': 'postgres',
-        'PASSWORD': 'SuperUserPostgres',
+        'PASSWORD': 'admin',
         'HOST': '127.0.0.1',
         'PORT': '5432',
     }
@@ -136,4 +137,9 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+
 LOGUIN_URL = 'index'
+LOGIN_REDIRECT_URL = 'index'
+#LOGIN_REDIRECT_URL = '/'
+#LOGIN_REDIRECT_URL = 'turno_medico'
+LOGOUT_REDIRECT_URL = 'index'
