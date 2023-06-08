@@ -111,6 +111,9 @@ class Paciente(Persona):
         except cls.DoesNotExist:
             return None
 
+    def __str__(self):
+        return f"{self.nombre} {self.apellido} - DNI: {self.dni}"
+
 
 class Medico(Persona):
     matricula = models.IntegerField(blank=False, verbose_name='Matricula')
@@ -160,11 +163,23 @@ class Medico(Persona):
 
         print("Registros iniciales de médicos migrados con éxito.")
 
+    def __str__(self):
+        return f"{self.nombre} {self.apellido} ({self.especialidad})"
+
+
 
 class Turno(models.Model):
+    HORARIOS = [
+        ('10:00','10:00'),
+        ('11:00','11:00'),
+        ('12:00','12:00'),
+        ('15:00','15:00'),
+        ('16:00','16:00'),
+        ('17:00','17:00'),
+    ]
     fecha = models.DateField(verbose_name='Fecha')
-    hora = models.CharField(max_length=128, verbose_name='Horario_turno')
-    paciente = models.ForeignKey(Paciente, on_delete=models.CASCADE, null=True)
+    hora = models.CharField(max_length=128, choices=HORARIOS ,verbose_name='Horario_turno')
+    paciente = models.ForeignKey(Paciente, on_delete=models.CASCADE, null=True, blank=True)
     medico = models.ForeignKey(Medico, on_delete=models.CASCADE)
     # hora = models.TimeField(verbose_name='Hora')
 
@@ -233,6 +248,9 @@ class Turno(models.Model):
             turno.save()
             return True
         return False
+
+    def __str__(self):
+        return f"{self.fecha} - {self.hora} - Medico: {self.medico} - Paciente: {self.paciente}"
 
 
 
