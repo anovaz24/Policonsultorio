@@ -56,34 +56,29 @@
                                 <th scope="col">Especialidad</th>
                                 <!-- <th scope="col">Paciente</th> -->
                                 <th scope="col">Selección</th>
-                                <th scope="col">id</th>
                             </tr>
                             </thead>
                             <tbody>
                                                 
+                                
+                                {% for xx in listado_turnos %}     
                                 <tr>
-                                {% for xx in listado_turnos %}                           
                                     <td>{{ xx.fecha }}</td>
                                     <td>{{ xx.hora }}</td>
                                     <td>{{ xx.medico.apellido}} , {{xx.medico.nombre}}</td>
                                     <td>{{ xx.medico.especialidad.descripcion}}</td>
-                                    <td>{{xx.id}}</td>
-                                    <td><input type="radio" name="selectbajaturno" value= {{ xx.ID }} ></td>       
-   
-                                    <!-- {%if  type="radio" name="selectbajaturno" value= {{ xx.ID }}.checked%}
-                                        {{eliminar_turno(xx.id)}}
-                                    {% endif %} -->
-
+                                    <td>{{xx.id}}</td> 
+                                    <td><input type="radio" class="form-check-input" name="selectbajaturno"   value="{{ xx.id }}" ></td>     
+                                    <!-- <td> <a href="eliminar_turno/{{xx.id}}" class="btn btn-danger">"Eliminar"</a>   </td>  -->
+                                    <!-- <td> <a href="eliminar_turno?id={{xx.id}}" name= 'eliminar' class="btn btn-danger">"Eliminar"</a>   </td>   -->
+                                    
                                 </tr>
                                 {% endfor %}
-
-                            </tbody>
-
+                           
+                        </tbody>
+                           
                             <!-- si no hay ningun radio bnutton presionado, que aparezca el boton de seleccionar 
-                            si está seleccionado, ocultar el de seleccion y que aparezca el de confirmar la baja_turno -->
-
-
-    <!-- meter un javascript para saber que boton apreto -->
+                             si está seleccionado, ocultar el de seleccion y que aparezca el de confirmar la baja_turno  --> 
 
                         </table>
                     </div>
@@ -106,6 +101,10 @@
             <div class="form-row justify-content-center">
 				<button type="submit" name="eliminar_turno" class="btn btn-primary" {{ null }}>Eliminar turno</button>
 			</div>
+
+            {% if selectbjaturno is not null %} checked id_borrar = {{ xx.id }} 
+            {{ checked_id_borrar }}
+            {% endif %}
 
         </form>
     </div>
