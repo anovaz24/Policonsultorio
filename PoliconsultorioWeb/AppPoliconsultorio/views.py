@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseNotFound, HttpResponseRedirect
 from django.contrib import messages
 from django.views.generic.list import ListView
+from django.contrib.auth.decorators import login_required,permission_required
 
 from .forms import *
 from .models import *
@@ -34,6 +35,7 @@ def listar_especialidad(request):
     return render (request,"AppPoliconsultorio/listar_especialidad.html", context)
 
 
+@permission_required('AppPoliconsultorio.add_medico')
 def alta_medico(request):
     # Alta de un Médico
     context = {}
@@ -50,6 +52,7 @@ def alta_medico(request):
     return render(request, "AppPoliconsultorio/alta_medico.html", context)
 
 
+@login_required
 def baja_medico(request):
     # Baja de un Médico
     context = {}
@@ -81,12 +84,14 @@ class listar_medicos(ListView):
     ordering = ['apellido', 'nombre']
 
 
+@login_required
 def alta_paciente(request):
     # Alta de un Paciente
     context = {}
     return render(request, "AppPoliconsultorio/alta_paciente.html", context)
 
 
+@login_required
 def baja_paciente(request):
     # Baja de un Médico
     context = {}
@@ -109,6 +114,7 @@ def consulta_pacientes(request):
     return render(request, "AppPoliconsultorio/consulta_pacientes.html", context)
 
 
+@login_required
 def listar_pacientes(request):
     context = {}
 
@@ -314,7 +320,6 @@ def turno_medico(request):
 
 
 @login_required
-
 def baja_turno(request):
     listado_turnos = []
     errores = []
@@ -385,6 +390,7 @@ def eliminar_turno(request,id):
 
     # return render(request, 'Apppoliconsultorio/baja_turnos.html')  
 
+@login_required
 def consulta_turnos(request):
     listado_turnos = []
     errores = []
@@ -437,6 +443,7 @@ def consulta_turnos(request):
     return render(request, "AppPoliconsultorio/consulta_turno.html", context)
 
 
+@login_required
 def listar_turnos(request):
     context = {}
 

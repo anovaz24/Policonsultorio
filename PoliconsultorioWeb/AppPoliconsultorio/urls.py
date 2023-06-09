@@ -28,3 +28,4 @@ urlpatterns = [
     path('thanks/', views.thanks, name="thanks"),
     #path('turnos/',views.turnos,name="turnos"),
     #path('turnos/<slug:slug>/',views.turnos,name="turnos_rol"),
+]

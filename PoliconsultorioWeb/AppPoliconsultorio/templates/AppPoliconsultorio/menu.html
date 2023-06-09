@@ -8,9 +8,9 @@
         <h7 style="color: #228d6a;"><b>
         {% if user.is_authenticated %}
           Bienvenido {{ user.first_name }} {{ user.last_name }}
-          {% else %}
+        {% else %}
             
-          {% endif %} 
+        {% endif %} 
         </b></h7>
         <!-- Uncomment below if you prefer to use an image logo -->
         <!-- <a href="index.html"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
@@ -42,29 +42,37 @@
           </li>
           <li class="dropdown"><a href="#"><span>Médicos</span> <i class="bi bi-chevron-down"></i></a>
             <ul>
-              <li><a href="{% url 'alta_medico' %}">Alta de Médico</a></li>
-              <li><a href="{% url 'baja_medico' %}">Baja de Médico</a></li>
+              {% if perms.AppPoliconsultorio.add_medico %}
+                <li><a href="{% url 'alta_medico' %}">Alta de Médico</a></li>
+                <li><a href="{% url 'baja_medico' %}">Baja de Médico</a></li>
+              {% endif %}
               <li><a href="{% url 'consulta_medicos' %}">Consulta de Médicos</a></li>
               <li><a href="{% url 'listar_medicos' %}">Listado de Médicos</a></li>
             </ul>
           </li>
-          <li class="dropdown"><a href="#"><span>Pacientes</span> <i class="bi bi-chevron-down"></i></a>
-            <ul>
-              <li><a href="{% url 'alta_paciente' %}">Alta de Paciente</a></li>
-              <li><a href="{% url 'baja_paciente' %}">Baja de Paciente</a></li>
-              <li><a href="{% url 'consulta_pacientes' %}">Consulta de Paciente</a></li>
-              <li><a href="{% url 'listar_pacientes' %}">Listado de Pacientes</a></li>
-            </ul>
-          </li>
-		  <li class="dropdown"><a href="#"><span>Turnos</span> <i class="bi bi-chevron-down"></i></a>
-            <ul>
-              <!-- <li><a href="http://127.0.0.1:8000/AppPoliconsultorio/turno_medico/">Alta de Turno</a></li> -->
-              <li><a href="{% url 'turno_medico' %}">Alta de Turno</a></li>
-              <li><a href="{% url 'baja_turno' %}">Baja de turno</a></li>
-              <li><a href="{% url 'consulta_turnos' %}">Consulta de Turnos</a></li>
-              <li><a href="{% url 'listar_turnos' %}">Listado de turnos</a></li>
-            </ul>
-          </li>
+          {% if user.is_authenticated %}
+            {% if perms.AppPoliconsultorio.view_paciente %}
+              <li class="dropdown"><a href="#"><span>Pacientes</span> <i class="bi bi-chevron-down"></i></a>
+                  <ul>
+                    {% if perms.AppPoliconsultorio.add_paciente %}
+                      <li><a href="{% url 'alta_paciente' %}">Alta de Paciente</a></li>
+                      <li><a href="{% url 'baja_paciente' %}">Baja de Paciente</a></li>
+                    {% endif %}
+                    <li><a href="{% url 'consulta_pacientes' %}">Consulta de Paciente</a></li>
+                    <li><a href="{% url 'listar_pacientes' %}">Listado de Pacientes</a></li>
+                  </ul>
+              </li>
+            {% endif %}
+              <li class="dropdown"><a href="#"><span>Turnos</span> <i class="bi bi-chevron-down"></i></a>
+              <ul>
+                  <!-- <li><a href="http://127.0.0.1:8000/AppPoliconsultorio/turno_medico/">Alta de Turno</a></li> -->
+                  <li><a href="{% url 'turno_medico' %}">Alta de Turno</a></li>
+                  <li><a href="{% url 'baja_turno' %}">Baja de turno</a></li>
+                  <li><a href="{% url 'consulta_turnos' %}">Consulta de Turnos</a></li>
+                  <li><a href="{% url 'listar_turnos' %}">Listado de turnos</a></li>
+              </ul>
+            </li>
+          {% endif %}
           <li>
             {% if user.is_authenticated %}
               <a class="getstarted scrollto" href="{% url 'logout' %}">Salir</a></li>

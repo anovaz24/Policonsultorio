@@ -1,6 +1,7 @@
 from django.db import models
 from datetime import timedelta, date
 from django.utils.dateparse import parse_date
+from django.contrib import admin
 
 
 class Persona(models.Model):
@@ -273,7 +274,7 @@ class Turno(models.Model):
         return f"{self.fecha} - {self.hora} - Medico: {self.medico} - Paciente: {self.paciente}"
 
 
-
 def daterange(start_date, end_date):
     for n in range(int((end_date - start_date).days)):
         yield start_date + timedelta(n)
+
