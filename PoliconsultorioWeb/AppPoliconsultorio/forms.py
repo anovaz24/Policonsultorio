@@ -126,7 +126,7 @@ def funcion_de_guardado_de_turno(accion,id,medico,fecha,hora):
 
 class BajaTurnoForm(forms.Form):          
     dni = forms.IntegerField(label="Paciente:", initial="" , error_messages={'required': 'Ingrese el dni del paciente'} ,
-            widget=forms.TextInput(attrs={"class": "form-paciente", "id":"paciente", "title":"Ingrese entre 7 y 8 dígitos de su número de documento"}))
+            widget=forms.TextInput(attrs={"class": "form-paciente paciente_recuadro", "id":"paciente", "title":"Ingrese entre 7 y 8 dígitos de su número de documento"}))
     
     # nombre_completo = forms.Field(required=False , disabled=True)  -- no hace falta colocarlo aquí, ,porque lo estoy pasando por el context
     

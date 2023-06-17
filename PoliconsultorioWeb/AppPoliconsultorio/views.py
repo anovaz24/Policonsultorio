@@ -59,6 +59,7 @@ def baja_medico(request):
     return render(request, "AppPoliconsultorio/baja_medico.html", context)
 
 
+@login_required
 def consulta_medicos(request):
     # Prepara los combos
     listado_especialidad = Especialidad.lista_especialidades()
@@ -98,6 +99,7 @@ def baja_paciente(request):
     return render(request, "AppPoliconsultorio/baja_paciente.html", context)
 
 
+@login_required
 def consulta_pacientes(request):
     # Prepara los combos
     listado_pacientes = Paciente.lista_pacientes()
@@ -349,10 +351,12 @@ def baja_turno(request):
                 turno = Turno.objects.filter(id=seleccionado)
                 print('turno1: ', turno)
                 
-                turno[0].paciente = None
-                print('turno de cero: ', turno)
+                p=Paciente(None)
+                turno[0].paciente = p
+                print('turno de cero: ', turno[0])
+                print('Paciente: ', turno[0].paciente)
 
-                # turno.save()
+                turno[0].save()
                 
             # revisar los mensajes
                 # turno.hora = ""
