@@ -123,6 +123,14 @@ def funcion_de_guardado_de_turno(accion,id,medico,fecha,hora):
         print("LISTA NUEVITA DE TURNOS! --> :",listado_de_turnos)
         return listado_de_turnos
 
+    if accion == 'anular':
+        print("Ingreso a anular") 
+        actualizacion = Turno.desasignar_turno(id)
+        if actualizacion:
+            print("Turno fue anulado correctamente!!!")
+        else:
+            print("Hay un problema en el anulado del turno")
+
 
 class BajaTurnoForm(forms.Form):          
     dni = forms.IntegerField(label="Paciente:", initial="" , error_messages={'required': 'Ingrese el dni del paciente'} ,
@@ -139,7 +147,7 @@ class BajaTurnoForm(forms.Form):
             pass                               
               
         else:
-            print("NO encontró el  dni en la tabla")
+            print("NO encontró el dni en la tabla")
             raise ValidationError("Paciente inexistente")
        
         return data

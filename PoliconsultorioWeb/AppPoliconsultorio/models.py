@@ -2,13 +2,14 @@ from django.db import models
 from datetime import timedelta, date
 from django.utils.dateparse import parse_date
 from django.contrib import admin
-
+from django.contrib.auth.models import User
 
 class Persona(models.Model):
     nombre = models.CharField(max_length=25, blank=False, verbose_name='Nombre')
     apellido = models.CharField(max_length=25, blank=False, verbose_name='Apellido')
     telefono = models.CharField(max_length=50, verbose_name='Telefono')
     mail = models.EmailField(max_length=150, verbose_name='Email')
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
 
     class Meta:
         abstract = True
@@ -251,7 +252,10 @@ class Turno(models.Model):
 
     @classmethod
     def asignar_turno(cls, id_paciente, id_medico, fecha_turno, hora_param):
-        paciente = Paciente.objects.get(dni=id_paciente)
+        if id_paciente is not None:
+            paciente = Paciente.objects.get(dni=id_paciente)
+        else:
+            paciente = id_paciente
         turno = cls.objects.filter(medico__id=id_medico, fecha=fecha_turno, hora=hora_param).first()
         if turno:
             turno.paciente = paciente
@@ -259,6 +263,17 @@ class Turno(models.Model):
             return True
         return False
 
+    @classmethod
+    def desasignar_turno(cls,id_turno):
+        turno = cls.objects.filter(id=id_turno).first()
+        if turno:
+            turno.paciente = None
+            turno.save()
+            return True
+        return False
+
+    def __str__(self):
+        return f"{self.fecha} - {self.hora} - Medico: {self.medico} - Paciente: {self.paciente}"
 
 def daterange(start_date, end_date):
     for n in range(int((end_date - start_date).days)):
