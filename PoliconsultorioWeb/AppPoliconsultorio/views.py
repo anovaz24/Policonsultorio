@@ -330,8 +330,10 @@ def baja_turno(request):
       
         if bajaturno_form.is_valid():
             dni = int(request.POST['dni'])    
-            seleccionado = (request.POST.get('selectbajaturno'))   
-            print('sleccionado1: ', seleccionado)
+            seleccionado = (request.POST.get('selectbajaturno'))
+            todo = request.POST
+            print(todo)
+            print('selecciono el que voy a bajar: ', seleccionado)
             if seleccionado is None :    
                 pacientes = Paciente.objects.filter(dni=dni)
                 turnos_tabla = Turno.objects.filter(paciente=dni )                
@@ -342,16 +344,10 @@ def baja_turno(request):
                 # aca genero el listado_turnos: gte= mayor o igual a hoy                        
                 listado_turnos = Turno.objects.filter(fecha__gte=date.today(), paciente=dni).order_by('fecha')
                 return render(request, "AppPoliconsultorio/baja_turno.html", {'bajaturno_form': bajaturno_form, 'pacientel': nombre_completo, 'listado_turnos': listado_turnos  })
-       
             else:
-                
-
                 turno = Turno.objects.filter(id=seleccionado)
                 print('turno1: ', turno)
-                
-                turno[0].paciente = None
-                print('turno de cero: ', turno)
-
+                funcion_de_guardado_de_turno('anular',request.POST.get('selectbajaturno'),'','','')
                 # turno.save()
                 
             # revisar los mensajes

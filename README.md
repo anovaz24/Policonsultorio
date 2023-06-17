@@ -53,4 +53,10 @@
 # Alta de turno: (22-05-2023)
 # En el alta de turnos, el turno viene de la BD y se guarda en la BD.
 #
+# Baja de Turno: 12-06-2023
+# Ahora la baja de turno registra el cambio en la base de datos.
+# El mensaje de baja no se visualiza duplicado(Corregido)
+# Modelo: El modelo ahora tiene una FK en Persona sobre el modelo por defecto de django de Usuario.
+# Las personas son usuario tambien en este modelo.
+#
 #
