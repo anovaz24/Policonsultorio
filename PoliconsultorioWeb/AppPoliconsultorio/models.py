@@ -70,8 +70,6 @@ class Paciente(Persona):
     genero = models.CharField(max_length=1, choices=GENEROS, verbose_name='Genero', null = True)
     obra_social = models.CharField(max_length=128, verbose_name="Obra_social", null = True)
 
-    def __str__(self):
-        return self.nombre_completo
 
     class Meta:
         constraints = [
@@ -123,17 +121,11 @@ class Paciente(Persona):
         except cls.DoesNotExist:
             return None
 
-    def __str__(self):
-        return f"{self.nombre} {self.apellido} - DNI: {self.dni}"
-
 
 class Medico(Persona):
     matricula = models.IntegerField(blank=False, null=True, verbose_name='Matricula')
     especialidad = models.ForeignKey(Especialidad, on_delete=models.CASCADE)
     pacientes = models.ManyToManyField(Paciente, through='Turno')
-
-    def __str__(self):
-        return self.nombre_completo
 
 
     class Meta:
@@ -198,9 +190,6 @@ class Turno(models.Model):
     paciente = models.ForeignKey(Paciente, on_delete=models.CASCADE, null=True, blank=True)
     medico = models.ForeignKey(Medico, on_delete=models.CASCADE)
     # hora = models.TimeField(verbose_name='Hora')
-
-    def __str__(self):
-        return f" {self.fecha } ,{self.hora}, {self.paciente} ,{self.medico}"
 
     class Meta:
         constraints = [
@@ -274,7 +263,6 @@ class Turno(models.Model):
             return True
         return False
 
-
     @classmethod
     def desasignar_turno(cls,id_turno):
         turno = cls.objects.filter(id=id_turno).first()
@@ -286,7 +274,6 @@ class Turno(models.Model):
 
     def __str__(self):
         return f"{self.fecha} - {self.hora} - Medico: {self.medico} - Paciente: {self.paciente}"
-
 
 def daterange(start_date, end_date):
     for n in range(int((end_date - start_date).days)):

@@ -14,3 +14,8 @@
 .mensajes {
     color: red;
 }
+
+.paciente_recuadro {
+    color: yellow;
+    border-radius: 25rem;
+}

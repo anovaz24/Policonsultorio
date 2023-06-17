@@ -59,6 +59,7 @@ def baja_medico(request):
     return render(request, "AppPoliconsultorio/baja_medico.html", context)
 
 
+@login_required
 def consulta_medicos(request):
     # Prepara los combos
     listado_especialidad = Especialidad.lista_especialidades()
@@ -98,6 +99,7 @@ def baja_paciente(request):
     return render(request, "AppPoliconsultorio/baja_paciente.html", context)
 
 
+@login_required
 def consulta_pacientes(request):
     # Prepara los combos
     listado_pacientes = Paciente.lista_pacientes()
