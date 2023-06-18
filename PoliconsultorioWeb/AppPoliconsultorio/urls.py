@@ -11,6 +11,7 @@ urlpatterns = [
     path('baja_medico/',views.baja_medico,name="baja_medico"),
     path('consulta_medicos/',views.consulta_medicos,name="consulta_medicos"),
     path('listar_medicos/',views.listar_medicos.as_view(),name="listar_medicos"),
+    path('listar_medicos_por_especialidad/<str:cod_especialidad>/', views.listar_medicos_por_especialidad, name="listar_medicos_por_especialidad"),
     path('alta_paciente/',views.alta_paciente,name="alta_paciente"),
     path('baja_paciente/',views.baja_paciente,name="baja_paciente"),
     path('consulta_pacientes/',views.consulta_pacientes,name="consulta_pacientes"),
