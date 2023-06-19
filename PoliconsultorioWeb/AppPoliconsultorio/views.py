@@ -84,6 +84,34 @@ class listar_medicos(ListView):
     template_name = "AppPoliconsultorio\listar_medicos.html"
     ordering = ['apellido', 'nombre']
 
+@login_required
+def listar_medicos_por_especialidad(request,cod_especialidad):
+    context = {}
+    print('El cod_especialidad ingresado es: ',cod_especialidad)
+
+    try:
+        especialidad_ob = Especialidad.objects.get(codigo=cod_especialidad)
+        print('El id del objeto es: ',especialidad_ob.pk)
+        #especialidad_elegida = Especialidad.objects.filter()
+        medicos = Medico.objects.filter(especialidad=especialidad_ob)
+
+        #id_especialidad = Especialidad.objects.filter(codigo=cod_especialidad)
+
+        listado_medicos = []
+
+        for medico in medicos:
+            print(medico.nombre_completo+' ('+medico.especialidad.descripcion+')')
+            listado_medicos.append(medico.nombre_completo+' ('+medico.especialidad.descripcion+')')
+        #return listado_medicos 
+        #listado = Paciente.objects.all()
+
+        context['listado_medicos'] = listado_medicos
+        return render(request, 'Apppoliconsultorio/listar_medicos_por_especialidad.html', context) 
+    except:
+        listado_medicos = []
+        context['listado_medicos'] = listado_medicos
+        return render(request, 'Apppoliconsultorio/listar_medicos_por_especialidad.html', context)
+
 
 @login_required
 def alta_paciente(request):

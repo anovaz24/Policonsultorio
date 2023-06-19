@@ -59,4 +59,16 @@
 # Modelo: El modelo ahora tiene una FK en Persona sobre el modelo por defecto de django de Usuario.
 # Las personas son usuario tambien en este modelo.
 #
+# -------------------------------
+# 17/06/2023 (Flavio Rinaldi)
+# Añadida una vista de "listar_medicos_por_especialidad" parametrizada por código de especialidad
+# Para utilizarla deben estar logueados y luego deben llamarla de la siguiente manera:
+#
+# http://localhost:8000/apppoliconsultorio/listar_medicos_por_especialidad/O/
+# 
+# El parametro O es "Oftalmología", si se pone un parametro que no existe el front-end recibira la lista vacia y emite un mensaje
+# informando el siguiente mensaje "No hay médicos habilitados"
+#
+# No esta capturado que no reciba parametros, va a dar error(falta esa parte, tener en cuenta para la presentación.
+#
 #
