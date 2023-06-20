@@ -3,12 +3,12 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseNotFound, HttpResponseRedirect
 from django.contrib import messages
 from django.views.generic.list import ListView
+from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required,permission_required
 
 from .forms import *
 from .models import *
 
-from django.contrib.auth.decorators import login_required, permission_required
 
 # Create your views here.
 def index(request):
@@ -503,3 +503,24 @@ def thanks(request): #new
 def turnos(request):
     context = {}
     return render (request,"AppPoliconsultorio/turnos.html", context)
+
+
+def registro(request):
+    context = {}
+    if request.method == 'POST':
+        form = CustomUserCreationForm(request.POST)
+        if form.is_valid():
+            print(form.cleaned_data)
+            form.save()
+            user = authenticate(username=form.cleaned_data["username"], password = form.cleaned_data["password1"])
+            login(request, request.user)
+            messages.success(request, "Te has registrado correctamente")
+            return redirect(to='home')
+    else:
+        form = CustomUserCreationForm()
+
+    context = {
+        "form": form
+    }
+    return render (request,"registration/registro.html", context)
+

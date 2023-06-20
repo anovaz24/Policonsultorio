@@ -2,6 +2,7 @@ from typing import Any, Dict
 from django import forms
 from django.core.exceptions import ValidationError
 from django.core.validators import RegexValidator
+from django.contrib.auth.forms import UserCreationForm,UsernameField
 import datetime
 from .models import *
 
@@ -201,3 +202,43 @@ class ContactoForm(forms.Form):
         widget=forms.TextInput(attrs={"class": "special", "id":"44"}))
     apellido = forms.CharField(label="Apellido de contacto", required=True)
     email = forms.EmailField(required=True)
+
+
+class CustomUserCreationForm(UserCreationForm):
+    username = UsernameField(label="Email de Usuario", required=True)
+    
+    class Meta:
+        model = User
+        fields = ['username', 'first_name', 'last_name', 'email', 'password1', 'password2']
+
+    def clean_username(self):
+        username = self.cleaned_data["username"]
+        print(username)
+
+        if username != '':
+            if User.objects.filter(username = username).exists():
+                raise ValidationError("Usted ya se encuentra registrado con ese mail")
+        else:
+            raise ValidationError("Debe ingresar un mail válido")
+        print(username)
+        return username
+
+    def clean_mail(self):
+        email = super().clean_email()
+
+        if email != '':
+            if User.objects.filter(email = email).exists():
+                raise ValidationError("Usted ya se encuentra registrado con ese mail")
+        else:
+            raise ValidationError("Debe ingresar un mail válido")
+
+        return email
+    
+    def clean(self):
+        cleaned_data = super().clean()
+        email = cleaned_data.get("username")
+        
+        # defino como usuario el mail
+        cleaned_data["email"] = cleaned_data["username"]
+    
+        return cleaned_data
