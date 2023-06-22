@@ -27,6 +27,7 @@ urlpatterns = [
     path('contactenos/', views.contactenos, name='contactenos'),
     path('contacto/', views.contacto, name="contacto"),
     path('thanks/', views.thanks, name="thanks"),
+    path('registro/', views.registro, name="registro"),
     #path('turnos/',views.turnos,name="turnos"),
     #path('turnos/<slug:slug>/',views.turnos,name="turnos_rol"),
 ]
