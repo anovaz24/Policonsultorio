@@ -11,7 +11,7 @@
     <h2>Médicos con consultorio en el Policonsultorio</h2>
 
     <section>
-        <h3>Listado de Médicos</h3>
+        <h3>Consulta de Médicos</h3>
         <article>
             <!-- <li style="color: {% cycle 'red' 'green' %} ">
                 <p>Médico: {{medico.medico}}</p>
@@ -29,7 +29,7 @@
                     <h2>Filtros</h2>
                     <!-- {% csrf_token %} -->
                     {{form}}
-                    <div class="form-group-2">
+                    <!-- <div class="form-group-2">
                         <label for="especialidad">Especialidad:</label>
                         <select class="form-control" id="especialidad">
                             <option value="">Seleccione una especialidad</option>
@@ -45,7 +45,7 @@
                                 <option value="{{medico.ID}}">{{medico.nombre}}</option>
                             {% endfor %}							
                         </select>
-                    </div>
+                    </div> -->
                 </div>
             </form>
             <div class="container">

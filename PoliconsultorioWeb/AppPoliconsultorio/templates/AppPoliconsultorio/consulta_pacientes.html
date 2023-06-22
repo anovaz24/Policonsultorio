@@ -1,0 +1,63 @@
+{% extends 'AppPoliconsultorio/base.html' %}
+{% load static %}
+
+ <!-- Estilos CSS personalizados-->
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static '/css/consulta_pacientes.css' %}">
+{% endblock %}
+
+{% block titulo %} Pacientes {% endblock %}
+{% block contenido %}
+    <h2>Pacientes de Policonsultorio</h2>
+
+    <section>
+        <h3>Consulta de Pacientes</h3>
+        <article>
+            <form action="{% url 'consulta_pacientes' %}" method="GET">
+                {% csrf_token %} 
+                <div>    
+                     {{form}}   
+                </div>
+                <div class="form-row justify-content-center">
+                    <button type="submit" class="btn btn-primary">Consultar</button>                   
+                </div> 
+            </form>
+            <div class="container">
+                <table>
+                    <div class="form-row justify-content-center">
+                        <div class="form-group col-md-12"> 
+                            <table class="table table-bordered table-striped">                            
+                                <thead class="table-header"> 
+                                    <tr>
+                                        <th scope="col">DNI</th>
+                                        <th scope="col">Nombre</th>
+                                        <th scope="col">Apellido</th>
+                                        <th scope="col">Teléfono</th>
+                                        <th scope="col">E-mail</th>
+                                        <th scope="col">Fecha Nacimiento</th>
+                                        <th scope="col">Género</th>
+                                        <th scope="col">Obra social</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for paciente in listado_pacientes %}
+                                    <tr>
+                                        <td>{{paciente.dni}}</td>
+                                        <td>{{paciente.nombre}}</td>
+                                        <td>{{paciente.apellido}}</td>
+                                        <td>{{paciente.telefono}}</td>
+                                        <td>{{paciente.mail}}</td>
+                                        <td>{{paciente.fecha_nacimiento}}</td>
+                                        <td>{{paciente.genero}}</td>
+                                        <td>{{paciente.obra_social}}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+            </div>
+        </article>
+    </section>
+
+{% endblock %}

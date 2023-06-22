@@ -3,12 +3,13 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseNotFound, HttpResponseRedirect
 from django.contrib import messages
 from django.views.generic.list import ListView
+from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required,permission_required
+from django.contrib.auth.models import Group
 
 from .forms import *
 from .models import *
 
-from django.contrib.auth.decorators import login_required, permission_required
 
 # Create your views here.
 def index(request):
@@ -56,6 +57,18 @@ def alta_medico(request):
 def baja_medico(request):
     # Baja de un Médico
     context = {}
+    # En Construcción
+    #
+    # if request.method == 'POST':
+    #     form = BajaMedicoForm(request.POST)
+    #     if form.is_valid():
+    #         form.save()
+    #         messages.add_message(request, messages.SUCCESS, 'Médico Eliminado del plantel')
+    #         return redirect('listar_medicos')
+    # else:
+    #     form = BajaMedicoForm()
+
+    # context['form'] = form
     return render(request, "AppPoliconsultorio/baja_medico.html", context)
 
 
@@ -142,9 +155,69 @@ def consulta_pacientes(request):
         "form": consulta_pacientes_form,
     }
     return render(request, "AppPoliconsultorio/consulta_pacientes.html", context)
+# **********************************************************************************
 
+def consulta_pacientes_estaba_este(request):
+    context = {}
 
-@login_required
+    listado_pacientes = Paciente.objects.all()
+    
+    if request.method == "POST":
+        # consulta_pacientes_form = ConsultaPacientesForm(request.POST)
+        # paciente = Paciente.buscar_por_dni(request.POST.get('paciente', None))
+        paciente = Paciente.buscar_paciente_completo_por_dni(request.POST.get('paciente', None))
+        if consulta_pacientes_form.is_valid():
+            
+            dni = int(request.POST['dni'])
+            listado_pacientes = Paciente.objects.filter(paciente=dni).oder_by('apellido','nombre')
+            # consulta_pacientes_form = ConsultaPacientesForm()
+            return render(request, "AppPoliconsultorio/consulta_pacientes.html", {'consulta_pacientes_form': consulta_pacientes_form, 'pacientes': listado_pacientes  })
+    else:
+        consulta_pacientes_form = ConsultaPacientesForm()   
+    
+    context ={
+         "paciente": listado_pacientes,
+        
+        }
+    return render(request, "AppPoliconsultorio/consulta_pacientes.html", context)
+# **********************************************************************************     
+def consulta_pacientes(request):  
+        listado_turnos = []
+        errores = []
+
+        if request.method == "POST":
+        # Creo la instancia del formulario con los datos cargados en pantalla
+            conspac_form = ConsultaPacientesForm(request.POST)
+        
+            if conspac_form.is_valid():
+                dni = int(request.POST['dni'])    
+                # seleccionado = (request.POST.get('selectbajaturno'))   
+                if dni is None :    
+                # pacientes = Paciente.objects.filter(dni=dni)
+                #     turnos_tabla = Turno.objects.filter(paciente=dni )                
+                #     nombre = pacientes[0].nombre
+                #     apellido= pacientes[0].apellido
+                #     nombre_completo = f"{ apellido}, {nombre}"
+                #     id = turnos_tabla[0].id
+                #     # aca genero el listado_turnos: gte= mayor o igual a hoy                        
+                #     listado_turnos = Turno.objects.filter(fecha__gte=date.today(), paciente=dni).order_by('fecha')
+                # print("dni", dni)
+                    return render(request, "AppPoliconsultorio/consulta_pacientes.html", {'conspac_form': conspac_form  })
+            else:
+                paciente = Paciente.objects.filter(id=dni)
+           
+        else:                 
+            conspac_form = ConsultaPacientesForm()
+ 
+        context = {
+           
+            "conspac_form": ConsultaPacientesForm,
+            "errores": errores,
+    }
+        
+        return render(request, "AppPoliconsultorio/consulta_pacientes.html", context)
+   
+# **********************************************************************************
 def listar_pacientes(request):
     context = {}
 
@@ -360,10 +433,7 @@ def baja_turno(request):
       
         if bajaturno_form.is_valid():
             dni = int(request.POST['dni'])    
-            seleccionado = (request.POST.get('selectbajaturno'))
-            todo = request.POST
-            print(todo)
-            print('selecciono el que voy a bajar: ', seleccionado)
+            seleccionado = (request.POST.get('selectbajaturno'))   
             if seleccionado is None :    
                 pacientes = Paciente.objects.filter(dni=dni)
                 turnos_tabla = Turno.objects.filter(paciente=dni )                
@@ -375,26 +445,12 @@ def baja_turno(request):
                 listado_turnos = Turno.objects.filter(fecha__gte=date.today(), paciente=dni).order_by('fecha')
                 return render(request, "AppPoliconsultorio/baja_turno.html", {'bajaturno_form': bajaturno_form, 'pacientel': nombre_completo, 'listado_turnos': listado_turnos  })
             else:
+              
                 turno = Turno.objects.filter(id=seleccionado)
                 print('turno1: ', turno)
                 funcion_de_guardado_de_turno('anular',request.POST.get('selectbajaturno'),'','','')
                 # turno.save()
-                
-            # revisar los mensajes
-                # turno.hora = ""
-                
-                                
-                messages.add_message(request, messages.WARNING, 'Turno eliminado', extra_tags="tag1")
-
-                context = {                        
-                    "bajaturno_form": BajaTurnoForm,
-                    "errores": errores,
-                }
-
-                return render(request, "AppPoliconsultorio/baja_turno.html", context)
-
-    else: 
-                
+    else:                 
         bajaturno_form = BajaTurnoForm()
  
     context = {
@@ -403,20 +459,7 @@ def baja_turno(request):
         "errores": errores,
     }
     return render(request, "AppPoliconsultorio/baja_turno.html", context)
-
-    #return HttpResponseRedirect('/AppPoliconsultorio/thanks/')
-
-def eliminar_turno(request,id):
-    print ("request", request)
-
-    print ('request.id', request.id)
-    print ('id', id)
-
-    return redirect('/')
-
-    # return render(request, 'Apppoliconsultorio/baja_turnos.html')  
-
-@login_required
+   
 def consulta_turnos(request):
     listado_turnos = []
     errores = []
@@ -531,3 +574,42 @@ def thanks(request): #new
 def turnos(request):
     context = {}
     return render (request,"AppPoliconsultorio/turnos.html", context)
+
+
+def registro(request):
+    context = {}
+    if request.method == 'POST':
+        form = CustomUserCreationForm(request.POST)
+        if form.is_valid():
+            print(form.cleaned_data)
+            form.save()
+            print(form)
+            # Registro en Medico/Paciente el enlace con el usuario
+            email = form.cleaned_data['email']
+            if Medico.objects.filter(mail = email).exists():
+                persona = Medico.objects.filter(mail = email).first()
+                grupo = Group.objects.get(name = 'Medicos')
+            elif Paciente.objects.filter(mail = email).exists():
+                persona = Paciente.objects.filter(mail = email).first()
+                grupo = Group.objects.get(name = 'Pacientes')
+            else:
+                raise ValidationError('Error en la identificación del usuario')
+            # Registro en users_groups el enlace con los grupos que definen los perfiles
+            usuario = User.objects.get(username=form.cleaned_data["username"])
+            persona.user = usuario
+            persona.save()
+            # Registro en users_groups el enlace con los grupos que definen los perfiles
+            usuario.groups.add(grupo)
+            # Autenticación y logueo
+            user = authenticate(username=form.cleaned_data["username"], password = form.cleaned_data["password1"])
+            login(request, user)
+            messages.success(request, f"Te has registrado correctamente como {grupo.name}")
+            return redirect(to='index')
+    else:
+        form = CustomUserCreationForm()
+
+    context = {
+        "form": form
+    }
+    return render (request,"registration/registro.html", context)
+

@@ -12,7 +12,7 @@
 <h2>Listado de turnos</h2>
 {% endblock %}
 
-{% block contenido %}
+<!-- {% block contenido %}
 <section class="listado" style="margin-top: 40px;"></section>
     {%for turno in listado_turnos %}
         <article>
@@ -25,5 +25,58 @@
     {% empty %}
 
     {% endfor %}
-</section>
+</section> -->
+
+<div class="container">
+	<div class="form-container justifica-arriba">
+		<div class="form-row justify-content-center">
+			<h2><u>Listado de Turnos</u></h2>
+		</div>
+		<!--<form>-->
+		<form action="{% url 'consulta_turnos' %}" method="post">
+			{% csrf_token %}
+			<div class="form-row">
+				<div class="mt-lg-0 d-flex align-items-stretch">
+					<label class='rotulo_filtro' for="paciente">Paciente: <b>{{ paciente }}</b></label>
+					{{ consulta_turnos_form.paciente }}
+					<!-- <label class='nombre_completo' for="paciente"><b>{{ nombre_completo }}</b></label> -->
+				</div>
+			</div>
+			
+
+			<div class="form-row justify-content-center">
+				<button type="submit" class="btn btn-primary">Consultar</button>
+			</div>
+			<div class="form-row justify-content-center">
+				<div class="form-group col-md-12">
+					<table class="table table-bordered">
+						<thead class="table-header">
+							<tr>
+								<th scope="col">Día</th>
+								<th scope="col">Hora</th>
+								<th scope="col">Médico</th>
+								<th scope="col">Paciente</th>
+								
+							</tr>
+						</thead>
+
+						<tbody>
+							{% for turno in listado_turnos %}
+							<!-- <tr style='background-color: {% cycle '#f3c5aa' '#f1d5c5' %}'></tr> -->
+								<th>{{ turno.fecha }}</th>
+								<td>{{ turno.hora }}</td>
+								<td>{{ turno.medico.apellido }}, {{ turno.medico.nombre }}</td>
+								<td>{{ turno.paciente.apellido }}, {{ turno.paciente.nombre }}</td>
+							</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
+            </div>
+		</form>
+	</div>
+</div>
+
+
+
 {% endblock %}

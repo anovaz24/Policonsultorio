@@ -12,7 +12,7 @@ class Persona(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
 
     class Meta:
-        abstract = True
+        abstract = True 
 
     @property
     def nombre_completo(self):
@@ -39,7 +39,7 @@ class Especialidad(models.Model):
 
     def lista_especialidades():
         opciones_especialidades = [('Z', 'Seleccione una especialidad')]
-        opciones_especialidades += [(esp.codigo, esp.descripcion) for esp in Especialidad.objects.all().order_by('descripcion')]
+        opciones_especialidades = [(esp.codigo, esp.descripcion) for esp in Especialidad.objects.all().order_by('descripcion')]
         return opciones_especialidades
 
     @classmethod
@@ -83,9 +83,10 @@ class Paciente(Persona):
 
     def lista_pacientes():
         pacientes = Paciente.objects.all().order_by('apellido','nombre')
-        listado_pacientes = [('Z','Seleccione un paciente')]
-        for paciente in pacientes:
-                listado_pacientes.append(paciente.dni, paciente.nombre_completo)
+        listado_pacientes = pacientes
+        # listado_pacientes = [('Z','Seleccione un paciente')]
+        # for paciente in pacientes:
+        #         listado_pacientes.append(paciente.dni,  f"{paciente.nombre_completo}")               
             
         return listado_pacientes 
     
@@ -112,6 +113,16 @@ class Paciente(Persona):
             return nombre_completo
         except cls.DoesNotExist:
             return "No-existe"
+        
+    @classmethod
+    def buscar_paciente_completo_por_dni(cls, dni):
+        try:
+            paciente = cls.objects.get(dni=dni)
+            paciente_completo = f"{paciente.dni} {paciente.nombre} {paciente.apellido} {paciente.telefono} {paciente.mail} {paciente.fecha_nacimiento} {paciente.genero} {paciente.obra_social} "
+            return paciente_completo
+        except cls.DoesNotExist:
+            return "No-existe"
+
 
     @classmethod
     def Obtener_id_Paciente_por_dni(cls, dni):
@@ -191,6 +202,14 @@ class Turno(models.Model):
     medico = models.ForeignKey(Medico, on_delete=models.CASCADE)
     # hora = models.TimeField(verbose_name='Hora')
 
+<<<<<<< HEAD
+    def __str__(self):
+        if self.paciente =='':
+            self.paciente = empty_value_display = '-empty-'
+        return f" {self.fecha } ,{self.hora}, {self.paciente} ,{self.medico}"
+
+=======
+>>>>>>> 8854de63452bc1930ab73419b3c7b8b8ebbfcfb7
     class Meta:
         constraints = [
             models.UniqueConstraint(
@@ -198,8 +217,8 @@ class Turno(models.Model):
             )
         ]
 
-    def __str__(self):
-        return f"{self.fecha} - {self.hora} - Médico: {self.medico} - Paciente: {self.paciente}"
+    # def __str__(self):
+    #     return f"{self.fecha} - {self.hora} - Médico: {self.medico} - Paciente: {self.paciente}"
 
     def lista_turnos(filtro_fechaDesde=date.today(), filtro_fechaHasta=date.today(), filtro_paciente='', filtro_especialidad='', filtro_medico=''):
         turnos = Turno.objects.filter(fecha__range=(parse_date(filtro_fechaDesde),parse_date(filtro_fechaHasta)))
@@ -262,6 +281,17 @@ class Turno(models.Model):
             turno.save()
             return True
         return False
+    
+
+    @classmethod
+    def desasignar_turno(cls,id_turno):
+        turno = cls.objects.filter(id=id_turno).first()
+        if turno:
+            turno.paciente = None
+            turno.save()
+            return True
+        return False
+    
 
     @classmethod
     def desasignar_turno(cls,id_turno):
@@ -274,6 +304,10 @@ class Turno(models.Model):
 
     def __str__(self):
         return f"{self.fecha} - {self.hora} - Medico: {self.medico} - Paciente: {self.paciente}"
+    
+
+    # def __str__(self):
+    #     return f"{self.fecha} - {self.hora} - Medico: {self.medico} - Paciente: {self.paciente}"
 
 def daterange(start_date, end_date):
     for n in range(int((end_date - start_date).days)):

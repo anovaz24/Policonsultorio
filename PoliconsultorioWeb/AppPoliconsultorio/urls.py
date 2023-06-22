@@ -19,14 +19,19 @@ urlpatterns = [
     path('turno_medico/',views.turno_medico,name="turno_medico"),
     path('baja_turno/',views.baja_turno,name="baja_turno"),
     # path('eliminar_turno/id',views.eliminar_turno,name="eliminar_turno"),
-    path('baja_turno/eliminar_turno', views.eliminar_turno, name="eliminar_turno"),
+    # path('baja_turno/eliminar_turno', views.eliminar_turno, name="eliminar_turno"),
     path('consulta_turnos/',views.consulta_turnos,name="consulta_turnos"),
     path('listar_turnos/',views.listar_turnos,name="listar_turnos"),
-    path('eliminar_turno/dni',views.eliminar_turno,name="eliminar_turno"),
+    # path('eliminar_turno/dni',views.eliminar_turno,name="eliminar_turno"),
     path('usuarios/',views.usuarios,name="usuarios"),
     path('contactenos/', views.contactenos, name='contactenos'),
     path('contacto/', views.contacto, name="contacto"),
     path('thanks/', views.thanks, name="thanks"),
+    path('registro/', views.registro, name="registro"),
     #path('turnos/',views.turnos,name="turnos"),
     #path('turnos/<slug:slug>/',views.turnos,name="turnos_rol"),
+<<<<<<< HEAD
 ]
+=======
+]
+>>>>>>> 8854de63452bc1930ab73419b3c7b8b8ebbfcfb7
