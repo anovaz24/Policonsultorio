@@ -90,9 +90,6 @@ DATABASES = {
         'USER': 'postgres',
 <<<<<<< HEAD
         'PASSWORD': 'UserSuperAdmin',
-=======
-        'PASSWORD': 'SuperUserPostgres',
->>>>>>> 8854de63452bc1930ab73419b3c7b8b8ebbfcfb7
         'HOST': '127.0.0.1',
         'PORT': '5432',
     }
