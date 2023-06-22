@@ -57,16 +57,18 @@ def alta_medico(request):
 def baja_medico(request):
     # Baja de un Médico
     context = {}
-    if request.method == 'POST':
-        form = BajaMedicoForm(request.POST)
-        if form.is_valid():
-            form.save()
-            messages.add_message(request, messages.SUCCESS, 'Médico Eliminado del plantel')
-            return redirect('listar_medicos')
-    else:
-        form = BajaMedicoForm()
+    # En Construcción
+    #
+    # if request.method == 'POST':
+    #     form = BajaMedicoForm(request.POST)
+    #     if form.is_valid():
+    #         form.save()
+    #         messages.add_message(request, messages.SUCCESS, 'Médico Eliminado del plantel')
+    #         return redirect('listar_medicos')
+    # else:
+    #     form = BajaMedicoForm()
 
-    context['form'] = form
+    # context['form'] = form
     return render(request, "AppPoliconsultorio/baja_medico.html", context)
 
 
