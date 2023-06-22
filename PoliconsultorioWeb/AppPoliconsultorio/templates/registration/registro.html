@@ -57,6 +57,15 @@
                            </div>
                         {% endif %}
                      </div>
+                     <div class="form-group" hidden="true">
+                        {{ form.email.label_tag }}
+                        {{ form.email }}
+                        {% if form.email.errors %}
+                           <div class="alert alert-danger" role="alert">
+                              {{ form.email.errors }}
+                           </div>
+                        {% endif %}
+                     </div>
                      <br>
                      <div class="form-group">
                         {{ form.password1.label_tag }}
@@ -79,7 +88,7 @@
                      </div>
                      <br>
                      <!-- Este que puse arriba del button es para guardar el parametro de la pagina o vista anterior al login -->
-                     <input type="hidden" name="next" value="{{ next_url }}"> 
+                     <!-- <input type="hidden" name="next" value="{{ next_url }}">  -->
                      <button type="submit" class="btn btn-primary">Registrarse</button>
                   </form>
                <!--</div>

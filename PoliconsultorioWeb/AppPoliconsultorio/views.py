@@ -5,6 +5,7 @@ from django.contrib import messages
 from django.views.generic.list import ListView
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required,permission_required
+from django.contrib.auth.models import Group
 
 from .forms import *
 from .models import *
@@ -56,6 +57,16 @@ def alta_medico(request):
 def baja_medico(request):
     # Baja de un Médico
     context = {}
+    if request.method == 'POST':
+        form = BajaMedicoForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.add_message(request, messages.SUCCESS, 'Médico Eliminado del plantel')
+            return redirect('listar_medicos')
+    else:
+        form = BajaMedicoForm()
+
+    context['form'] = form
     return render(request, "AppPoliconsultorio/baja_medico.html", context)
 
 
@@ -512,10 +523,28 @@ def registro(request):
         if form.is_valid():
             print(form.cleaned_data)
             form.save()
+            print(form)
+            # Registro en Medico/Paciente el enlace con el usuario
+            email = form.cleaned_data['email']
+            if Medico.objects.filter(mail = email).exists():
+                persona = Medico.objects.filter(mail = email).first()
+                grupo = Group.objects.get(name = 'Medicos')
+            elif Paciente.objects.filter(mail = email).exists():
+                persona = Paciente.objects.filter(mail = email).first()
+                grupo = Group.objects.get(name = 'Pacientes')
+            else:
+                raise ValidationError('Error en la identificación del usuario')
+            # Registro en users_groups el enlace con los grupos que definen los perfiles
+            usuario = User.objects.get(username=form.cleaned_data["username"])
+            persona.user = usuario
+            persona.save()
+            # Registro en users_groups el enlace con los grupos que definen los perfiles
+            usuario.groups.add(grupo)
+            # Autenticación y logueo
             user = authenticate(username=form.cleaned_data["username"], password = form.cleaned_data["password1"])
-            login(request, request.user)
-            messages.success(request, "Te has registrado correctamente")
-            return redirect(to='home')
+            login(request, user)
+            messages.success(request, f"Te has registrado correctamente como {grupo.name}")
+            return redirect(to='index')
     else:
         form = CustomUserCreationForm()
 

@@ -11,7 +11,7 @@ class AltaMedicoForm(forms.ModelForm):
     class Meta:
         model = Medico
         fields = '__all__'
-        exclude = ['pacientes']
+        exclude = ['pacientes','user']
 
 
 class ConsultaMedicosForm(forms.Form):
@@ -216,29 +216,35 @@ class CustomUserCreationForm(UserCreationForm):
         print(username)
 
         if username != '':
+            print(User.objects.filter(username = username).exists())
             if User.objects.filter(username = username).exists():
                 raise ValidationError("Usted ya se encuentra registrado con ese mail")
+            elif not Medico.objects.filter(mail = username).exists() and not Paciente.objects.filter(mail = username).exists():
+                raise ValidationError("Usted no se encuentra habilitado para registrarse")
+            else:
+                self.cleaned_data["email"] = username
         else:
             raise ValidationError("Debe ingresar un mail válido")
         print(username)
         return username
 
-    def clean_mail(self):
-        email = super().clean_email()
+    # def clean_email(self):
+    #     email = self.cleaned_data["email"]
+    #     # email = super().clean_email()
 
-        if email != '':
-            if User.objects.filter(email = email).exists():
-                raise ValidationError("Usted ya se encuentra registrado con ese mail")
-        else:
-            raise ValidationError("Debe ingresar un mail válido")
+    #     if email != '':
+    #         if User.objects.filter(email = email).exists():
+    #             raise ValidationError("Usted ya se encuentra registrado con ese mail")
+    #     else:
+    #         raise ValidationError("Debe ingresar un mail válido")
 
-        return email
+    #     return email
     
     def clean(self):
         cleaned_data = super().clean()
         email = cleaned_data.get("username")
         
         # defino como usuario el mail
-        cleaned_data["email"] = cleaned_data["username"]
+        cleaned_data["email"] = email
     
         return cleaned_data
