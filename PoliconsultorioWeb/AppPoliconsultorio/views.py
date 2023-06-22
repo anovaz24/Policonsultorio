@@ -93,8 +93,7 @@ def baja_paciente(request):
     return render(request, "AppPoliconsultorio/baja_paciente.html", context)
 
 
-def consulta_pacientes(request):
-    # Prepara los combos
+def consulta_pacientes_v2(request):
     listado_pacientes = Paciente.lista_pacientes()
 
     if request.method == "POST":
@@ -107,8 +106,69 @@ def consulta_pacientes(request):
         "form": consulta_pacientes_form,
     }
     return render(request, "AppPoliconsultorio/consulta_pacientes.html", context)
+# **********************************************************************************
 
+def consulta_pacientes_estaba_este(request):
+    context = {}
 
+    listado_pacientes = Paciente.objects.all()
+    
+    if request.method == "POST":
+        # consulta_pacientes_form = ConsultaPacientesForm(request.POST)
+        # paciente = Paciente.buscar_por_dni(request.POST.get('paciente', None))
+        paciente = Paciente.buscar_paciente_completo_por_dni(request.POST.get('paciente', None))
+        if consulta_pacientes_form.is_valid():
+            
+            dni = int(request.POST['dni'])
+            listado_pacientes = Paciente.objects.filter(paciente=dni).oder_by('apellido','nombre')
+            # consulta_pacientes_form = ConsultaPacientesForm()
+            return render(request, "AppPoliconsultorio/consulta_pacientes.html", {'consulta_pacientes_form': consulta_pacientes_form, 'pacientes': listado_pacientes  })
+    else:
+        consulta_pacientes_form = ConsultaPacientesForm()   
+    
+    context ={
+         "paciente": listado_pacientes,
+        
+        }
+    return render(request, "AppPoliconsultorio/consulta_pacientes.html", context)
+# **********************************************************************************     
+def consulta_pacientes(request):  
+        listado_turnos = []
+        errores = []
+
+        if request.method == "POST":
+        # Creo la instancia del formulario con los datos cargados en pantalla
+            conspac_form = ConsultaPacientesForm(request.POST)
+        
+            if conspac_form.is_valid():
+                dni = int(request.POST['dni'])    
+                # seleccionado = (request.POST.get('selectbajaturno'))   
+                if dni is None :    
+                # pacientes = Paciente.objects.filter(dni=dni)
+                #     turnos_tabla = Turno.objects.filter(paciente=dni )                
+                #     nombre = pacientes[0].nombre
+                #     apellido= pacientes[0].apellido
+                #     nombre_completo = f"{ apellido}, {nombre}"
+                #     id = turnos_tabla[0].id
+                #     # aca genero el listado_turnos: gte= mayor o igual a hoy                        
+                #     listado_turnos = Turno.objects.filter(fecha__gte=date.today(), paciente=dni).order_by('fecha')
+                # print("dni", dni)
+                    return render(request, "AppPoliconsultorio/consulta_pacientes.html", {'conspac_form': conspac_form  })
+            else:
+                paciente = Paciente.objects.filter(id=dni)
+           
+        else:                 
+            conspac_form = ConsultaPacientesForm()
+ 
+        context = {
+           
+            "conspac_form": ConsultaPacientesForm,
+            "errores": errores,
+    }
+        
+        return render(request, "AppPoliconsultorio/consulta_pacientes.html", context)
+   
+# **********************************************************************************
 def listar_pacientes(request):
     context = {}
 
@@ -326,7 +386,6 @@ def baja_turno(request):
         if bajaturno_form.is_valid():
             dni = int(request.POST['dni'])    
             seleccionado = (request.POST.get('selectbajaturno'))   
-            print('sleccionado1: ', seleccionado)
             if seleccionado is None :    
                 pacientes = Paciente.objects.filter(dni=dni)
                 turnos_tabla = Turno.objects.filter(paciente=dni )                
@@ -339,31 +398,12 @@ def baja_turno(request):
                 return render(request, "AppPoliconsultorio/baja_turno.html", {'bajaturno_form': bajaturno_form, 'pacientel': nombre_completo, 'listado_turnos': listado_turnos  })
        
             else:
-                
-
+              
                 turno = Turno.objects.filter(id=seleccionado)
                 print('turno1: ', turno)
-                
-                turno[0].paciente = None
-                print('turno de cero: ', turno)
-
+                funcion_de_guardado_de_turno('anular',request.POST.get('selectbajaturno'),'','','')
                 # turno.save()
-                
-            # revisar los mensajes
-                # turno.hora = ""
-                
-                                
-                messages.add_message(request, messages.WARNING, 'Turno eliminado', extra_tags="tag1")
-
-                context = {                        
-                    "bajaturno_form": BajaTurnoForm,
-                    "errores": errores,
-                }
-
-                return render(request, "AppPoliconsultorio/baja_turno.html", context)
-
-    else: 
-                
+    else:                 
         bajaturno_form = BajaTurnoForm()
  
     context = {
@@ -372,19 +412,7 @@ def baja_turno(request):
         "errores": errores,
     }
     return render(request, "AppPoliconsultorio/baja_turno.html", context)
-
-    #return HttpResponseRedirect('/AppPoliconsultorio/thanks/')
-
-def eliminar_turno(request,id):
-    print ("request", request)
-
-    print ('request.id', request.id)
-    print ('id', id)
-
-    return redirect('/')
-
-    # return render(request, 'Apppoliconsultorio/baja_turnos.html')  
-
+   
 def consulta_turnos(request):
     listado_turnos = []
     errores = []

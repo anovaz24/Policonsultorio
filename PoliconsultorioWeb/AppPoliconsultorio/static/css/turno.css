@@ -4,6 +4,7 @@
 
 .rotulo_filtro {
     margin: 5px 10px;
+    
 }
 
 .nombre_completo {
@@ -13,4 +14,8 @@
 
 .mensajes {
     color: red;
+}
+
+.paciente_recuadro {
+    border-radius: .375rem;
 }

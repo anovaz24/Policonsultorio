@@ -4,7 +4,7 @@
 {% block titulo %} Consulta de Turnos {% endblock %}
  <!-- Estilos CSS personalizados-->
 {% block extra_css %}
-	<link rel="stylesheet" href="{% static '/css/turno.css' %}">
+	<link rel="stylesheet" href="{% static '/css/turno.css' %}"> 
 {% endblock %}
 
 {% block contenido %}
@@ -90,7 +90,7 @@
 
 						<tbody>
 							{% for turno in listado_turnos %}
-							<tr style='background-color: {% cycle '#f3c5aa' '#f1d5c5' %}'>
+							<tr style='background-color: {% cycle '#f3c5aa' '#f1d5c5' %}'></tr>
 								<th>{{ turno.fecha }}</th>
 								<td>{{ turno.hora }}</td>
 								<td>{{ turno.medico.apellido }}, {{ turno.medico.nombre }}</td>

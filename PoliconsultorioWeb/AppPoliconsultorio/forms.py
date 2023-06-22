@@ -12,6 +12,24 @@ class AltaMedicoForm(forms.ModelForm):
         fields = '__all__'
         exclude = ['pacientes']
 
+class AltaPpacienteForm(forms.Form):
+    nombre = forms.CharField(label='Nombre:', required=True,
+        widget=forms.TextInput(attrs={"class": "form-control paciente_recuadro", "id":"nombre"}))
+    apellido = forms.ChoiceField(label="Apellido:", required=True,
+        widget=forms.TextInput(attrs={"class": "form-control paciente_recuadro", "id":"apellido"}))
+    dni = forms.IntegerField(label='Dni', required=True,
+        widget=forms.TextInput(attrs={"class": "form-control paciente_recuadro", "id":"dni"}))
+    mail = forms.EmailField(label='E-mail', required=True,
+        widget=forms.TextInput(attrs={"class": "form-control paciente_recuadro", "id":"mail"}))  
+    telefono = forms.EmailField(label='Telefono', required=True,
+        widget=forms.TextInput(attrs={"class": "form-control paciente_recuadro", "id":"telefono"})) 
+    fecha_nacimiento = forms.DateField(label='Fecha de Nacimiento', required=False,
+        widget=forms.DateInput(attrs={'type': 'date'}))
+    genero = forms.CharField(label='Género:', required=False) ,
+    widget=forms.Select(attrs={"class": "form-control", "id":"genero"})
+    obra_social = forms.ChoiceField(label="Obra Social:", required=True,
+        widget=forms.TextInput(attrs={"class": "form-control paciente_recuadro", "id":"obra_social"}))
+
 
 class ConsultaMedicosForm(forms.Form):
     # Definir campos
@@ -24,10 +42,18 @@ class ConsultaMedicosForm(forms.Form):
 
 
 class ConsultaPacientesForm(forms.Form):
-    especialidad = forms.ChoiceField(choices=Especialidad.lista_especialidades(), required=True, widget=forms.Select)
-    medico = forms.CharField(label="Médico", widget=forms.TextInput(attrs={'class': 'medico'}), required=False)
-    fecha = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'})),
+    # especialidad = forms.ChoiceField(choices=Especialidad.lista_especialidades(), required=True, widget=forms.Select)
+    # medico = forms.CharField(label="Médico", widget=forms.TextInput(attrs={'class': 'medico'}), required=False)
+    
+    paciente = forms.IntegerField(label="Paciente:", initial="" , error_messages={'required': 'Ingrese el dni del paciente'} ,
+            widget=forms.TextInput(attrs={"class": "form-paciente paciente_recuadro", "id":"paciente", "title":"Ingrese entre 7 y 8 dígitos de su número de documento"}))
 
+    def clean_paciente(self):
+        data = self.cleaned_data["paciente"]
+        if data != '':
+            if not Paciente.objects.filter(dni = int(data)).exists():
+                raise ValidationError("Debe ingresar un DNI de paciente válido o dejarlo en blanco")
+        return data
 
 class AltaTurnoForm(forms.Form):
 
@@ -123,33 +149,37 @@ def funcion_de_guardado_de_turno(accion,id,medico,fecha,hora):
         print("LISTA NUEVITA DE TURNOS! --> :",listado_de_turnos)
         return listado_de_turnos
 
+    if accion == 'anular':
+        print("Ingreso a anular") 
+        actualizacion = Turno.desasignar_turno(id)
+        if actualizacion:
+            print("Turno fue anulado correctamente!!!")
+        else:
+            print("Hay un problema en el anulado del turno")
+
 
 class BajaTurnoForm(forms.Form):          
     dni = forms.IntegerField(label="Paciente:", initial="" , error_messages={'required': 'Ingrese el dni del paciente'} ,
-            widget=forms.TextInput(attrs={"class": "form-paciente", "id":"paciente", "title":"Ingrese entre 7 y 8 dígitos de su número de documento"}))
-    
+            widget=forms.TextInput(attrs={"class": "form-paciente paciente_recuadro", "id":"paciente", "title":"Ingrese entre 7 y 8 dígitos de su número de documento"}))
+
     # nombre_completo = forms.Field(required=False , disabled=True)  -- no hace falta colocarlo aquí, ,porque lo estoy pasando por el context
     
   
-    def clean_dni(self):
-        
-        data = self.cleaned_data["dni"]      
-       
+    def clean_dni(self): 
+        data = self.cleaned_data["dni"]  
         if Paciente.objects.filter(dni=self.cleaned_data["dni"]).exists():
-            pass                               
-              
+            pass     
         else:
             print("NO encontró el  dni en la tabla")
             raise ValidationError("Paciente inexistente")
-       
         return data
        
 
-class BajaTurnoDetalleForm(forms.Form):
-    fecha = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
-    horario = forms.CharField(label="Horario", required=True)       
-    medico = forms.CharField(label=' Médico', widget=forms.TextInput(attrs={'class': 'paciente'}))
-    especialidad = forms.CharField(label=' Especialidad')
+# class BajaTurnoDetalleForm(forms.Form):
+#     fecha = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
+#     horario = forms.CharField(label="Horario", required=True)       
+#     medico = forms.CharField(label=' Médico', widget=forms.TextInput(attrs={'class': 'paciente'}))
+#     especialidad = forms.CharField(label=' Especialidad')
 
 
 class ConsultaTurnosForm(forms.Form):
