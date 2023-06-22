@@ -26,6 +26,5 @@ urlpatterns = [
     path('accounts/login/', auth_views.LoginView.as_view(template_name='AppPoliconsultorio/login_html')),
     path('AppPoliconsultorio/', include('AppPoliconsultorio.urls')),        
     path('apppoliconsultorio/', include('AppPoliconsultorio.urls')),
-    path('accounts/', include('django.contrib.auth.urls')),
     path('favicon.ico', RedirectView.as_view(url=staticfiles_storage.url('img/favicon.ico'))),
 ]

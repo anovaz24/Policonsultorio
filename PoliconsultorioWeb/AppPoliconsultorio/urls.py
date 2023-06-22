@@ -11,6 +11,7 @@ urlpatterns = [
     path('baja_medico/',views.baja_medico,name="baja_medico"),
     path('consulta_medicos/',views.consulta_medicos,name="consulta_medicos"),
     path('listar_medicos/',views.listar_medicos.as_view(),name="listar_medicos"),
+    path('listar_medicos_por_especialidad/<str:cod_especialidad>/', views.listar_medicos_por_especialidad, name="listar_medicos_por_especialidad"),
     path('alta_paciente/',views.alta_paciente,name="alta_paciente"),
     path('baja_paciente/',views.baja_paciente,name="baja_paciente"),
     path('consulta_pacientes/',views.consulta_pacientes,name="consulta_pacientes"),
@@ -26,6 +27,11 @@ urlpatterns = [
     path('contactenos/', views.contactenos, name='contactenos'),
     path('contacto/', views.contacto, name="contacto"),
     path('thanks/', views.thanks, name="thanks"),
+    path('registro/', views.registro, name="registro"),
     #path('turnos/',views.turnos,name="turnos"),
     #path('turnos/<slug:slug>/',views.turnos,name="turnos_rol"),
+<<<<<<< HEAD
 ]
+=======
+]
+>>>>>>> 8854de63452bc1930ab73419b3c7b8b8ebbfcfb7

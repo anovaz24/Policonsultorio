@@ -38,6 +38,7 @@
                         {% endif %}
                      </div>
                      <br>
+                     <a href="{% url 'registro' %}">Regístrate</a>
                      <!-- Este que puse arriba del button es para guardar el parametro de la pagina o vista anterior al login -->
                      <input type="hidden" name="next" value="{{ next_url }}"> 
                      <button type="submit" class="btn btn-primary">Iniciar sesión</button>

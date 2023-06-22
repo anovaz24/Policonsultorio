@@ -1,13 +1,15 @@
 from django.db import models
 from datetime import timedelta, date
 from django.utils.dateparse import parse_date
-
+from django.contrib import admin
+from django.contrib.auth.models import User
 
 class Persona(models.Model):
     nombre = models.CharField(max_length=25, blank=False, verbose_name='Nombre')
     apellido = models.CharField(max_length=25, blank=False, verbose_name='Apellido')
     telefono = models.CharField(max_length=50, verbose_name='Telefono')
     mail = models.EmailField(max_length=150, verbose_name='Email')
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
 
     class Meta:
         abstract = True 
@@ -68,8 +70,6 @@ class Paciente(Persona):
     genero = models.CharField(max_length=1, choices=GENEROS, verbose_name='Genero', null = True)
     obra_social = models.CharField(max_length=128, verbose_name="Obra_social", null = True)
 
-    def __str__(self):
-        return self.nombre_completo
 
     class Meta:
         constraints = [
@@ -132,17 +132,11 @@ class Paciente(Persona):
         except cls.DoesNotExist:
             return None
 
-    def __str__(self):
-        return f"{self.nombre} {self.apellido} - DNI: {self.dni}"
-
 
 class Medico(Persona):
     matricula = models.IntegerField(blank=False, null=True, verbose_name='Matricula')
     especialidad = models.ForeignKey(Especialidad, on_delete=models.CASCADE)
     pacientes = models.ManyToManyField(Paciente, through='Turno')
-
-    def __str__(self):
-        return self.nombre_completo
 
 
     class Meta:
@@ -208,11 +202,14 @@ class Turno(models.Model):
     medico = models.ForeignKey(Medico, on_delete=models.CASCADE)
     # hora = models.TimeField(verbose_name='Hora')
 
+<<<<<<< HEAD
     def __str__(self):
         if self.paciente =='':
             self.paciente = empty_value_display = '-empty-'
         return f" {self.fecha } ,{self.hora}, {self.paciente} ,{self.medico}"
 
+=======
+>>>>>>> 8854de63452bc1930ab73419b3c7b8b8ebbfcfb7
     class Meta:
         constraints = [
             models.UniqueConstraint(
@@ -274,7 +271,10 @@ class Turno(models.Model):
 
     @classmethod
     def asignar_turno(cls, id_paciente, id_medico, fecha_turno, hora_param):
-        paciente = Paciente.objects.get(dni=id_paciente)
+        if id_paciente is not None:
+            paciente = Paciente.objects.get(dni=id_paciente)
+        else:
+            paciente = id_paciente
         turno = cls.objects.filter(medico__id=id_medico, fecha=fecha_turno, hora=hora_param).first()
         if turno:
             turno.paciente = paciente
@@ -293,6 +293,15 @@ class Turno(models.Model):
         return False
     
 
+    @classmethod
+    def desasignar_turno(cls,id_turno):
+        turno = cls.objects.filter(id=id_turno).first()
+        if turno:
+            turno.paciente = None
+            turno.save()
+            return True
+        return False
+
     def __str__(self):
         return f"{self.fecha} - {self.hora} - Medico: {self.medico} - Paciente: {self.paciente}"
     
@@ -300,8 +309,7 @@ class Turno(models.Model):
     # def __str__(self):
     #     return f"{self.fecha} - {self.hora} - Medico: {self.medico} - Paciente: {self.paciente}"
 
-
-
 def daterange(start_date, end_date):
     for n in range(int((end_date - start_date).days)):
         yield start_date + timedelta(n)
+

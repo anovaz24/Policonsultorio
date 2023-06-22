@@ -2,6 +2,7 @@ from typing import Any, Dict
 from django import forms
 from django.core.exceptions import ValidationError
 from django.core.validators import RegexValidator
+from django.contrib.auth.forms import UserCreationForm,UsernameField
 import datetime
 from .models import *
 
@@ -10,7 +11,7 @@ class AltaMedicoForm(forms.ModelForm):
     class Meta:
         model = Medico
         fields = '__all__'
-        exclude = ['pacientes']
+        exclude = ['pacientes','user']
 
 class AltaPpacienteForm(forms.Form):
     nombre = forms.CharField(label='Nombre:', required=True,
@@ -159,9 +160,15 @@ def funcion_de_guardado_de_turno(accion,id,medico,fecha,hora):
 
 
 class BajaTurnoForm(forms.Form):          
+<<<<<<< HEAD
     dni = forms.IntegerField(label="Paciente:", initial="" , error_messages={'required': 'Ingrese el dni del paciente'} ,
             widget=forms.TextInput(attrs={"class": "form-paciente paciente_recuadro", "id":"paciente", "title":"Ingrese entre 7 y 8 dígitos de su número de documento"}))
 
+=======
+    dni = forms.CharField(label="Paciente:", max_length=8,min_length=7 ,initial="" , error_messages={'required': 'Ingrese el dni del paciente'} ,
+            widget=forms.TextInput(attrs={"class": "form-paciente", "id":"paciente", "title":"Ingrese entre 7 y 8 dígitos de su número de documento"}))
+    
+>>>>>>> 8854de63452bc1930ab73419b3c7b8b8ebbfcfb7
     # nombre_completo = forms.Field(required=False , disabled=True)  -- no hace falta colocarlo aquí, ,porque lo estoy pasando por el context
     
   
@@ -170,7 +177,7 @@ class BajaTurnoForm(forms.Form):
         if Paciente.objects.filter(dni=self.cleaned_data["dni"]).exists():
             pass     
         else:
-            print("NO encontró el  dni en la tabla")
+            print("NO encontró el dni en la tabla")
             raise ValidationError("Paciente inexistente")
         return data
        
@@ -223,3 +230,49 @@ class ContactoForm(forms.Form):
         widget=forms.TextInput(attrs={"class": "special", "id":"44"}))
     apellido = forms.CharField(label="Apellido de contacto", required=True)
     email = forms.EmailField(required=True)
+
+
+class CustomUserCreationForm(UserCreationForm):
+    username = UsernameField(label="Email de Usuario", required=True)
+    
+    class Meta:
+        model = User
+        fields = ['username', 'first_name', 'last_name', 'email', 'password1', 'password2']
+
+    def clean_username(self):
+        username = self.cleaned_data["username"]
+        print(username)
+
+        if username != '':
+            print(User.objects.filter(username = username).exists())
+            if User.objects.filter(username = username).exists():
+                raise ValidationError("Usted ya se encuentra registrado con ese mail")
+            elif not Medico.objects.filter(mail = username).exists() and not Paciente.objects.filter(mail = username).exists():
+                raise ValidationError("Usted no se encuentra habilitado para registrarse")
+            else:
+                self.cleaned_data["email"] = username
+        else:
+            raise ValidationError("Debe ingresar un mail válido")
+        print(username)
+        return username
+
+    # def clean_email(self):
+    #     email = self.cleaned_data["email"]
+    #     # email = super().clean_email()
+
+    #     if email != '':
+    #         if User.objects.filter(email = email).exists():
+    #             raise ValidationError("Usted ya se encuentra registrado con ese mail")
+    #     else:
+    #         raise ValidationError("Debe ingresar un mail válido")
+
+    #     return email
+    
+    def clean(self):
+        cleaned_data = super().clean()
+        email = cleaned_data.get("username")
+        
+        # defino como usuario el mail
+        cleaned_data["email"] = email
+    
+        return cleaned_data
