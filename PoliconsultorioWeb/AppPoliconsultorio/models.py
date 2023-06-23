@@ -4,6 +4,7 @@ from django.utils.dateparse import parse_date
 from django.contrib import admin
 from django.contrib.auth.models import User
 
+
 class Persona(models.Model):
     nombre = models.CharField(max_length=25, blank=False, verbose_name='Nombre')
     apellido = models.CharField(max_length=25, blank=False, verbose_name='Apellido')
@@ -32,14 +33,17 @@ class Especialidad(models.Model):
             models.UniqueConstraint(
                 fields=['codigo', 'descripcion'], name='unique_codigo_descripcion_combination'
             )
-            ]
+        ]
        
     def __str__(self):
         return self.descripcion
 
     def lista_especialidades():
         opciones_especialidades = [('Z', 'Seleccione una especialidad')]
-        opciones_especialidades = [(esp.codigo, esp.descripcion) for esp in Especialidad.objects.all().order_by('descripcion')]
+        # opciones_especialidades = [(esp.codigo, esp.descripcion) for esp in Especialidad.objects.all().order_by('descripcion')]
+        especialidades = Especialidad.objects.all().order_by('descripcion')
+        for especialidad in especialidades:
+            opciones_especialidades.append((especialidad.codigo, especialidad.descripcion))
         return opciones_especialidades
 
     @classmethod
@@ -69,7 +73,6 @@ class Paciente(Persona):
     fecha_nacimiento = models.DateField(null= True, verbose_name='Fecha Nacimiento')
     genero = models.CharField(max_length=1, choices=GENEROS, verbose_name='Genero', null = True)
     obra_social = models.CharField(max_length=128, verbose_name="Obra_social", null = True)
-
 
     class Meta:
         constraints = [
@@ -138,7 +141,6 @@ class Medico(Persona):
     especialidad = models.ForeignKey(Especialidad, on_delete=models.CASCADE)
     pacientes = models.ManyToManyField(Paciente, through='Turno')
 
-
     class Meta:
         constraints = [
             models.UniqueConstraint(
@@ -196,29 +198,21 @@ class Turno(models.Model):
         ('17:00','17:00'),
     ]
     fecha = models.DateField(verbose_name='Fecha')
-
     hora = models.CharField(max_length=128, choices=HORARIOS ,verbose_name='Horario_turno')
     paciente = models.ForeignKey(Paciente, on_delete=models.CASCADE, null=True, blank=True)
     medico = models.ForeignKey(Medico, on_delete=models.CASCADE)
-    # hora = models.TimeField(verbose_name='Hora')
 
-<<<<<<< HEAD
     def __str__(self):
         if self.paciente =='':
             self.paciente = empty_value_display = '-empty-'
         return f" {self.fecha } ,{self.hora}, {self.paciente} ,{self.medico}"
 
-=======
->>>>>>> 8854de63452bc1930ab73419b3c7b8b8ebbfcfb7
     class Meta:
         constraints = [
             models.UniqueConstraint(
                 fields=['medico', 'fecha', 'hora'], name='unique_medico_fecha_hora_combination'
             )
         ]
-
-    # def __str__(self):
-    #     return f"{self.fecha} - {self.hora} - Médico: {self.medico} - Paciente: {self.paciente}"
 
     def lista_turnos(filtro_fechaDesde=date.today(), filtro_fechaHasta=date.today(), filtro_paciente='', filtro_especialidad='', filtro_medico=''):
         turnos = Turno.objects.filter(fecha__range=(parse_date(filtro_fechaDesde),parse_date(filtro_fechaHasta)))
@@ -268,7 +262,6 @@ class Turno(models.Model):
             resultados.append(resultado)
         return resultados
 
-
     @classmethod
     def asignar_turno(cls, id_paciente, id_medico, fecha_turno, hora_param):
         if id_paciente is not None:
@@ -282,7 +275,6 @@ class Turno(models.Model):
             return True
         return False
     
-
     @classmethod
     def desasignar_turno(cls,id_turno):
         turno = cls.objects.filter(id=id_turno).first()
@@ -291,7 +283,6 @@ class Turno(models.Model):
             turno.save()
             return True
         return False
-    
 
     @classmethod
     def desasignar_turno(cls,id_turno):
@@ -305,9 +296,6 @@ class Turno(models.Model):
     def __str__(self):
         return f"{self.fecha} - {self.hora} - Medico: {self.medico} - Paciente: {self.paciente}"
     
-
-    # def __str__(self):
-    #     return f"{self.fecha} - {self.hora} - Medico: {self.medico} - Paciente: {self.paciente}"
 
 def daterange(start_date, end_date):
     for n in range(int((end_date - start_date).days)):

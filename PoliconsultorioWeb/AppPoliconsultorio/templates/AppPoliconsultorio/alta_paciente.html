@@ -11,30 +11,7 @@
 <div class="container">
 	<div class="form-container justifica-arriba">
 		<div class="form-row justify-content-center">
-<<<<<<< HEAD
 			<h2><u>Alta de un Paciente</u></h2>
-=======
-			<!--<h2><u>Ingrese los datos del turno médico</u></h2>-->
-			{% block titulo %} <h2><u> Ingreso de un Paciente</u></h2> {% endblock %}
-		</div>
-		<div class="messages form-row justify-content-center" style="color: red;">
-			{% filter upper %}
-				<p><b> {{ error_formulario }} </b></p>
-			{% endfilter %}
-		</div>
-		<div class="messages form-row justify-content-center">
-			{% if messages %}
-				<ul class="messages_list">
-					{% for message in messages %}
-						{% filter upper %}
-						<li style="color: red;" {% if message.tags %} class="{{ message.tags }}" {% endif %}>
-							<b> {{ message }} </b>
-						</li>
-						{% endfilter %}
-					{% endfor %}
-				</ul>
-			{% endif %}
->>>>>>> 8854de63452bc1930ab73419b3c7b8b8ebbfcfb7
 		</div>
 		<!--<form>-->
 		<form action="{% url 'alta_paciente' %}" method="post">
