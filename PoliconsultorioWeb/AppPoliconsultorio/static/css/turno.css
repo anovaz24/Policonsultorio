@@ -17,11 +17,6 @@
 }
 
 .paciente_recuadro {
-<<<<<<< HEAD
-    border-radius: .375rem;
+    color: yellowgreen;
+    border-radius: 2px;
 }
-=======
-    color: yellow;
-    border-radius: 25rem;
-}
->>>>>>> 8854de63452bc1930ab73419b3c7b8b8ebbfcfb7

@@ -202,14 +202,12 @@ class Turno(models.Model):
     medico = models.ForeignKey(Medico, on_delete=models.CASCADE)
     # hora = models.TimeField(verbose_name='Hora')
 
-<<<<<<< HEAD
+
     def __str__(self):
         if self.paciente =='':
             self.paciente = empty_value_display = '-empty-'
         return f" {self.fecha } ,{self.hora}, {self.paciente} ,{self.medico}"
 
-=======
->>>>>>> 8854de63452bc1930ab73419b3c7b8b8ebbfcfb7
     class Meta:
         constraints = [
             models.UniqueConstraint(

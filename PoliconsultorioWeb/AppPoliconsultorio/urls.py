@@ -30,8 +30,4 @@ urlpatterns = [
     path('registro/', views.registro, name="registro"),
     #path('turnos/',views.turnos,name="turnos"),
     #path('turnos/<slug:slug>/',views.turnos,name="turnos_rol"),
-<<<<<<< HEAD
 ]
-=======
-]
->>>>>>> 8854de63452bc1930ab73419b3c7b8b8ebbfcfb7

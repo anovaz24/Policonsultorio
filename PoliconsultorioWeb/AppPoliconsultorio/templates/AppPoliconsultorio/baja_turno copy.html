@@ -5,10 +5,10 @@
 {% block titulo %} Baja del turno médico {% endblock %}
 
 {% block extra_css %}
- <link rel="stylesheet" href="{% static '/css/baja_turno.css' %}">
+ <link rel="stylesheet" href="{% static '/css/turno.css' %}">
 {% endblock %}
 
-{% block contenido %} 
+{% block contenido %}
 <div class="container">
 
     <!--<div>class ="row">
@@ -82,7 +82,53 @@
                 </div>
 
 
-                     
+                    <div class="messages form-row justify-content-center"> 
+                        {% if messages %}
+                            <ul class="messages_list">
+                                {% for message in messages %}
+                                    {% filter upper %}
+                                    <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>
+                                        <b> {{ message }} </b>
+                                    </li>
+                                    {% endfilter %}
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </div>
+                                 
+                    <div class="form-row justify-content-center">
+                        <button type="submit" class="btn btn-primary">Consultar</button>                   
+                    </div> 
+                    <div class="form-row justify-content-center">
+                            <div class="form-group col-md-12"> 
+                                <table class="table table-bordered">
+                                
+                                    <thead class="table-header"> 
+                                         <!-- <table class="table table-striped">  -->
+                                        <tr>
+                                            <th scope="col">Fecha</th>
+                                            <th scope="col">Hora</th>
+                                            <th scope="col">Médico</th>
+                                            <th scope="col">Especialidad</th>
+                                            <th scope="col">Selección</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                            {% for xx in listado_turnos %}     
+                                            <tr>
+                                                <td>{{ xx.fecha }}</td>
+                                                <td>{{ xx.hora }}</td>
+                                                <td>{{ xx.medico.apellido}} , {{xx.medico.nombre}}</td>
+                                                <td>{{ xx.medico.especialidad.descripcion}}</td>
+                                                <!-- <td>{{xx.id}}</td>  -->
+                                                <td><input type="radio" class="form-check-input" name="selectbajaturno"   value="{{ xx.id }}" ></td>     
+                                            </tr>
+                                            {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>            
+                    
                         <div class="messages form-row justify-content-center"> 
                             {% if messages %}
                             <ul class="messages_list">
@@ -99,7 +145,7 @@
 
                     <div class="form-row justify-content-center">
                         <button type="submit" name="eliminar_turno" class="btn btn-primary" {{ null }}>Eliminar turno</button>
-                    </div> 
+                    </div>
 
                     {% if selectbjaturno is not null %} checked id_borrar = {{ xx.id }} 
                     {{ checked_id_borrar }}

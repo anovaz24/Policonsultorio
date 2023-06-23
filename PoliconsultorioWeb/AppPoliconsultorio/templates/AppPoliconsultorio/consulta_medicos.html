@@ -61,10 +61,10 @@
                     <tbody>
                         {% for medico in listado_medicos %}
                         <tr>
-                            <th>medico.nombre</th>
-                            <td>medico.especialidad</td>
-                            <td>medico.matricula</td>
-                            <td>medico.agenda</td>
+                            <th>{{medico.nombre}}</th>
+                            <td>{{medico.especialidad}}</td>
+                            <td>{{medico.matricula}}</td>
+                            <td>{{medico.agenda}}</td>
                         </tr>
                         {% endfor %}
                     </tbody>
